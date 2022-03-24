@@ -1,0 +1,14 @@
+apiVersion: v2
+name: dex
+version: "1.0"
+kubeVersion: ">=1.20.0"
+description: dex for kubeflow.
+type: application
+keywords:
+  - "cert manager"
+sources:
+  - https://gitlab-ce.alauda.cn/middleware/kubeflow-manifests/tree/v1.4-branch-acp
+maintainers:
+  - name: WuYi
+    email: yiwu@alauda.io
+appVersion: "2.24.0"

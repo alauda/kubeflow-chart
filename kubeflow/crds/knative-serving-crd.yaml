@@ -1,0 +1,486 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: certificates.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - networking
+    kind: Certificate
+    plural: certificates
+    shortNames:
+    - kcert
+    singular: certificate
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Ready")].reason
+      name: Reason
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    duck.knative.dev/podspecable: "true"
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: configurations.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  names:
+    categories:
+    - all
+    - knative
+    - serving
+    kind: Configuration
+    plural: configurations
+    shortNames:
+    - config
+    - cfg
+    singular: configuration
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.latestCreatedRevisionName
+      name: LatestCreated
+      type: string
+    - jsonPath: .status.latestReadyRevisionName
+      name: LatestReady
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+  name: images.caching.internal.knative.dev
+spec:
+  group: caching.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - caching
+    kind: Image
+    plural: images
+    shortNames:
+    - img
+    singular: image
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.image
+      name: Image
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: ingresses.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - networking
+    kind: Ingress
+    plural: ingresses
+    shortNames:
+    - kingress
+    - king
+    singular: ingress
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: metrics.autoscaling.internal.knative.dev
+spec:
+  group: autoscaling.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - autoscaling
+    kind: Metric
+    plural: metrics
+    singular: metric
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: podautoscalers.autoscaling.internal.knative.dev
+spec:
+  group: autoscaling.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - autoscaling
+    kind: PodAutoscaler
+    plural: podautoscalers
+    shortNames:
+    - kpa
+    - pa
+    singular: podautoscaler
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.desiredScale
+      name: DesiredScale
+      type: integer
+    - jsonPath: .status.actualScale
+      name: ActualScale
+      type: integer
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: revisions.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  names:
+    categories:
+    - all
+    - knative
+    - serving
+    kind: Revision
+    plural: revisions
+    shortNames:
+    - rev
+    singular: revision
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.labels['serving\.knative\.dev/configuration']
+      name: Config Name
+      type: string
+    - jsonPath: .status.serviceName
+      name: K8s Service Name
+      type: string
+    - jsonPath: .metadata.labels['serving\.knative\.dev/configurationGeneration']
+      name: Generation
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    duck.knative.dev/addressable: "true"
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: routes.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  names:
+    categories:
+    - all
+    - knative
+    - serving
+    kind: Route
+    plural: routes
+    shortNames:
+    - rt
+    singular: route
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.url
+      name: URL
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: serverlessservices.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  names:
+    categories:
+    - knative-internal
+    - networking
+    kind: ServerlessService
+    plural: serverlessservices
+    shortNames:
+    - sks
+    singular: serverlessservice
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.mode
+      name: Mode
+      type: string
+    - jsonPath: .spec.numActivators
+      name: Activators
+      type: integer
+    - jsonPath: .status.serviceName
+      name: ServiceName
+      type: string
+    - jsonPath: .status.privateServiceName
+      name: PrivateServiceName
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    duck.knative.dev/addressable: "true"
+    duck.knative.dev/podspecable: "true"
+    knative.dev/crd-install: "true"
+    serving.knative.dev/release: v0.22.1
+  name: services.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  names:
+    categories:
+    - all
+    - knative
+    - serving
+    kind: Service
+    plural: services
+    shortNames:
+    - kservice
+    - ksvc
+    singular: service
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.url
+      name: URL
+      type: string
+    - jsonPath: .status.latestCreatedRevisionName
+      name: LatestCreated
+      type: string
+    - jsonPath: .status.latestReadyRevisionName
+      name: LatestReady
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].reason
+      name: Reason
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            properties:
+              template:
+                description: |
+                  A template for the current desired application state.
+                  Changes to `template` will cause a new Revision to be created as
+                  defined in the lifecycle section. The contents of the Service's
+                  RevisionTemplateSpec is used to create a corresponding Configuration.
+                type: object
+                x-kubernetes-preserve-unknown-fields: true
+              traffic:
+                description: |
+                  Traffic specifies how to distribute traffic over a
+                  collection of Revisions belonging to the Service. If traffic is
+                  empty or not provided, defaults to 100% traffic to the latest
+                  `Ready` Revision. The contents of the Service's TrafficTarget is
+                  used to create a corresponding Route.
+                items:
+                  properties:
+                    configurationName:
+                      description: |
+                        ConfigurationName of a configuration to whose latest revision we will send
+                        this portion of traffic. When the "status.latestReadyRevisionName" of the
+                        referenced configuration changes, we will automatically migrate traffic
+                        from the prior "latest ready" revision to the new one.  This field is never
+                        set in Route's status, only its spec.
+                        This is mutually exclusive with RevisionName.
+                      type: string
+                    latestRevision:
+                      description: |
+                        `latestRevision` may be optionally provided to indicate
+                        that the latest ready Revision of the Configuration should be used
+                        for this traffic target. When provided latestRevision MUST be true
+                        if revisionName is empty, and it MUST be false when revisionName is non-empty.
+                      type: boolean
+                    percent:
+                      description: |
+                        The percentage of requests which should be allocated
+                        from the main Route domain name to the specified `revisionName` or
+                        `configurationName`.
+                        All `percent` values in `traffic` MUST sum to 100.
+                      maximum: 100
+                      minimum: 0
+                      type: integer
+                    revisionName:
+                      description: |
+                        A specific revision to which to send this portion
+                        of traffic.
+                        This is mutually exclusive with configurationName.
+                      type: string
+                    tag:
+                      description: |
+                        Tag is optionally used to expose a dedicated URL for
+                        referencing this target exclusively. The dedicated URL MUST include
+                        in it the string provided by tag.
+                      type: string
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                type: array
+                x-kubernetes-preserve-unknown-fields: true
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+        x-kubernetes-preserve-unknown-fields: true
+    served: true
+    storage: true
+    subresources:
+      status: {}

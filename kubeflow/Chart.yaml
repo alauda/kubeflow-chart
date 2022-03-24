@@ -1,0 +1,46 @@
+apiVersion: v2
+name: kubeflow
+version: "0.1"
+kubeVersion: ">=1.20.0"
+description: |
+  The Kubeflow project is dedicated to making deployments
+  of machine learning (ML) workflows on Kubernetes simple,
+  portable and scalable. Our goal is not to recreate other services,
+  but to provide a straightforward way to deploy best-of-breed
+  open-source systems for ML to diverse infrastructures.
+  Anywhere you are running Kubernetes, you should be able to run Kubeflow.
+  
+# 卸载须知：
+# 
+# 1. 执行 helm delete 之后，注意需要执行下面命令确保 profile 资源删除：
+#    kubectl patch profile kubeflow-admin-cpaas-io -p '{"metadata":{"finalizers":null}}' --type=merge
+# 2. 然后 kubectl get ns 查看 kubeflow, kubeflow-admin-cpaas-io, knative-serving 都完全删除之后才能重新安装
+# 3. 如果执行 helm delete 时，仍有其他的 profile 或者 inference service，需要查看 namespace 删除需要递归删除的
+#    CRD 资源，参考上述 patch 方法删除掉 finalizer 才可以完全删除掉 namespace
+type: application
+keywords:
+  - "Kubeflow"
+  - "Kubernetes"
+  - "machine learning"
+  - "tensorflow"
+  - "pytorch"
+  - "XGBoost"
+sources:
+  - https://github.com/alauda/kubeflow-chart
+  - https://github.com/kubeflow/manifests
+dependencies:
+  - name: minio
+    version: 1.0
+    condition: minio.enabled
+    import-values:
+      - secrets
+  - name: dex
+    version: 1.0
+    condition: dex.enabled
+    import-values:
+      - secrets
+      - confs
+maintainers:
+  - name: typhoonzero
+    email: typhoonzero1986@gmail.com
+appVersion: "1.4"

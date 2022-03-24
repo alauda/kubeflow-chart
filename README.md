@@ -2,6 +2,8 @@
 
 使用 Helm Chart 在多种环境快速安装和配置 Kubeflow。
 
+原始代码参考：https://github.com/kubeflow/manifests。
+
 安装步骤：
 
 - `git clone https://github.com/alauda/kubeflow-chart.git`
@@ -21,4 +23,3 @@
 ## 配置解释
 
 建设中……
-
