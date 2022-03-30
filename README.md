@@ -1,8 +1,8 @@
 # Kubeflow Chart
 
-使用 Helm Chart 在多种环境快速安装和配置 Kubeflow。
+使用 Helm Chart 在多种环境更加快速安装和配置 [Kubeflow](https://www.kubeflow.org/)。
 
-原始代码参考：https://github.com/kubeflow/manifests。
+原始代码参考：https://github.com/kubeflow/manifests
 
 安装步骤：
 

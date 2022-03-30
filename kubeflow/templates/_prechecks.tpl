@@ -1,6 +1,6 @@
 {{ define "prechecks" }}
 
-{{ if not .Values.dryRun }}
+{{ if .Values.checkDeps }}
 
 {{/* Check if istio is installed. */}}
 {{ $istioNamespace := lookup "v1" "Namespace" "" "istio-system" }}
@@ -20,17 +20,19 @@
 {{ fail "must install envoyfilters.networking.istio.io crd (install ASM on ACP)" }}
 {{ end }}
 
-{{ $istioIngDeploy := lookup "v1" "Deployment" "istio-system" "istio-ingressgateway" }}
+{{ $istioIngDeploy := lookup "apps/v1" "Deployment" "istio-system" "istio-ingressgateway" }}
 {{ if not $istioIngDeploy }}
 {{ fail "must install istio-ingressgateway deployment (install ASM on ACP)" }}
 {{ end }}
-{{ $istioEgDeploy := lookup "v1" "Deployment" "istio-system" "istio-egressgateway" }}
+{{ $istioEgDeploy := lookup "apps/v1" "Deployment" "istio-system" "istio-egressgateway" }}
 {{ if not $istioEgDeploy }}
 {{ fail "must install istio-egressgateway deployment (install ASM on ACP)" }}
 {{ end }}
-{{ $istiodDeploy := lookup "v1" "Deployment" "istio-system" "istiod-1-10" }}
-{{ if not $istiodDeploy }}
-{{ fail "must install istiod-1-10 deployment (install ASM on ACP)" }}
+{{ $istiodDeploy := lookup "apps/v1" "Deployment" "istio-system" "istiod" }}
+{{ $istiodDeploy110 := lookup "apps/v1" "Deployment" "istio-system" "istiod-1-10" }}
+{{ $istiodDeploy112 := lookup "apps/v1" "Deployment" "istio-system" "istiod-1-12" }}
+{{ if not (or $istiodDeploy $istiodDeploy110 $istiodDeploy112) }}
+{{ fail "must install istiod deployment (install ASM on ACP)" }}
 {{ end }}
 
 {{/* Check if cert-manager is installed */}}
@@ -39,15 +41,15 @@
 {{ fail "must install cert-manager namespace" }}
 {{ end }}
 
-{{ $certMngrDeploy := lookup "v1" "Deployment" "cert-manager" "cert-manager" }}
+{{ $certMngrDeploy := lookup "apps/v1" "Deployment" "cert-manager" "cert-manager" }}
 {{ if not $certMngrDeploy }}
 {{ fail "must install cert-manager deployment" }}
 {{ end }}
-{{ $certMngrCJDeploy := lookup "v1" "Deployment" "cert-manager" "cert-manager-cainjector" }}
+{{ $certMngrCJDeploy := lookup "apps/v1" "Deployment" "cert-manager" "cert-manager-cainjector" }}
 {{ if not $certMngrCJDeploy }}
 {{ fail "must install cert-manager-cainjector deployment" }}
 {{ end }}
-{{ $certMngrWHDeploy := lookup "v1" "Deployment" "cert-manager" "cert-manager-webhook" }}
+{{ $certMngrWHDeploy := lookup "apps/v1" "Deployment" "cert-manager" "cert-manager-webhook" }}
 {{ if not $certMngrWHDeploy }}
 {{ fail "must install cert-manager-webhook deployment" }}
 {{ end }}

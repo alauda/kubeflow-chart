@@ -1,5 +1,5 @@
 # 是否是 dry-run 的开关
-dryRun: true
+dryRun: false
 
 # 主要组件安装的 Namespace。有些特定组件会安装到 istio-system 等固定位置
 namespace: kubeflow
