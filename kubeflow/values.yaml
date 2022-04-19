@@ -1,7 +1,5 @@
-# 是否是 dry-run 的开关
 dryRun: false
 
-# 主要组件安装的 Namespace。有些特定组件会安装到 istio-system 等固定位置
 namespace: kubeflow
 
 # Kubeflow 使用的域名和根路径。必须配置使用 FQDN 格式的域名。如果要使用 IP
@@ -18,8 +16,11 @@ useridClaim: email
 useridHeader: kubeflow-userid
 useridPrefix: "\"\""
 oidcScopes: "profile email groups"
-tlsCrt: "<你的 HTTPS crt内容(base64 encoded)>"
-tlsKey: "<你的 HTTPS key内容(base64 encoded)>"
+# 配置 tlsCrt 和 tlsKey 以启用 HTTPS 访问
+# 你的 HTTPS crt内容(base64 encoded)
+tlsCrt: ""
+# 你的 HTTPS key内容(base64 encoded)
+tlsKey: ""
 
 notebookAccessPipelineDesc: "Allow access pipeline"
 
