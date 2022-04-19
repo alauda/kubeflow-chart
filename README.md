@@ -17,10 +17,16 @@
 
 访问 Kubeflow 界面：
 
-- 通过 port-forward 方式：`kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`， 然后访问执行该命令的服务器地址：`https://ip/`。
+- 通过 port-forward 方式：
+  - 使用 HTTP: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 8080:80`， 然后访问执行该命令的服务器地址：`http://ip/`。
+  - 开启 HTTPS: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`， 然后访问执行该命令的服务器地址：`https://ip/`。
+- 使用默认账号密码：`user@example.com`, `12341234` 即可登录。
 - 通过 node port 方式：查看 istio ingressgateway 服务是否开启了 nodeport：`kubectl -n istio-system get svc istio-ingressgateway`，根据[这里](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport) 配置 nodeport 之后，即可访问。
 - 使用 Ingress/LoadBalancer：配置 Ingress/LoadBalancer 到 istio-system/istio-ingressgateway 之后访问。
 
+## 卸载 Kubeflow
+
+执行命令 `helm delete kubeflow-helm` 即可完成卸载。
 
 ## 配置
 
