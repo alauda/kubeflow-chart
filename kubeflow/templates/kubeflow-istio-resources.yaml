@@ -51,6 +51,7 @@ rules:
   - list
   - watch
 ---
+{{ if .Values.tlsCrt }}
 apiVersion: v1
 data:
   tls.crt: {{ .Values.tlsCrt }}
@@ -60,6 +61,7 @@ metadata:
   name: cpaas-https-certs
   namespace: istio-system
 type: kubernetes.io/tls
+{{ end }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -76,7 +78,8 @@ spec:
       name: http
       number: 80
       protocol: HTTP
-# NOTE(WuYi): HTTPS is required.
+{{ if .Values.tlsCrt }}
+# Enable HTTPS when tlsCrt is set
     tls:
       httpsRedirect: true
   - hosts:
@@ -88,3 +91,4 @@ spec:
     tls:
       credentialName: cpaas-https-certs
       mode: SIMPLE
+{{ end }}
