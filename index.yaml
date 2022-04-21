@@ -1,0 +1,85 @@
+apiVersion: v1
+entries:
+  certmanager:
+  - apiVersion: v2
+    appVersion: 1.3.1
+    created: "2022-04-21T07:28:10.78424632Z"
+    description: cert manager deps for kubeflow.
+    digest: 31e33a046bde1cf2c5c431c4c7571e7a170fa9e0a9412dfa62d14057b928cf0b
+    keywords:
+    - cert manager
+    kubeVersion: '>=1.20.0'
+    maintainers:
+    - email: yiwu@alauda.io
+      name: WuYi
+    name: certmanager
+    sources:
+    - https://gitlab-ce.alauda.cn/middleware/kubeflow-manifests/tree/v1.4-branch-acp
+    type: application
+    urls:
+    - https://github.com/alauda/kubeflow-chart/releases/download/certmanager-1.0/certmanager-1.0.tgz
+    version: "1.0"
+  istio:
+  - apiVersion: v2
+    appVersion: "1.9"
+    created: "2022-04-21T07:28:10.925085528Z"
+    description: istio for kubeflow.
+    digest: 5e30430546e7e8a0bcee2f51aec4cab5aeb7488cb1aff4c81f05383cf3a7ef1b
+    keywords:
+    - istio
+    kubeVersion: '>=1.20.0'
+    maintainers:
+    - email: yiwu@alauda.io
+      name: WuYi
+    name: istio
+    sources:
+    - https://gitlab-ce.alauda.cn/middleware/kubeflow-manifests/tree/v1.4-branch-acp
+    type: application
+    urls:
+    - https://github.com/alauda/kubeflow-chart/releases/download/istio-1.0/istio-1.0.tgz
+    version: "1.0"
+  kubeflow:
+  - apiVersion: v2
+    appVersion: "1.4"
+    created: "2022-04-21T07:28:11.071630758Z"
+    dependencies:
+    - condition: minio.enabled
+      import-values:
+      - secrets
+      name: minio
+      repository: ""
+      version: "1"
+    - condition: dex.enabled
+      import-values:
+      - secrets
+      - confs
+      name: dex
+      repository: ""
+      version: "1"
+    description: 'The Kubeflow project is dedicated to making deployments of machine
+      learning (ML) workflows on Kubernetes simple, portable and scalable. Our goal
+      is not to recreate other services, but to provide a straightforward way to deploy
+      best-of-breed open-source systems for ML to diverse infrastructures. Anywhere
+      you are running Kubernetes, you should be able to run Kubeflow. '
+    digest: eb8d23c94a750ff3b24b237e547650f3fa4277010692361a1d9c18437a7b2358
+    home: https://github.com/alauda/kubeflow-chart
+    keywords:
+    - Kubeflow
+    - Kubernetes
+    - machine learning
+    - tensorflow
+    - pytorch
+    - XGBoost
+    kubeVersion: '>=1.20.0'
+    maintainers:
+    - email: typhoonzero1986@gmail.com
+      name: typhoonzero
+    name: kubeflow
+    sources:
+    - https://github.com/alauda/kubeflow-chart
+    - https://github.com/kubeflow/manifests
+    type: application
+    urls:
+    - https://github.com/alauda/kubeflow-chart/releases/download/kubeflow-1.4/kubeflow-1.4.tgz
+    version: "1.4"
+generated: "2022-04-21T07:28:11.072040996Z"
