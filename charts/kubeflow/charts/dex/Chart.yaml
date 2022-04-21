@@ -9,6 +9,6 @@ keywords:
 sources:
   - https://gitlab-ce.alauda.cn/middleware/kubeflow-manifests/tree/v1.4-branch-acp
 maintainers:
-  - name: WuYi
-    email: yiwu@alauda.io
+  - name: typhoonzero
+    email: typhoonzero1986@gmail.com
 appVersion: "2.24.0"
