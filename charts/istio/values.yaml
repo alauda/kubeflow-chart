@@ -1,0 +1,2 @@
+istioProxyv2Image: docker.io/istio/proxyv2:1.9.6
+istioPilotImage: docker.io/istio/pilot:1.9.6
