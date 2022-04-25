@@ -13,9 +13,18 @@ Kubeflow at any environments using Helm.
   - `helm install cert-manager alauda/certmanager`
 3. `helm install my-kubeflow alauda/kubeflow`
   
-### Use alternative image registry
+### Use alternative image registry (for CN access)
 
-Change the installation command as follows:
+When installing istio and cert-manager:
+
+```bash
+wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/istio/values-cn.yaml
+helm install istio alauda/istio -f values-istio-cn.yaml
+wget -O values-certm-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/certmanager/values-cn.yaml
+helm install cert-manager alauda/certmanager -f values-certm-cn.yaml
+```
+
+Change the Kubeflow installation command as follows:
 
 1. `wget https://raw.githubusercontent.com/alauda/kubeflow-chart/main/values-cn.yaml`
 2. `helm install my-kubeflow alauda/kubeflow -f values-cn.yaml`
@@ -34,31 +43,34 @@ Visit `http://localhost:8080/`.
 
 Run `helm delete my-kubeflow` to uninstall Kubeflow.
 
-## 在生产集群中部署 Kubeflow
+## Deploy Kubeflow in production
 
-在生产集群中部署 Kubeflow，通常需要根据当前集群环境信息，完成如下配置：
+To deploy Kubeflow in a production Kubernetes cluster, you need to configure below settings:
 
-### 使用 HTTPS
+### Setup HTTPS
 
-Kubeflow 强依赖 HTTPS，只有使用 `localhost` 访问可以不使用 HTTPS，所以在使用 Minikube 快速部署时不需要配置 HTTPS 相关配置项。当需要配置 HTTPS 时，请配置 `values.yaml` 中的 `tlsCrt` 和 `tlsKey` 为 HTTPS 证书。
+You ***Must*** use HTTPS to access Kubeflow web UI. Only when you deploy it under `localhost`, you do not need to setup HTTPS settings.
 
-### 配置访问方式
+To setup HTTPS, configure `tlsCrt` and `tlsKey` to be the HTTPS `.crt` and `.key` file content (base64 encoded).
 
-- 通过 port-forward 方式（不推荐）：
-  - 使用 HTTP: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 8080:80`， 然后访问执行该命令的服务器地址：`http://ip/`。
-  - 开启 HTTPS: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`， 然后访问执行该命令的服务器地址：`https://ip/`。
-- 使用默认账号密码：`user@example.com`, `12341234` 即可登录。
-- 通过 node port 方式：查看 istio ingressgateway 服务是否开启了 nodeport：`kubectl -n istio-system get svc istio-ingressgateway`，根据[这里](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport) 配置 nodeport 之后，即可访问。
-- 使用 Ingress/LoadBalancer：配置 Ingress/LoadBalancer 到 istio-system/istio-ingressgateway 之后访问。
+### Setup Access To the UI
 
-### 配置 Dex 登录认证 (可选)
+Kubeflow uses [Istio](https://istio.io/) as the service mesh control, you should configure you cluster load balancer or ingress to redirect to istio-ingressgateway:
 
-如果不使用本 chart 内置的 dex 部署，即需要连接到已有的 dex 部署，需要：
+- Through port-forward (***not recommended***):
+  - HTTP: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 8080:80`, then browse `http://ip:8080/`.
+  - HTTPS: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`, then browse `https://ip/`
+- The default username and password is: `user@example.com`, `12341234`
+- Through [NodePort](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport): first checkout if your `ingressgateway` service is running with NodePort: `kubectl -n istio-system get svc istio-ingressgateway`. Then access the NodePort to open Kubeflow web UI.
+- Through ingress/LoadBalancer: configure your ingress/LoadBalancer to service `istio-system/istio-ingressgateway`.
 
-1. 修改 `dex: enabled: false`
-2. 修改 `values.yaml` 下面的选项已联通您已有的 dex：
+### Setup Dex Authentication (Optional)
+
+If need to connect Kubeflow to you current Dex deployment, you may need to setup below sections under `values.yaml`:
+
+1. change `dex: enabled: false`
+2. Setup below sections to connect to your Dex:
 ```
-# 配置和认证服务 Dex 的联动
 oidcAuthURL: /dex/auth
 oidcProvider: http://dex.auth.svc.cluster.local:5556/dex
 oidcRedirectURL: /login/oidc
@@ -67,9 +79,12 @@ useridClaim: email
 useridHeader: kubeflow-userid
 useridPrefix: "\"\""
 oidcScopes: "profile email groups"
+
+clientID: <your-dex-clientID>
+clientSecret: <your-dex-client-secret>
 ```
 
 ## TODO
 
-- 适配 `cert-manager`, `istio`, `dex`, `minio` 的官方 Charts
-- 统一 `values.yaml` 中的 镜像/tag 的配置
+- Let `cert-manager`, `istio`, `dex`, `minio` to be the sub-chart of Kubeflow
+- Unify Docker image/tag settings in `values.yaml`
