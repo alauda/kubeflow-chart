@@ -2,51 +2,53 @@ dryRun: false
 
 namespace: kubeflow
 
-# Kubeflow 使用的域名和根路径。必须配置使用 FQDN 格式的域名。如果要使用 IP
-# 可以配置成 *。kubeflowSitePrefix 必须以 / 结尾
+# Set enableIngress to true to use Kubernetes ingress to access Kubeflow.
+# else, you need to use istio-ingressgateway service.
+enableIngress: false
+# kubeflowHost is the VirtualService host setting,
+# it should be a FQDN formated string.
+# - If you are using ingress, must set kubeflowHost to a valid domain name.
+# - If you are using IP to access Kubeflow, set kubeflowHost to "*" and enableIngress to false.
 kubeflowHost: "*"
+# kubeflowSitePrefix only supports "/" currently
 kubeflowSitePrefix: "/"
+# Setup tlsCrt and tlsKey to support HTTPS access (base64 encoded).
+tlsCrt: ""
+tlsKey: ""
 
-# 配置和认证服务 Dex 的联动
+# Dex auth configurations
 oidcAuthURL: /dex/auth
 oidcProvider: http://dex.auth.svc.cluster.local:5556/dex
-oidcRedirectURL: /login/oidc
 skipAuthURI: "/dex"
 useridClaim: email
 useridHeader: kubeflow-userid
 useridPrefix: "\"\""
 oidcScopes: "profile email groups"
-# 配置 tlsCrt 和 tlsKey 以启用 HTTPS 访问
-# 你的 HTTPS crt内容(base64 encoded)
-tlsCrt: ""
-# 你的 HTTPS key内容(base64 encoded)
-tlsKey: ""
 
-notebookAccessPipelineDesc: "Allow access pipeline"
-
+# Set minio.enabled = true to use embeded single node MinIO test deployment.
 minio:
   enabled: true
   kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
-# NOTE: minioAK and minioSK 是从子 chart 中继承来的。如果不使用子chart中的 minio
-# 需要手动配置下面的 AK/SK 值，确保 Kubeflow 可以访问 Minio。
+# If you are not using the embeded deployment, setup minioAK and minioSK below.
 # minioAK: 
 # minioSK: 
 
-# 如果使用 dex 子 chart，则会继承 clientID, clientSecret，defaultUserEmail, 否则需要手动配置。
+# Set dex.enabled = true to use embeded Dex deployment.
+# If you are using your own Dex server, 
+# you need to setup below clientID, clientSecret, defaultUserEmail
 dex:
   enabled: true
-# 配置 OIDC 的 client_id/client_secret （base64编码）
-# clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
-# clientSecret: WlhoaGJYQnNaUzFoY0hBdGMyVmpjbVYw
-# defaultUserEmail: user@example.com
+  oidcRedirectURL: /login/oidc
+  defaultUserEmail: user@example.com      
+  # clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
+  # clientSecret: WlhoaGJYQnNaUzFoY0hBdGMyVmpjbVYw
 
-# 配置默认账户 defaultUserEmail 关联的 namespace:
+# The default namespace bind to the default user:
 defaultUserProfile: kubeflow-user-example-com
+notebookAccessPipelineDesc: "Allow access pipeline"
 
 # ----------------------------------------------------
-# 以下为镜像配置
-# 每个镜像包含两行，第一行注释掉的是当前版本官方原始镜像
-# 第二行为实际需要使用的镜像
+# Images
 # ----------------------------------------------------
 admissionWebhookImage: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook:v1.4
 jupyterWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app:v1.4
@@ -65,15 +67,12 @@ volumesWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app:v1.4
 notebookImageCodeserverPython: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:v1.4
 notebookImageRstudioTidyverse: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:v1.4
 
-# ----------------------------------------------------
-# Kubeflow Pipeline
-# ----------------------------------------------------
-# kfpVersion 指定 kubeflow pipeline 镜像版本
+# kfpVersion is the version of Kubeflow Pipeline images
 kfpVersion: "1.7.0"
 
 kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:1.7.0
 
-# 以下 kubeflow pipeline 组件的镜像需要和 kfpVersion 一起使用作为tag
+# below images uses kfpVersion as version tag:
 kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
 kfpFrontendImage: gcr.io/ml-pipeline/frontend
 kfpViewerCrdControllerImage: gcr.io/ml-pipeline/viewer-crd-controller
@@ -84,8 +83,7 @@ kfpMetadataEnvoyImage: gcr.io/ml-pipeline/metadata-envoy
 kfpCacheServerImage: gcr.io/ml-pipeline/cache-server
 kfpCacheDeployerImage: gcr.io/ml-pipeline/cache-deployer
 
-
-# 以下 kubeflow pipeline 组件拥有独立的 tag
+# pipeline images using unique tags:
 kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.0.0
 kfpCacheImage: gcr.io/google-containers/busybox
 kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.1.6-patch-license-compliance
@@ -94,10 +92,7 @@ kfpMetaControllerImage: metacontroller/metacontroller:v0.3.0
 kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7
 kfpPythonImage: python:3.7
 
-
-# ----------------------------------------------------
 # KFServing
-# ----------------------------------------------------
 kfsVersion: "v0.6.1"
 kfsAgentImage: kfserving/agent
 kfsAlibiExplainerImage: kfserving/alibi-explainer
@@ -146,10 +141,7 @@ kfsModelsWebAppImage: kfserving/models-web-app
 kfsControllerImage: kfserving/kfserving-controller
 kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.4.0
 
-
-# ----------------------------------------------------
 # knative
-# ----------------------------------------------------
 knativeVersion: "v0.22.1"
 
 # NOTE: kubeflow's knative installation uses digest to pull these images.
@@ -170,22 +162,18 @@ knativeServingWebhookImage: gcr.io/knative-releases/knative.dev/serving/cmd/webh
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
 knativeProxyvImage: docker.io/istio/proxyv2:1.9.6
-# Istio 使用的主要的 configmap，为创建 kfserving cluster-local-gateway 使用。
-# 可以使用命令 kubectl -n istio-system get configmap 确认。
+# Configmap used by istio, for creating kfserving "cluster-local-gateway".
+# You may use `kubectl -n istio-system get configmap` to confirm.
 knativeIstioConfigmap: istio
-# kfserving cluster-local-gateway 使用的 istio 配置项 ISTIO_META_CLUSTER_ID。
-# 默认为: Kubernetes
+# istio configuration "ISTIO_META_CLUSTER_ID" used by kfserving cluster-local-gateway.
+# Default: Kubernetes
 istioMetaClusterID: Kubernetes
 
-# ----------------------------------------------------
 # training operators
-# ----------------------------------------------------
 trainingOperatorImage: public.ecr.aws/j1r0q0g6/training/training-operator:760ac1171dd30039a7363ffa03c77454bd714da5
 mpiOperatorImage: mpioperator/mpi-operator:0.3.0
 mpiOperatorKubectlDeliveryImage: mpioperator/kubectl-delivery:latest
 
-# ----------------------------------------------------
 # Tensorboard
-# ----------------------------------------------------
 tensorboardControllerImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller:v1.4
 tensorboardWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app:v1.4

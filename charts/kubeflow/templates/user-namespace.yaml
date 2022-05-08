@@ -2,7 +2,7 @@
 apiVersion: v1
 data:
   profile-name: {{ .Values.defaultUserProfile }}
-  user: {{ .Values.defaultUserEmail }}
+  user: {{ .Values.dex.defaultUserEmail }}
 kind: ConfigMap
 metadata:
   name: default-install-config-5cbhhbttg4
@@ -14,4 +14,4 @@ metadata:
 spec:
   owner:
     kind: User
-    name: {{ .Values.defaultUserEmail }}
+    name: {{ .Values.dex.defaultUserEmail }}

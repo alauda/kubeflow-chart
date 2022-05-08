@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
-    owner: {{ .Values.defaultUserEmail }}
+    owner: {{ .Values.dex.defaultUserEmail }}
   labels:
     app.kubernetes.io/part-of: kubeflow-profile
     istio-injection: enabled

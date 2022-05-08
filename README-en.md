@@ -62,7 +62,8 @@ Kubeflow uses [Istio](https://istio.io/) as the service mesh control, you should
   - HTTPS: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`, then browse `https://ip/`
 - The default username and password is: `user@example.com`, `12341234`
 - Through [NodePort](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport): first checkout if your `ingressgateway` service is running with NodePort: `kubectl -n istio-system get svc istio-ingressgateway`. Then access the NodePort to open Kubeflow web UI.
-- Through ingress/LoadBalancer: configure your ingress/LoadBalancer to service `istio-system/istio-ingressgateway`.
+- Through Ingress: If Ingress is available in your cluster, then set `enableIngress: true` and
+  `kubeflowHost` to your domain name in `values.yaml`, e.g. `kubeflowHost: "kubeflow.test.info"`.
 
 ### Setup Dex Authentication (Optional)
 
@@ -88,3 +89,4 @@ clientSecret: <your-dex-client-secret>
 
 - Let `cert-manager`, `istio`, `dex`, `minio` to be the sub-chart of Kubeflow
 - Unify Docker image/tag settings in `values.yaml`
+- Supports subpath of Kubeflow URL access, like: `https://domain.name/kubeflow/`

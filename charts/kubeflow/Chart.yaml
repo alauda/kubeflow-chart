@@ -40,9 +40,6 @@ dependencies:
     version: 1.0
     reponsitory: https://alauda.github.io/kubeflow-chart
     condition: dex.enabled
-    import-values:
-      - secrets
-      - confs
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com

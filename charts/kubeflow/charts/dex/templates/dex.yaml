@@ -57,14 +57,14 @@ data:
       skipApprovalScreen: true
     enablePasswordDB: true
     staticPasswords:
-    - email: {{ .Values.exports.confs.defaultUserEmail }}
-      hash: {{ .Values.exports.confs.defaultUserPass }}
-      username: {{ .Values.exports.confs.defaultUserName }}
+    - email: {{ .Values.defaultUserEmail }}
+      hash: {{ .Values.defaultUserPass }}
+      username: {{ .Values.defaultUserName }}
       userID: "15841185641784"
     staticClients:
     # https://github.com/dexidp/dex/pull/1664
     - idEnv: OIDC_CLIENT_ID
-      redirectURIs: ["{{ .Values.exports.confs.oidcRedirectURL }}"]
+      redirectURIs: ["{{ .Values.oidcRedirectURL }}"]
       name: 'Dex Login Application'
       secretEnv: OIDC_CLIENT_SECRET
 kind: ConfigMap
@@ -74,8 +74,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  OIDC_CLIENT_ID: {{ .Values.exports.secrets.clientID }}
-  OIDC_CLIENT_SECRET: {{ .Values.exports.secrets.clientSecret }}
+  OIDC_CLIENT_ID: {{ .Values.clientID }}
+  OIDC_CLIENT_SECRET: {{ .Values.clientSecret }}
 kind: Secret
 metadata:
   name: dex-oidc-client

@@ -38,7 +38,7 @@ helm install cert-manager alauda/certmanager -f values-certm-cn.yaml
 kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 8080:80
 ```
 
-然后通过浏览器访问：`http://localhost:8080/`
+然后通过浏览器访问：`http://localhost:8080/`, 使用默认账号密码：`user@example.com`, `12341234` 即可登录。
 
 ## 卸载 Kubeflow
 
@@ -59,7 +59,8 @@ Kubeflow 强依赖 HTTPS，只有使用 `localhost` 访问可以不使用 HTTPS�
   - 开启 HTTPS: `kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 443:443`， 然后访问执行该命令的服务器地址：`https://ip/`。
 - 使用默认账号密码：`user@example.com`, `12341234` 即可登录。
 - 通过 node port 方式：查看 istio ingressgateway 服务是否开启了 nodeport：`kubectl -n istio-system get svc istio-ingressgateway`，根据[这里](https://kubernetes.io/zh/docs/concepts/services-networking/service/#type-nodeport) 配置 nodeport 之后，即可访问。
-- 使用 Ingress/LoadBalancer：配置 Ingress/LoadBalancer 到 istio-system/istio-ingressgateway 之后访问。
+- 使用 Ingress: 集群中 Ingress 可用时，可以配置 `values.yaml` 中 `enableIngress: true`， 并设置 `kubeflowHost`
+  为需要使用的访问域名，比如 `kubeflowHost: "kubeflow.test.info"`
 
 ### 配置 Dex 登录认证 (可选)
 
@@ -84,3 +85,4 @@ oidcScopes: "profile email groups"
 
 - 适配 `cert-manager`, `istio`, `dex`, `minio` 的官方 Charts
 - 统一 `values.yaml` 中的 镜像/tag 的配置
+- 支持使用 subpath 方式访问 Kubeflow, 比如 `https://domain.name/kubeflow/`

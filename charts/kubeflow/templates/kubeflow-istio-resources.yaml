@@ -78,8 +78,9 @@ spec:
       name: http
       number: 80
       protocol: HTTP
+# Enable HTTPS when ingress is *NOT* enabled and tlsCrt is set
+{{ if not .Values.enableIngress }}
 {{ if .Values.tlsCrt }}
-# Enable HTTPS when tlsCrt is set
     tls:
       httpsRedirect: true
   - hosts:
@@ -91,4 +92,5 @@ spec:
     tls:
       credentialName: cpaas-https-certs
       mode: SIMPLE
+{{ end }}
 {{ end }}

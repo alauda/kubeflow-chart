@@ -5,7 +5,7 @@ data:
   OIDC_PROVIDER: {{ default "/dex" .Values.oidcProvider }}
   OIDC_SCOPES: {{ .Values.oidcScopes }}
   PORT: '"8080"'
-  REDIRECT_URL: {{ default "/login/oidc" .Values.oidcRedirectURL }}
+  REDIRECT_URL: {{ default "/login/oidc" .Values.dex.oidcRedirectURL }}
   SKIP_AUTH_URI: {{ .Values.skipAuthURI }}
   STORE_PATH: /var/lib/authservice/data.db
   USERID_CLAIM: {{ .Values.useridClaim }}
@@ -58,8 +58,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  CLIENT_ID: {{ .Values.clientID }}
-  CLIENT_SECRET: {{ .Values.clientSecret }}
+  CLIENT_ID: {{ .Values.dex.clientID }}
+  CLIENT_SECRET: {{ .Values.dex.clientSecret }}
 kind: Secret
 metadata:
   name: oidc-authservice-client
