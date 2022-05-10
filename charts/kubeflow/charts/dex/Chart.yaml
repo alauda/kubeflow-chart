@@ -7,7 +7,7 @@ type: application
 keywords:
   - "cert manager"
 sources:
-  - https://gitlab-ce.alauda.cn/middleware/kubeflow-manifests/tree/v1.4-branch-acp
+  - https://github.com/alauda/kubeflow-chart
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
