@@ -39,14 +39,14 @@ kfsTensorflowImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/serving
 kfsTorchServeImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/torchserve-kfs
 kfsTritonImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tritonserver
 kfsXgbserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/xgbserver
-knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/controller
-knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/webhook
+knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-controller
+knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-webhook
 knativeProxyvImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/proxyv2:1.9.6
 knativeServingActivatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/activator
 knativeServingAutoscalerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/autoscaler
-knativeServingControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/controller
+knativeServingControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-controller
 knativeServingQueueImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/queue
-knativeServingWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/webhook
+knativeServingWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-webhook
 minio:
   kfpMinioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
 mpiOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/mpi-operator:0.3.0
