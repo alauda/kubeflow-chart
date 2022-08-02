@@ -5,7 +5,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-controller-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -13,7 +13,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-leader-election-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -48,7 +48,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-leader-election-rolebinding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -56,7 +56,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: profiles-controller-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -71,7 +71,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: profiles-controller-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -90,16 +90,16 @@ data:
     # 1. Remove the label by using `key: ''` and deploy.
     # 2. Add the label by using `key: 'value'` and deploy.
     #
-    katib-metricscollector-injection:      'enabled'
-    serving.kubeflow.org/inferenceservice: 'enabled'
-    pipelines.kubeflow.org/enabled:        'true'
-    app.kubernetes.io/part-of:             'kubeflow-profile'
+    katib.kubeflow.org/metrics-collector-injection: "enabled"
+    serving.kubeflow.org/inferenceservice: "enabled"
+    pipelines.kubeflow.org/enabled: "true"
+    app.kubernetes.io/part-of: "kubeflow-profile"
 kind: ConfigMap
 metadata:
   labels:
     kustomize.component: profiles
-  name: namespace-labels-data-m76mmk6ckt
-  namespace: {{ .Values.namespace }}
+  name: namespace-labels-data-54d54k5788
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -112,7 +112,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-config-2g29dd2mbd
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Service
@@ -120,7 +120,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-kfam
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - port: 8081
@@ -133,7 +133,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -142,7 +142,7 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/inject: "false"
+        sidecar.istio.io/inject: "true"
       labels:
         kustomize.component: profiles
     spec:
@@ -202,7 +202,7 @@ spec:
       serviceAccountName: profiles-controller-service-account
       volumes:
       - configMap:
-          name: namespace-labels-data-m76mmk6ckt
+          name: namespace-labels-data-54d54k5788
         name: namespace-labels
 ---
 apiVersion: networking.istio.io/v1alpha3
@@ -211,7 +211,7 @@ metadata:
   labels:
     kustomize.component: profiles
   name: profiles-kfam
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   gateways:
   - kubeflow-gateway
@@ -232,3 +232,21 @@ spec:
         host: profiles-kfam.kubeflow.svc.cluster.local
         port:
           number: 8081
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  labels:
+    kustomize.component: profiles
+  name: profiles-kfam
+  namespace: kubeflow
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/kubeflow/sa/centraldashboard
+  selector:
+    matchLabels:
+      kustomize.component: profiles

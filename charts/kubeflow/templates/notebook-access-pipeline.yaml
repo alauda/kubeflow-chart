@@ -24,12 +24,14 @@ metadata:
   name: minio-s3-secret
   namespace: {{ .Values.defaultUserProfile}}
   annotations:
-     serving.kserve.io/s3-endpoint: minio-service.kubeflow:9000 # replace with your s3 endpoint e.g minio-service.kubeflow:9000
+     serving.kserve.io/s3-endpoint: minio-service.kubeflow:9000
      serving.kubeflow.org/s3-endpoint: minio-service.kubeflow:9000
-     serving.kserve.io/s3-usehttps: "0" # by default 1, if testing with minio you can set to 0
-     serving.kubeflow.org/s3-usehttps: "0" # by default 1, if testing with minio you can set to 0
+     serving.kserve.io/s3-usehttps: "0"
+     serving.kubeflow.org/s3-usehttps: "0"
      serving.kserve.io/s3-region: "us-east-2"
-     serving.kserve.io/s3-useanoncredential: "false" # omitting this is the same as false, if true will ignore provided credential and use anonymous credentials
+     serving.kubeflow.org/s3-region: "us-east-2"
+     serving.kserve.io/s3-useanoncredential: "false"
+     serving.kubeflow.org/s3-useanoncredential: "false"
 type: Opaque
 # use `stringData` for raw credential string or `data` for base64 encoded string
 stringData:

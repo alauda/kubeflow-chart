@@ -1,0 +1,9 @@
+knativeVersion: "v0.22.1"
+
+knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-controller
+knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-webhook
+knativeServingActivatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-activator
+knativeServingAutoscalerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-autoscaler
+knativeServingControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-controller
+knativeServingQueueImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-queue
+knativeServingWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-webhook

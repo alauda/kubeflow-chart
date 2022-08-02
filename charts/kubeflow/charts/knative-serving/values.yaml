@@ -1,0 +1,15 @@
+# NOTE: kubeflow's knative installation uses digest to pull these images.
+# @sha256:0b8e031170354950f3395876961452af1c62f7ab5161c9e71867392c11881962
+knativeServingQueueImage: gcr.io/knative-releases/knative.dev/serving/cmd/queue
+# @sha256:fed92af8b9779c97482906db8857f27b5d4826708b75d0298aa30fad8900671f
+knativeServingActivatorImage: gcr.io/knative-releases/knative.dev/serving/cmd/activator
+# @sha256:bc5ae3090ab0322ed0e4f9efddb60fa85f6ff3a29156411d24d0e4764b18eba7
+knativeServingAutoscalerImage: gcr.io/knative-releases/knative.dev/serving/cmd/autoscaler
+# @sha256:bd7c6350e5d5c4edaa197a86fb96cff78bdd3e61f33fcb77aa60930de0ec0827
+knativeServingControllerImage: gcr.io/knative-releases/knative.dev/serving/cmd/controller
+# @sha256:1e371db6b1a9f9265fc7a55d15d98c935c0c28925ffde351fb3b93f331c5a08e
+knativeNetWebhookImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/webhook
+# @sha256:ff8680da52ef47b8573ebc3393cbfa2f0f14b05c1e02232807f22699adbef57a
+knativeNetControllerImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/controller
+# @sha256:6f41d379f1aacdfbb8f6d4f539e1769040e4f01bff3ad9c249b427e54dc56ea8
+knativeServingWebhookImage: gcr.io/knative-releases/knative.dev/serving/cmd/webhook

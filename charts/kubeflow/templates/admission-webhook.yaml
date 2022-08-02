@@ -15,7 +15,7 @@ webhooks:
     caBundle: ""
     service:
       name: admission-webhook-service
-      namespace: {{ .Values.namespace }}
+      namespace: kubeflow
       path: /apply-poddefault
   name: admission-webhook-deployment.kubeflow.org
   namespaceSelector:
@@ -40,7 +40,7 @@ metadata:
     app.kubernetes.io/name: poddefaults
     kustomize.component: poddefaults
   name: admission-webhook-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -135,7 +135,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: admission-webhook-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Service
@@ -146,7 +146,7 @@ metadata:
     app.kubernetes.io/name: poddefaults
     kustomize.component: poddefaults
   name: admission-webhook-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: https-webhook
@@ -167,7 +167,7 @@ metadata:
     app.kubernetes.io/name: poddefaults
     kustomize.component: poddefaults
   name: admission-webhook-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -204,7 +204,7 @@ spec:
         secret:
           secretName: webhook-certs
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
@@ -213,7 +213,7 @@ metadata:
     app.kubernetes.io/name: poddefaults
     kustomize.component: poddefaults
   name: admission-webhook-cert
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   commonName: admission-webhook-service.kubeflow.svc
   dnsNames:
@@ -225,7 +225,7 @@ spec:
     name: admission-webhook-selfsigned-issuer
   secretName: webhook-certs
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   labels:
@@ -234,6 +234,6 @@ metadata:
     app.kubernetes.io/name: poddefaults
     kustomize.component: poddefaults
   name: admission-webhook-selfsigned-issuer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selfSigned: {}

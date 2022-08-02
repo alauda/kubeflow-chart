@@ -6,7 +6,7 @@ metadata:
     app: tensorboards-web-app
     kustomize.component: tensorboards-web-app
   name: tensorboards-web-app-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -127,7 +127,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: tensorboards-web-app-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -141,7 +141,7 @@ metadata:
     app: tensorboards-web-app
     kustomize.component: tensorboards-web-app
   name: tensorboards-web-app-parameters-bdb48k45kd
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Service
@@ -151,7 +151,7 @@ metadata:
     kustomize.component: tensorboards-web-app
     run: tensorboards-web-app
   name: tensorboards-web-app-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -170,7 +170,7 @@ metadata:
     app: tensorboards-web-app
     kustomize.component: tensorboards-web-app
   name: tensorboards-web-app-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -206,7 +206,7 @@ metadata:
     app: tensorboards-web-app
     kustomize.component: tensorboards-web-app
   name: tensorboards-web-app-tensorboards-web-app
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   gateways:
   - kubeflow-gateway

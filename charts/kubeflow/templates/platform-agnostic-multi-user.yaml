@@ -1,11 +1,44 @@
 {{- include "prechecks" . -}}
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: kubeflow/kfp-cache-cert
+  labels:
+    app: cache-server-cert-manager
+  name: cache-webhook-kubeflow
+webhooks:
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: cache-server
+      namespace: kubeflow
+      path: /mutate
+  failurePolicy: Ignore
+  name: cache-server.kubeflow.svc
+  objectSelector:
+    matchLabels:
+      pipelines.kubeflow.org/cache_enabled: "true"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    resources:
+    - pods
+  sideEffects: None
+  timeoutSeconds: 5
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: argo
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -16,17 +49,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-cache
-  namespace: {{ .Values.namespace }}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-cache-deployer-sa
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -36,7 +59,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-container-builder
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -46,7 +69,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-metadata-writer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -56,7 +79,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-viewer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -65,7 +88,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
     kustomize.component: metacontroller
   name: meta-controller-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -73,7 +96,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-server
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -83,7 +106,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -93,7 +116,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -103,7 +126,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -113,7 +136,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -123,7 +146,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-crd-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -133,7 +156,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -141,7 +164,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: mysql
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -151,7 +174,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: pipeline-runner
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -159,7 +182,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: argo-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - coordination.k8s.io
@@ -180,34 +203,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    app: cache-deployer
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-cache-deployer-role
-  namespace: {{ .Values.namespace }}
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - patch
-  - list
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
     app: cache-server
     app.kubernetes.io/component: ml-pipeline
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-cache-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -245,7 +246,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-metadata-writer-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -283,7 +284,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -338,7 +339,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - argoproj.io
@@ -366,7 +367,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - argoproj.io
@@ -384,6 +385,7 @@ rules:
   - kubeflow.org
   resources:
   - scheduledworkflows
+  - scheduledworkflows/finalizers
   verbs:
   - create
   - get
@@ -409,7 +411,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -457,7 +459,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-controller-role
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - '*'
@@ -476,6 +478,7 @@ rules:
   - kubeflow.org
   resources:
   - viewers
+  - viewers/finalizers
   verbs:
   - create
   - get
@@ -493,7 +496,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: pipeline-runner
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -619,6 +622,23 @@ rules:
   - delete
   - disable
   - enable
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - scheduledworkflows
+  verbs:
+  - '*'
+- apiGroups:
+  - argoproj.io
+  resources:
+  - cronworkflows
+  - cronworkflows/finalizers
+  - workflows
+  - workflows/finalizers
+  - workfloweventbindings
+  - workflowtemplates
+  verbs:
+  - '*'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -677,6 +697,8 @@ rules:
   - cronworkflows/finalizers
   - clusterworkflowtemplates
   - clusterworkflowtemplates/finalizers
+  - workflowtasksets
+  - workflowtasksets/finalizers
   verbs:
   - create
   - delete
@@ -785,6 +807,8 @@ rules:
   resources:
   - workflows
   - workflows/finalizers
+  - workflowtasksets
+  - workflowtasksets/finalizers
   verbs:
   - get
   - list
@@ -838,45 +862,6 @@ rules:
   - create
   - get
   - delete
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app: kubeflow-pipelines-cache-deployer-clusterrole
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-cache-deployer-clusterrole
-rules:
-- apiGroups:
-  - certificates.k8s.io
-  resources:
-  - certificatesigningrequests
-  - certificatesigningrequests/approval
-  verbs:
-  - create
-  - delete
-  - get
-  - update
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-- apiGroups:
-  - certificates.k8s.io
-  resourceNames:
-  - kubernetes.io/*
-  resources:
-  - signers
-  verbs:
-  - approve
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -989,6 +974,60 @@ metadata:
     app.kubernetes.io/component: ml-pipeline
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
+  name: ml-pipeline
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+  - list
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - kubeflow.org
+  resources:
+  - scheduledworkflows
+  verbs:
+  - create
+  - get
+  - list
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent-role
 rules:
 - apiGroups:
@@ -1033,6 +1072,7 @@ rules:
   - kubeflow.org
   resources:
   - scheduledworkflows
+  - scheduledworkflows/finalizers
   verbs:
   - create
   - get
@@ -1123,6 +1163,7 @@ rules:
   - kubeflow.org
   resources:
   - viewers
+  - viewers/finalizers
   verbs:
   - create
   - get
@@ -1131,60 +1172,6 @@ rules:
   - update
   - patch
   - delete
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: ml-pipeline
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - pods/log
-  verbs:
-  - get
-  - list
-  - delete
-- apiGroups:
-  - argoproj.io
-  resources:
-  - workflows
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - kubeflow.org
-  resources:
-  - scheduledworkflows
-  verbs:
-  - create
-  - get
-  - list
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1192,7 +1179,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: argo-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1200,7 +1187,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argo
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1211,7 +1198,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-cache-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1219,26 +1206,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubeflow-pipelines-cache
-  namespace: {{ .Values.namespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app: cache-deployer
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-cache-deployer-rolebinding
-  namespace: {{ .Values.namespace }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: kubeflow-pipelines-cache-deployer-role
-subjects:
-- kind: ServiceAccount
-  name: kubeflow-pipelines-cache-deployer-sa
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1248,7 +1216,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-metadata-writer-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1256,7 +1224,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubeflow-pipelines-metadata-writer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1267,7 +1235,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1275,7 +1243,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1285,7 +1253,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1293,7 +1261,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-persistenceagent
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1303,7 +1271,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1311,7 +1279,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-scheduledworkflow
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1322,7 +1290,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1330,7 +1298,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1340,7 +1308,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-crd-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1348,7 +1316,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-viewer-crd-service-account
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1358,7 +1326,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: pipeline-runner-binding
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -1366,7 +1334,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: pipeline-runner
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1381,7 +1349,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argo
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1399,24 +1367,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubeflow-pipelines-cache
-  namespace: {{ .Values.namespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-cache-deployer-clusterrolebinding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: kubeflow-pipelines-cache-deployer-clusterrole
-subjects:
-- kind: ServiceAccount
-  name: kubeflow-pipelines-cache-deployer-sa
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1433,7 +1384,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubeflow-pipelines-metadata-writer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1449,7 +1400,24 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: meta-controller-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: ml-pipeline
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ml-pipeline
+subjects:
+- kind: ServiceAccount
+  name: ml-pipeline
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1466,7 +1434,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-persistenceagent
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1483,7 +1451,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-scheduledworkflow
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1501,7 +1469,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1518,24 +1486,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: ml-pipeline-viewer-crd-service-account
-  namespace: {{ .Values.namespace }}
----
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: ml-pipeline
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ml-pipeline
-subjects:
-- kind: ServiceAccount
-  name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1547,7 +1498,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kfp-launcher
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1736,8 +1687,8 @@ metadata:
     app.kubernetes.io/component: ml-pipeline
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
-  name: kubeflow-pipelines-profile-controller-code-dhhfgkff5f
-  namespace: {{ .Values.namespace }}
+  name: kubeflow-pipelines-profile-controller-code-4g2hc9g6bb
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1750,7 +1701,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-profile-controller-env-mgh6th2gff
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1762,7 +1713,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
     component: metadata-grpc-server
   name: metadata-grpc-configmap
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1779,7 +1730,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui-configmap
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -1794,11 +1745,11 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: pipeline-api-server-config-f4t72426kt
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
-  ConMaxLifeTimeSec: "120"
+  ConMaxLifeTime: 120s
   appName: pipeline
   appVersion: {{ .Values.kfpVersion }}
   autoUpdatePipelineDefaultVersion: "true"
@@ -1826,36 +1777,13 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: pipeline-install-config
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
-  artifactRepository: |
-    archiveLogs: true
-    s3:
-      endpoint: "minio-service.kubeflow:9000"
-      bucket: "mlpipeline"
-      # keyFormat is a format pattern to define how artifacts will be organized in a bucket.
-      # It can reference workflow metadata variables such as workflow.namespace, workflow.name,
-      # pod.name. Can also use strftime formating of workflow.creationTimestamp so that workflow
-      # artifacts can be organized by date. If omitted, will use {{ `{{workflow.name}}/{{pod.name}}` }},
-      # which has potential for have collisions, because names do not guarantee they are unique
-      # over the lifetime of the cluster.
-      # Refer to https://kubernetes.io/docs/concepts/overview/working-with-objects/names/.
-      #
-      # The following format looks like:
-      # artifacts/my-workflow-abc123/2018/08/23/my-workflow-abc123-1234567890
-      # Adding date into the path greatly reduces the chance of {{ `{{pod.name}}` }} collision.
-      keyFormat: "{{ `artifacts/{{workflow.name}}/{{workflow.creationTimestamp.Y}}/{{workflow.creationTimestamp.m}}/{{workflow.creationTimestamp.d}}/{{pod.name}}` }}"
-      # insecure will disable TLS. Primarily used for minio installs not configured with TLS
-      insecure: true
-      accessKeySecret:
-        name: mlpipeline-minio-artifact
-        key: accesskey
-      secretKeySecret:
-        name: mlpipeline-minio-artifact
-        key: secretkey
-  containerRuntimeExecutor: docker
+  artifactRepository: |-
+{{ .Files.Get "config-files/kfp-artifact-repo.txt" | indent 4 }}
+  containerRuntimeExecutor: emissary
   executor: |
     imagePullPolicy: IfNotPresent
     resources:
@@ -1870,7 +1798,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: workflow-controller-configmap
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Secret
@@ -1878,7 +1806,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: mlpipeline-minio-artifact
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 stringData:
   accesskey: {{ .Values.minioAK }}
   secretkey: {{ .Values.minioSK }}
@@ -1891,7 +1819,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: mysql-secret
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 stringData:
   password: ""
   username: root
@@ -1905,7 +1833,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: cache-server
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - port: 443
@@ -1925,7 +1853,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-profile-controller
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -1945,7 +1873,7 @@ metadata:
     app: metadata-envoy
     application-crd-id: kubeflow-pipelines
   name: metadata-envoy-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: md-envoy
@@ -1963,7 +1891,7 @@ metadata:
     app: metadata
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: grpc-api
@@ -1977,12 +1905,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    prometheus.io/port: "8888"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
   labels:
     app.kubernetes.io/component: ml-pipeline
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -2008,7 +1940,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -2029,7 +1961,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -2048,7 +1980,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: mysql
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - port: 3306
@@ -2065,7 +1997,7 @@ metadata:
     app: workflow-controller
     application-crd-id: kubeflow-pipelines
   name: workflow-controller-metrics
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: metrics
@@ -2080,52 +2012,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: cache-deployer
-    app.kubernetes.io/component: ml-pipeline
-    app.kubernetes.io/name: kubeflow-pipelines
-    application-crd-id: kubeflow-pipelines
-  name: cache-deployer-deployment
-  namespace: {{ .Values.namespace }}
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: cache-deployer
-      app.kubernetes.io/component: ml-pipeline
-      app.kubernetes.io/name: kubeflow-pipelines
-      application-crd-id: kubeflow-pipelines
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: cache-deployer
-        app.kubernetes.io/component: ml-pipeline
-        app.kubernetes.io/name: kubeflow-pipelines
-        application-crd-id: kubeflow-pipelines
-    spec:
-      containers:
-      - env:
-        - name: NAMESPACE_TO_WATCH
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        image: {{ .Values.kfpCacheDeployerImage }}:{{ .Values.kfpVersion }}
-        imagePullPolicy: Always
-        name: main
-      restartPolicy: Always
-      serviceAccountName: kubeflow-pipelines-cache-deployer-sa
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
     app: cache-server
     app.kubernetes.io/component: ml-pipeline
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: cache-server
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -2151,6 +2043,8 @@ spec:
         - --db_user=$(DBCONFIG_USER)
         - --db_password=$(DBCONFIG_PASSWORD)
         - --namespace_to_watch=$(NAMESPACE_TO_WATCH)
+        - --tls_cert_filename=tls.crt
+        - --tls_key_filename=tls.key
         env:
         - name: CACHE_IMAGE
           valueFrom:
@@ -2216,7 +2110,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-profile-controller
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -2273,7 +2167,7 @@ spec:
           name: hooks
       volumes:
       - configMap:
-          name: kubeflow-pipelines-profile-controller-code-dhhfgkff5f
+          name: kubeflow-pipelines-profile-controller-code-4g2hc9g6bb
         name: hooks
 ---
 apiVersion: apps/v1
@@ -2283,7 +2177,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
     component: metadata-envoy
   name: metadata-envoy-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -2314,7 +2208,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
     component: metadata-grpc-server
   name: metadata-grpc-deployment
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -2392,7 +2286,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: metadata-writer
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -2426,7 +2320,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2491,10 +2385,10 @@ spec:
             configMapKeyRef:
               key: dbPort
               name: pipeline-install-config
-        - name: DBCONFIG_CONMAXLIFETIMESEC
+        - name: DBCONFIG_CONMAXLIFETIME
           valueFrom:
             configMapKeyRef:
-              key: ConMaxLifeTimeSec
+              key: ConMaxLifeTime
               name: pipeline-install-config
         - name: DBCONFIG_EXTRAPARAMS
           value: "{\"charset\": \"utf8\", \"collation\": \"utf8_general_ci\"}"
@@ -2512,7 +2406,7 @@ spec:
         - configMapRef:
             name: pipeline-api-server-config-f4t72426kt
         image: {{ .Values.kfpApiServerImageAndTag }}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
             command:
@@ -2558,7 +2452,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2602,7 +2496,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2643,7 +2537,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2747,7 +2641,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-crd
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2790,7 +2684,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2849,7 +2743,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysqld-cnf-charset
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 data:
   mysqld.cnf: |
     [mysqld]
@@ -2873,7 +2767,7 @@ metadata:
     app: mysql
     application-crd-id: kubeflow-pipelines
   name: mysql
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2924,7 +2818,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: workflow-controller
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -2989,7 +2883,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
     kustomize.component: metacontroller
   name: metacontroller
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -3010,26 +2904,58 @@ spec:
       containers:
       - command:
         - /usr/bin/metacontroller
-        - --logtostderr
-        - -v=4
-        - --discovery-interval=20s
-        image: {{ .Values.kfpMetaControllerImage }}
-        imagePullPolicy: Always
+        - --zap-log-level=4
+        - --discovery-interval=3600s
+        # {{ .Values.kfpMetaControllerImage }}
+        image: docker.io/metacontrollerio/metacontroller:v2.0.4
         name: metacontroller
-        ports:
-        - containerPort: 2345
         resources:
           limits:
-            cpu: "4"
-            memory: 4Gi
-          requests:
-            cpu: 500m
+            cpu: "1"
             memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
         securityContext:
-          allowPrivilegeEscalation: true
-          privileged: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
       serviceAccountName: meta-controller-service
   volumeClaimTemplates: []
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    app: cache-server-cert-manager
+  name: kfp-cache-cert
+  namespace: kubeflow
+spec:
+  commonName: kfp-cache-cert
+  dnsNames:
+  - cache-server
+  - cache-server.kubeflow
+  - cache-server.kubeflow.svc
+  isCA: true
+  issuerRef:
+    kind: Issuer
+    name: kfp-cache-selfsigned-issuer
+  secretName: webhook-server-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  labels:
+    app: cache-server-cert-manager
+  name: kfp-cache-selfsigned-issuer
+  namespace: kubeflow
+spec:
+  selfSigned: {}
 ---
 apiVersion: metacontroller.k8s.io/v1alpha1
 kind: CompositeController
@@ -3040,7 +2966,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-profile-controller
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   childResources:
   - apiVersion: v1
@@ -3075,7 +3001,7 @@ spec:
   parentResource:
     apiVersion: v1
     resource: namespaces
-  resyncPeriodSeconds: 10
+  resyncPeriodSeconds: 3600
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -3083,7 +3009,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: metadata-grpc-service.kubeflow.svc.cluster.local
   trafficPolicy:
@@ -3098,7 +3024,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: ml-pipeline.kubeflow.svc.cluster.local
   trafficPolicy:
@@ -3111,7 +3037,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-minio
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: minio-service.kubeflow.svc.cluster.local
   trafficPolicy:
@@ -3124,7 +3050,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-mysql
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: mysql.kubeflow.svc.cluster.local
   trafficPolicy:
@@ -3139,14 +3065,12 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: ml-pipeline-ui.kubeflow.svc.cluster.local
   trafficPolicy:
     tls:
-      # TODO(WuYi): re-enable this later
       mode: ISTIO_MUTUAL
-      # mode: DISABLE
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -3156,7 +3080,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   host: ml-pipeline-visualizationserver.kubeflow.svc.cluster.local
   trafficPolicy:
@@ -3169,7 +3093,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   gateways:
   - kubeflow-gateway
@@ -3195,7 +3119,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   gateways:
   - kubeflow-gateway
@@ -3220,7 +3144,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   action: ALLOW
   rules:
@@ -3235,7 +3159,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: minio-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   action: ALLOW
   rules:
@@ -3260,7 +3184,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   rules:
   - from:
@@ -3288,7 +3212,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   rules:
   - from:
@@ -3307,7 +3231,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   rules:
   - from:
@@ -3329,7 +3253,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: mysql
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   rules:
   - from:
@@ -3354,7 +3278,7 @@ metadata:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
   name: service-cache-server
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   rules:
   - {}
@@ -3368,7 +3292,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: mysql-pv-claim
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   accessModes:
   - ReadWriteOnce

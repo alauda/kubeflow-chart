@@ -1,4 +1,3 @@
-{{- include "prechecks" . -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -162,8 +161,6 @@ spec:
         - --proxyLogLevel=warning
         - --proxyComponentLogLevel=misc:error
         - --log_output_level=default:info
-        - --serviceCluster
-        - cluster-local-gateway
         env:
         - name: JWT_POLICY
           value: third-party-jwt
@@ -200,18 +197,14 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        - name: CANONICAL_SERVICE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.labels['service.istio.io/canonical-name']
-        - name: CANONICAL_REVISION
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.labels['service.istio.io/canonical-revision']
         - name: ISTIO_META_WORKLOAD_NAME
           value: cluster-local-gateway
         - name: ISTIO_META_OWNER
           value: kubernetes://apis/apps/v1/namespaces/istio-system/deployments/cluster-local-gateway
+        - name: ISTIO_META_MESH_ID
+          value: cluster.local
+        - name: TRUST_DOMAIN
+          value: cluster.local
         - name: ISTIO_META_UNPRIVILEGED_POD
           value: "true"
         - name: ISTIO_META_ROUTER_MODE
@@ -290,16 +283,6 @@ spec:
           - fieldRef:
               fieldPath: metadata.annotations
             path: annotations
-          - path: cpu-limit
-            resourceFieldRef:
-              containerName: istio-proxy
-              divisor: 1m
-              resource: limits.cpu
-          - path: cpu-request
-            resourceFieldRef:
-              containerName: istio-proxy
-              divisor: 1m
-              resource: requests.cpu
         name: podinfo
       - emptyDir: {}
         name: istio-envoy

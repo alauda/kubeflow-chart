@@ -4,7 +4,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: minio-service
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - name: http
@@ -21,7 +21,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: minio-secret
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 stringData:
   accesskey: {{ .Values.exports.secrets.minioAK }}
   secretkey: {{ .Values.exports.secrets.minioSK }}
@@ -33,7 +33,7 @@ metadata:
     app: minio
     application-crd-id: kubeflow-pipelines
   name: minio
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   selector:
     matchLabels:
@@ -85,7 +85,7 @@ metadata:
   labels:
     application-crd-id: kubeflow-pipelines
   name: minio-pvc
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   accessModes:
   - ReadWriteOnce

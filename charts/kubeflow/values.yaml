@@ -50,28 +50,27 @@ notebookAccessPipelineDesc: "Allow access pipeline"
 # ----------------------------------------------------
 # Images
 # ----------------------------------------------------
-admissionWebhookImage: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook:v1.4
-jupyterWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app:v1.4
-notebookControllerImage: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller:v1.4
-notebookImageScipy: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:v1.4
-notebookImagePytorch: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:v1.4
-notebookImagePytorchCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:v1.4
-notebookImageTensorflow: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:v1.4
-notebookImageTensorflowCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:v1.4
+admissionWebhookImage: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook:v1.5.0
+jupyterWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app:v1.5.0
+notebookControllerImage: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller:v1.5.0
+notebookImageScipy: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:v1.5.0
+notebookImagePytorch: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:v1.5.0
+notebookImagePytorchCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:v1.5.0
+notebookImageTensorflow: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:v1.5.0
+notebookImageTensorflowCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:v1.5.0
+notebookImageCodeserverPython: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:v1.5.0
+notebookImageRstudioTidyverse: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:v1.5.0
 
 oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
-centralDashboardImage: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard:v1.4
-kfamAccessManagementImage: public.ecr.aws/j1r0q0g6/notebooks/access-management:v1.4
-kfamProfileControllerImage: public.ecr.aws/j1r0q0g6/notebooks/profile-controller:v1.4
-volumesWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app:v1.4
-notebookImageCodeserverPython: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:v1.4
-notebookImageRstudioTidyverse: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:v1.4
+centralDashboardImage: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard:v1.5.0
+kfamAccessManagementImage: public.ecr.aws/j1r0q0g6/notebooks/access-management:v1.5.0
+kfamProfileControllerImage: public.ecr.aws/j1r0q0g6/notebooks/profile-controller:v1.5.0
+volumesWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app:v1.5.0
 
 # kfpVersion is the version of Kubeflow Pipeline images
-kfpVersion: "1.7.0"
+kfpVersion: "1.8.2"
 
-kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:1.7.0
-
+kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:1.8.2
 # below images uses kfpVersion as version tag:
 kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
 kfpFrontendImage: gcr.io/ml-pipeline/frontend
@@ -81,23 +80,22 @@ kfpPersistenceAgentImage: gcr.io/ml-pipeline/persistenceagent
 kfpMetadataWriterImage: gcr.io/ml-pipeline/metadata-writer
 kfpMetadataEnvoyImage: gcr.io/ml-pipeline/metadata-envoy
 kfpCacheServerImage: gcr.io/ml-pipeline/cache-server
-kfpCacheDeployerImage: gcr.io/ml-pipeline/cache-deployer
 
 # pipeline images using unique tags:
-kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.0.0
-kfpCacheImage: gcr.io/google-containers/busybox
-kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.1.6-patch-license-compliance
-kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.1.6-patch-license-compliance
-kfpMetaControllerImage: metacontroller/metacontroller:v0.3.0
+kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.5.0
+kfpCacheImage: gcr.io/google-containers/busybox:latest
+kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.2.3-license-compliance
+kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.2.3-license-compliance
+kfpMetaControllerImage: docker.io/metacontrollerio/metacontroller:v2.0.4
 kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7
 kfpPythonImage: python:3.7
 
-# KFServing
-kfsVersion: "v0.6.1"
-kfsAgentImage: kfserving/agent
-kfsAlibiExplainerImage: kfserving/alibi-explainer
-kfsAixExplainer: kfserving/aix-explainer
-kfsArtExplainer: kfserving/art-explainer
+# KServe
+kfsVersion: "v0.7.0"
+kfsAgentImage: kserve/agent
+kfsAlibiExplainerImage: kserve/alibi-explainer
+kfsAixExplainer: kserve/aix-explainer
+kfsArtExplainer: kserve/art-explainer
 
 kfsTensorflowImage: tensorflow/serving
 kfsTensorflowImageVersion: "1.14.0"
@@ -106,59 +104,39 @@ kfsTensorflowImageGpuVersion: "1.14.0-gpu"
 kfsOnnxImage: mcr.microsoft.com/onnxruntime/server
 kfsOnnxImageVersion: "v1.0.0"
 
-kfsSkLearnImage: kfserving/sklearnserver
-kfsSkLearnImageVersion: "v0.6.1"
+kfsSkLearnImage: kserve/sklearnserver
+kfsSkLearnImageVersion: "v0.7.0"
 
 kfsSeldonioImage: docker.io/seldonio/mlserver
 kfsSeldonioImageVersion: "0.2.1"
 
-kfsXgbserverImage: kfserving/xgbserver
-kfsXgbserverImageVersion: "v0.6.1"
+kfsXgbserverImage: kserve/xgbserver
+kfsXgbserverImageVersion: "v0.7.0"
 
-kfsPytorchImage: kfserving/pytorchserver
-kfsPytorchImageVersion: "v0.6.1"
-kfsPytorchImageGpuVersion: "v0.6.1-gpu"
+kfsPytorchImage: kserve/pytorchserver
+kfsPytorchImageVersion: "v0.7.0"
+kfsPytorchImageGpuVersion: "v0.7.0-gpu"
 
 kfsTorchServeImage: pytorch/torchserve-kfs
-kfsTorchServeImageVersion: "0.4.0"
-kfsTorchServeImageGpuVersion: "0.4.0-gpu"
+kfsTorchServeImageVersion: "0.4.1"
+kfsTorchServeImageGpuVersion: "0.4.1-gpu"
 
 kfsTritonImage: nvcr.io/nvidia/tritonserver
-kfsTritonImageVersion: "20.08-py3"
+kfsTritonImageVersion: "21.09-py3"
 
-kfsPmmlserverImage: kfserving/pmmlserver
-kfsPmmlserverImageVersion: "v0.6.1"
+kfsPmmlserverImage: kserve/pmmlserver
+kfsPmmlserverImageVersion: "v0.7.0"
 
-kfsLgbserverImage: kfserving/lgbserver
-kfsLgbserverImageVersion: "v0.6.1"
+kfsLgbserverImage: kserve/lgbserver
+kfsLgbserverImageVersion: "v0.7.0"
 
-kfsPaddleserverImage: kfserving/paddleserver
-kfsPaddleserverImageVersion: "v0.6.1"
+kfsPaddleserverImage: kserve/paddleserver
+kfsPaddleserverImageVersion: "v0.7.0"
 
-kfsStorageInitializerImage: kfserving/storage-initializer
-
-kfsModelsWebAppImage: kfserving/models-web-app
-kfsControllerImage: kfserving/kfserving-controller
+kfsStorageInitializerImage: kserve/storage-initializer
+kfsControllerImage: kserve/kserve-controller
 kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.4.0
-
-# knative
-knativeVersion: "v0.22.1"
-
-# NOTE: kubeflow's knative installation uses digest to pull these images.
-# @sha256:0b8e031170354950f3395876961452af1c62f7ab5161c9e71867392c11881962
-knativeServingQueueImage: gcr.io/knative-releases/knative.dev/serving/cmd/queue
-# @sha256:fed92af8b9779c97482906db8857f27b5d4826708b75d0298aa30fad8900671f
-knativeServingActivatorImage: gcr.io/knative-releases/knative.dev/serving/cmd/activator
-# @sha256:bc5ae3090ab0322ed0e4f9efddb60fa85f6ff3a29156411d24d0e4764b18eba7
-knativeServingAutoscalerImage: gcr.io/knative-releases/knative.dev/serving/cmd/autoscaler
-# @sha256:bd7c6350e5d5c4edaa197a86fb96cff78bdd3e61f33fcb77aa60930de0ec0827
-knativeServingControllerImage: gcr.io/knative-releases/knative.dev/serving/cmd/controller
-# @sha256:1e371db6b1a9f9265fc7a55d15d98c935c0c28925ffde351fb3b93f331c5a08e
-knativeNetWebhookImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/webhook
-# @sha256:ff8680da52ef47b8573ebc3393cbfa2f0f14b05c1e02232807f22699adbef57a
-knativeNetControllerImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/controller
-# @sha256:6f41d379f1aacdfbb8f6d4f539e1769040e4f01bff3ad9c249b427e54dc56ea8
-knativeServingWebhookImage: gcr.io/knative-releases/knative.dev/serving/cmd/webhook
+kfsModelsWebAppImage: kserve/models-web-app
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
 knativeProxyvImage: docker.io/istio/proxyv2:1.9.6
@@ -170,9 +148,7 @@ knativeIstioConfigmap: istio
 istioMetaClusterID: Kubernetes
 
 # training operators
-trainingOperatorImage: public.ecr.aws/j1r0q0g6/training/training-operator:760ac1171dd30039a7363ffa03c77454bd714da5
-mpiOperatorImage: mpioperator/mpi-operator:0.3.0
-mpiOperatorKubectlDeliveryImage: mpioperator/kubectl-delivery:latest
+trainingOperatorImage: public.ecr.aws/j1r0q0g6/training/training-operator:174e8813666951ded505daf334a37f60fd50c18d
 
 # Tensorboard
 tensorboardControllerImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller:v1.4

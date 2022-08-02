@@ -59,6 +59,8 @@ data:
     staticPasswords:
     - email: {{ .Values.defaultUserEmail }}
       hash: {{ .Values.defaultUserPass }}
+      # https://github.com/dexidp/dex/pull/1601/commits
+      # FIXME: Use hashFromEnv instead
       username: {{ .Values.defaultUserName }}
       userID: "15841185641784"
     staticClients:
@@ -128,7 +130,7 @@ spec:
         envFrom:
         - secretRef:
             name: dex-oidc-client
-        image: quay.io/dexidp/dex:v2.24.0
+        image: {{ .Values.dexImage }}
         name: dex
         ports:
         - containerPort: 5556

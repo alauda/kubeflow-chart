@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -19,7 +19,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 rules:
 - apiGroups:
   - ""
@@ -71,7 +71,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -79,7 +79,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -97,7 +97,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -119,79 +119,85 @@ data:
         {
           "type": "item",
           "link": "/volumes/",
-          "text": "存储卷",
+          "text": "Volumes",
           "icon": "device:storage"
         },
         {
           "type": "item",
-          "link": "/models/",
-          "text": "模型服务",
+          "link": "/kserve-endpoints/",
+          "text": "Models",
           "icon": "kubeflow:models"
         },
         {
           "type": "item",
-          "text": "实验",
+          "link": "/katib/",
+          "text": "Experiments (AutoML)",
+          "icon": "kubeflow:katib"
+        },
+        {
+          "type": "item",
+          "text": "Experiments (KFP)",
           "link": "/pipeline/#/experiments",
           "icon": "done-all"
         },
         {
           "type": "item",
           "link": "/pipeline/#/pipelines",
-          "text": "工作流",
+          "text": "Pipelines",
           "icon": "kubeflow:pipeline-centered"
         },
         {
           "type": "item",
           "link": "/pipeline/#/runs",
-          "text": "执行记录",
+          "text": "Runs",
           "icon": "maps:directions-run"
         },
         {
           "type": "item",
           "link": "/pipeline/#/recurringruns",
-          "text": "定时任务",
+          "text": "Recurring Runs",
           "icon": "device:access-alarm"
         },
         {
           "type": "item",
           "link": "/pipeline/#/artifacts",
-          "text": "归档文件",
+          "text": "Artifacts",
           "icon": "editor:bubble-chart"
         },
         {
           "type": "item",
           "link": "/pipeline/#/executions",
-          "text": "执行细节",
+          "text": "Executions",
           "icon": "av:play-arrow"
         }
       ],
       "externalLinks": [ ],
         "quickLinks": [
           {
-            "text": "上传工作流任务",
-            "desc": "通过上传工作流定义 YAML 文件创建工作流任务",
+            "text": "Upload a pipeline",
+            "desc": "Pipelines",
             "link": "/pipeline/"
           },
           {
-            "text": "查看运行列表",
-            "desc": "查看所有的工作流任务的运行情况",
+            "text": "View all pipeline runs",
+            "desc": "Pipelines",
             "link": "/pipeline/#/runs"
           },
           {
-            "text": "创建新的 Notebook 环境",
-            "desc": "启动 Notebook 开发环境的实例",
+            "text": "Create a new Notebook server",
+            "desc": "Notebook Servers",
             "link": "/jupyter/new?namespace=kubeflow"
           },
           {
-            "text": "启动模型服务",
-            "desc": "通过定义 InferenceService 资源启动模型服务",
-            "link": "/models/"
+            "text": "View Katib Experiments",
+            "desc": "Katib",
+            "link": "/katib/"
           }
         ],
         "documentationItems": [
           {
-            "text": "Kubeflow 官方文档",
-            "desc": "Kubeflow 快速开始文档",
+            "text": "Getting Started with Kubeflow",
+            "desc": "Get your machine-learning workflow up and running on Kubeflow",
             "link": "https://www.kubeflow.org/docs/started/getting-started/"
           }
         ]
@@ -208,7 +214,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard-config
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 data:
@@ -224,7 +230,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard-parameters
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Service
@@ -235,7 +241,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   ports:
   - port: 80
@@ -258,7 +264,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   replicas: 1
   selector:
@@ -270,7 +276,7 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/inject: "false"
+        sidecar.istio.io/inject: "true"
       labels:
         app: centraldashboard
         app.kubernetes.io/component: centraldashboard
@@ -312,7 +318,7 @@ metadata:
     app.kubernetes.io/name: centraldashboard
     kustomize.component: centraldashboard
   name: centraldashboard
-  namespace: {{ .Values.namespace }}
+  namespace: kubeflow
 spec:
   gateways:
   - kubeflow-gateway
@@ -329,3 +335,24 @@ spec:
         host: centraldashboard.kubeflow.svc.cluster.local
         port:
           number: 80
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  labels:
+    app: centraldashboard
+    app.kubernetes.io/component: centraldashboard
+    app.kubernetes.io/name: centraldashboard
+    kustomize.component: centraldashboard
+  name: central-dashboard
+  namespace: kubeflow
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+  selector:
+    matchLabels:
+      app: centraldashboard
