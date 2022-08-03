@@ -1,7 +1,7 @@
 apiVersion: v2
 name: kubeflow
-version: "1.4.1"
-kubeVersion: ">=1.20.0"
+version: "1.5.0"
+kubeVersion: ">=1.18.0"
 description: |
   The Kubeflow project is dedicated to making deployments
   of machine learning (ML) workflows on Kubernetes simple,
@@ -46,4 +46,4 @@ dependencies:
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
-appVersion: "1.4"
+appVersion: "1.5.0"
