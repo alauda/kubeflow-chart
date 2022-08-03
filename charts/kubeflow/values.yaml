@@ -151,5 +151,5 @@ istioMetaClusterID: Kubernetes
 trainingOperatorImage: public.ecr.aws/j1r0q0g6/training/training-operator:174e8813666951ded505daf334a37f60fd50c18d
 
 # Tensorboard
-tensorboardControllerImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller:v1.4
-tensorboardWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app:v1.4
+tensorboardControllerImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller:v1.5.0
+tensorboardWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app:v1.5.0

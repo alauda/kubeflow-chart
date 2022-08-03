@@ -16,19 +16,14 @@
   
 ### 使用国内镜像源安装
 
-安装 istio 和 cert-manager 时：
+使用 `values-cn.yaml` 覆盖安装镜像配置：
 
 ```bash
-wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/istio/values-cn.yaml
-helm install istio alauda/istio -f values-istio-cn.yaml
-wget -O values-certm-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/certmanager/values-cn.yaml
-helm install cert-manager alauda/certmanager -f values-certm-cn.yaml
+wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+helm install istio alauda/istio -f values-cn.yaml
+helm install cert-manager alauda/certmanager -f values-cn.yaml
+helm install my-kubeflow alauda/kubeflow -f values-cn.yaml
 ```
-
-替换 Kubeflow 安装命令如下：
-
-1. `wget https://raw.githubusercontent.com/alauda/kubeflow-chart/main/values-cn.yaml`
-2. `helm install my-kubeflow alauda/kubeflow -f values-cn.yaml`
 
 ### 访问 Kubeflow 界面：
 

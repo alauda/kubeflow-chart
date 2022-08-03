@@ -1,19 +1,22 @@
-admissionWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/admission-webhook:v1.4
-centralDashboardImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/central-dashboard:v1.4
-jupyterWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-web-app:v1.4
-kfamAccessManagementImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/access-management:v1.4
-kfamProfileControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/profile-controller:v1.4
-kfpApiServerImageAndTag: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/api-server:1.7.0
-kfpArgoControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/workflow-controller:v3.1.6-patch-license-compliance
-kfpArgoExecImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/argoexec:v3.1.6-patch-license-compliance
-kfpCacheDeployerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cache-deployer
-kfpCacheImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/busybox
+admissionWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/admission-webhook:v1.5.0
+centralDashboardImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/central-dashboard:v1.5.0
+tensorboardControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboard-controller:v1.5.0
+tensorboardWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboards-web-app:v1.5.0
+trainingOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/training-operator:174e8813666951ded505daf334a37f60fd50c18d
+dex:
+  dexImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/dex:v2.24.0
+jupyterWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-web-app:v1.5.0
+kfamAccessManagementImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/access-management:v1.5.0
+kfamProfileControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/profile-controller:v1.5.0
+kfpApiServerImageAndTag: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/api-server:1.8.2
+kfpArgoControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/workflow-controller:v3.2.3-license-compliance
+kfpArgoExecImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/argoexec:v3.2.3-license-compliance
+kfpCacheImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/busybox:latest
 kfpCacheServerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cache-server
 kfpFrontendImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/frontend
-kfpMetaControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/metacontroller:v0.3.0
 kfpMetadataEnvoyImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/metadata-envoy
 kfpMetadataWriterImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/metadata-writer
-kfpMlMetadataStoreServerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/ml_metadata_store_server:1.0.0
+kfpMlMetadataStoreServerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/ml_metadata_store_server:1.5.0
 kfpMysqlImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/mysql:5.7
 kfpPersistenceAgentImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/persistenceagent
 kfpPythonImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/python:3.7
@@ -24,43 +27,48 @@ kfsAgentImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/agent
 kfsAixExplainer: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/aix-explainer
 kfsAlibiExplainerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/alibi-explainer
 kfsArtExplainer: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/art-explainer
-kfsControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/kfserving-controller
+kfsControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/kserve-controller
 kfsKubeRbacProxyImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/kube-rbac-proxy:v0.4.0
 kfsLgbserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/lgbserver
 kfsModelsWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/models-web-app
-kfsOnnxImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/server
+kfsOnnxImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/onnx-server
 kfsPaddleserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/paddleserver
 kfsPmmlserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/pmmlserver
 kfsPytorchImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/pytorchserver
 kfsSeldonioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/mlserver
 kfsSkLearnImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/sklearnserver
 kfsStorageInitializerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/storage-initializer
-kfsTensorflowImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/serving
+kfsTensorflowImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorflow-serving
 kfsTorchServeImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/torchserve-kfs
 kfsTritonImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tritonserver
 kfsXgbserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/xgbserver
-knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-controller
-knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-webhook
-knativeProxyvImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/proxyv2:1.9.6
-knativeServingActivatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/activator
-knativeServingAutoscalerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/autoscaler
-knativeServingControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-controller
-knativeServingQueueImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/queue
-knativeServingWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-webhook
 minio:
   kfpMinioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
-mpiOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/mpi-operator:0.3.0
-mpiOperatorKubectlDeliveryImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/kubectl-delivery:latest
-notebookControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/notebook-controller:v1.4
-notebookImageCodeserverPython: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/codeserver-python:v1.4
-notebookImagePytorch: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-pytorch-full:v1.4
-notebookImagePytorchCuda: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-pytorch-cuda-full:v1.4
-notebookImageRstudioTidyverse: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/rstudio-tidyverse:v1.4
-notebookImageScipy: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-scipy:v1.4
-notebookImageTensorflow: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-tensorflow-full:v1.4
-notebookImageTensorflowCuda: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-tensorflow-cuda-full:v1.4
+notebookControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/notebook-controller:v1.5.0
+notebookImageCodeserverPython: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/codeserver-python:v1.5.0
+notebookImagePytorch: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-pytorch-full:v1.5.0
+notebookImagePytorchCuda: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-pytorch-cuda-full:v1.5.0
+notebookImageRstudioTidyverse: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/rstudio-tidyverse:v1.5.0
+notebookImageScipy: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-scipy:v1.5.0
+notebookImageTensorflow: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-tensorflow-full:v1.5.0
+notebookImageTensorflowCuda: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-tensorflow-cuda-full:v1.5.0
 oidcAuthServiceImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/oidc-authservice:28c59ef
-tensorboardControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboard-controller:v1.4
-tensorboardWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboards-web-app:v1.4
-trainingOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/training-operator:760ac1171dd30039a7363ffa03c77454bd714da5
-volumesWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/volumes-web-app:v1.4
+volumesWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/volumes-web-app:v1.5.0
+
+knativeserving:
+  knativeVersion: "v0.22.1"
+  knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-controller
+  knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-webhook
+  knativeServingActivatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-activator
+  knativeServingAutoscalerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-autoscaler
+  knativeServingControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-controller
+  knativeServingQueueImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-queue
+  knativeServingWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-serving-webhook
+
+# for cert-manager:
+certManagerControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-controller:v1.3.1
+certManagerCAInjectorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-cainjector:v1.3.1
+certManagerWebHookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-webhook:v1.3.1
+# for istio:
+istioProxyv2Image: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/proxyv2:1.11.4
+istioPilotImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/pilot:1.11.4

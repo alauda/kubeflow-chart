@@ -15,19 +15,14 @@ Kubeflow at any environments using Helm.
   
 ### Use alternative image registry (for CN access)
 
-When installing istio and cert-manager:
+Use `values-cn.yaml` to override image configurations:
 
 ```bash
-wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/istio/values-cn.yaml
-helm install istio alauda/istio -f values-istio-cn.yaml
-wget -O values-certm-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/charts/certmanager/values-cn.yaml
-helm install cert-manager alauda/certmanager -f values-certm-cn.yaml
+wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+helm install istio alauda/istio -f values-cn.yaml
+helm install cert-manager alauda/certmanager -f values-cn.yaml
+helm install my-kubeflow alauda/kubeflow -f values-cn.yaml
 ```
-
-Change the Kubeflow installation command as follows:
-
-1. `wget https://raw.githubusercontent.com/alauda/kubeflow-chart/main/values-cn.yaml`
-2. `helm install my-kubeflow alauda/kubeflow -f values-cn.yaml`
 
 ### Access Kubeflow Web UI:
 

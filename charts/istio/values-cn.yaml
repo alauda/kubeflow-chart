@@ -1,2 +1,0 @@
-istioProxyv2Image: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/proxyv2:1.11.4
-istioPilotImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/pilot:1.11.4

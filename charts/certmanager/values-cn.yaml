@@ -1,3 +1,0 @@
-certManagerControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-controller:v1.3.1
-certManagerCAInjectorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-cainjector:v1.3.1
-certManagerWebHookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/cert-manager-webhook:v1.3.1

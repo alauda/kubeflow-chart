@@ -40,6 +40,9 @@ dependencies:
     version: 1.0
     reponsitory: https://alauda.github.io/kubeflow-chart
     condition: dex.enabled
+  - name: knativeserving
+    version: v0.22.1
+    reponsitory: https://alauda.github.io/kubeflow-chart
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
