@@ -4,10 +4,10 @@ kind: ServiceAccount
 metadata:
   name: tensorboard-controller
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

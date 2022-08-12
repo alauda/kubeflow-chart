@@ -39,10 +39,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: argo
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -54,10 +54,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-cache
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -68,10 +68,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-container-builder
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -82,10 +82,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-metadata-writer
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -96,10 +96,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-viewer
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -109,10 +109,10 @@ metadata:
     kustomize.component: metacontroller
   name: meta-controller-service
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -121,10 +121,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-server
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -135,10 +135,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -149,10 +149,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -163,10 +163,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -177,10 +177,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -191,10 +191,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-crd-service-account
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -205,10 +205,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -217,10 +217,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: mysql
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -231,10 +231,10 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: pipeline-runner
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

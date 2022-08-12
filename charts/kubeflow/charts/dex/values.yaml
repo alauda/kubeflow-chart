@@ -5,3 +5,10 @@ defaultUserPass: $2y$12$4K/VkmDd1q1Orb3xAt82zu8gk7Ad6ReFR4LCP9UeYE90NLiN9Df72
 clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
 clientSecret: cFVCbkJPWTgwU25YZ2ppYlRZTTlaV056WTJ4cmVOR1Fvaw==
 dexImage: quay.io/dexidp/dex:v2.24.0
+
+imageCredentials:
+  enabled: false
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com

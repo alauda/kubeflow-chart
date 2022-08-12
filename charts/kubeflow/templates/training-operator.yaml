@@ -6,10 +6,10 @@ metadata:
     app: training-operator
   name: training-operator
   namespace: kubeflow
-{{- if .Values.imageCredentials.enabled -}}
+{{ if .Values.imageCredentials.enabled }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
-{{- end -}}
+{{ end }}
 ---
 aggregationRule:
   clusterRoleSelectors:
