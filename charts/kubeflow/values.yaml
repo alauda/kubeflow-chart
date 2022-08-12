@@ -29,6 +29,7 @@ oidcScopes: "profile email groups"
 minio:
   enabled: true
   kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
+  useKubeflowImagePullSecrets: false
 # If you are not using the embeded deployment, setup minioAK and minioSK below.
 # minioAK: 
 # minioSK: 
@@ -39,13 +40,26 @@ minio:
 dex:
   enabled: true
   oidcRedirectURL: /login/oidc
-  defaultUserEmail: user@example.com      
+  defaultUserEmail: user@example.com
+  imageCredentials:
+    enabled: false
+    registry: quay.io
+    username: someone
+    password: sillyness
+    email: someone@host.com
   # clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
   # clientSecret: WlhoaGJYQnNaUzFoY0hBdGMyVmpjbVYw
 
 # The default namespace bind to the default user:
 defaultUserProfile: kubeflow-user-example-com
 notebookAccessPipelineDesc: "Allow access pipeline"
+
+imageCredentials:
+  enabled: false
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com
 
 # ----------------------------------------------------
 # Images

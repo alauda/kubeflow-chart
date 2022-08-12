@@ -35,6 +35,35 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 
 
 然后通过浏览器访问：`http://localhost:8080/`, 使用默认账号密码：`user@example.com`, `12341234` 即可登录。
 
+### 配置包含认证的私有镜像源：
+
+如果您将镜像同步到一个私有镜像源，并包含认证，可以在 `values.yaml` 中增加如下认证信息配置：
+
+```yaml
+imageCredentials:
+  enabled: true
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com
+dex:
+  imageCredentials:
+    enabled: true
+    registry: quay.io
+    username: someone
+    password: sillyness
+    email: someone@host.com
+minio:
+  useKubeflowImagePullSecrets: true
+knativeserving:
+  imageCredentials:
+    enabled: true
+    registry: quay.io
+    username: someone
+    password: sillyness
+    email: someone@host.com
+```
+
 ## 卸载 Kubeflow
 
 执行命令 `helm delete my-kubeflow` 即可完成卸载。

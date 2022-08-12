@@ -8,6 +8,10 @@ kind: ServiceAccount
 metadata:
   name: dex
   namespace: auth
+{{ if .Values.imageCredentials.enabled }}
+imagePullSecrets:
+- name: dex-image-pull-secrets
+{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole

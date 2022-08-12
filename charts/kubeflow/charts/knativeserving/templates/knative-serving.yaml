@@ -54,6 +54,10 @@ metadata:
     serving.knative.dev/release: v0.22.1
   name: controller
   namespace: knative-serving
+{{ if .Values.imageCredentials.enabled }}
+imagePullSecrets:
+- name: knative-serving-image-pull-secrets
+{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
