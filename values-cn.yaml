@@ -3,8 +3,6 @@ centralDashboardImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/central-
 tensorboardControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboard-controller:v1.5.0
 tensorboardWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboards-web-app:v1.5.0
 trainingOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/training-operator:174e8813666951ded505daf334a37f60fd50c18d
-dex:
-  dexImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/dex:v2.24.0
 jupyterWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-web-app:v1.5.0
 kfamAccessManagementImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/access-management:v1.5.0
 kfamProfileControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/profile-controller:v1.5.0
@@ -42,8 +40,6 @@ kfsTensorflowImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorflow-
 kfsTorchServeImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/torchserve-kfs
 kfsTritonImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tritonserver
 kfsXgbserverImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/xgbserver
-minio:
-  kfpMinioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
 notebookControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/notebook-controller:v1.5.0
 notebookImageCodeserverPython: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/codeserver-python:v1.5.0
 notebookImagePytorch: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-pytorch-full:v1.5.0
@@ -54,6 +50,12 @@ notebookImageTensorflow: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyte
 notebookImageTensorflowCuda: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-tensorflow-cuda-full:v1.5.0
 oidcAuthServiceImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/oidc-authservice:28c59ef
 volumesWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/volumes-web-app:v1.5.0
+
+dex:
+  dexImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/dex:v2.24.0
+
+minio:
+  kfpMinioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
 
 knativeserving:
   knativeVersion: "v0.22.1"

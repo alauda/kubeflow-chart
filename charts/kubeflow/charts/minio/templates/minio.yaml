@@ -47,6 +47,10 @@ spec:
         app: minio
         application-crd-id: kubeflow-pipelines
     spec:
+{{- if .Values.useKubeflowImagePullSecrets -}}
+      imagePullSecret:
+      - kubeflow-image-pull-secrets
+{{- end -}}
       containers:
       - args:
         - server

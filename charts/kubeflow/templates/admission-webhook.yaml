@@ -41,6 +41,10 @@ metadata:
     kustomize.component: poddefaults
   name: admission-webhook-service-account
   namespace: kubeflow
+{{- if .Values.imageCredentials.enabled -}}
+imagePullSecrets:
+- name: kubeflow-image-pull-secrets
+{{- end -}}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
