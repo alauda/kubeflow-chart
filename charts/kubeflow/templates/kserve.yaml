@@ -743,6 +743,10 @@ spec:
         control-plane: kserve-controller-manager
         controller-tools.k8s.io: "1.0"
     spec:
+{{ if .Values.imageCredentials.enabled }}
+      imagePullSecrets:
+      - name: kubeflow-image-pull-secrets
+{{ end }}
       containers:
       - args:
         - --metrics-addr=127.0.0.1:8080

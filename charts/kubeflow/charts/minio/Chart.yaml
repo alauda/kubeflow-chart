@@ -1,0 +1,19 @@
+apiVersion: v2
+name: minio
+version: "1.0"
+kubeVersion: ">=1.20.0"
+description: "MinIO"
+type: application
+keywords:
+  - "Minio"
+  - "storage"
+sources:
+  - https://github.com/alauda/kubeflow-chart
+maintainers:
+  - name: typhoonzero
+    email: typhoonzero1986@gmail.com
+appVersion: "1.4"
+annotations:
+  acp-version: "3.8"
+  istio-version: "1.10"
+  acp-dependencies: "dex,cert-manager,istio"

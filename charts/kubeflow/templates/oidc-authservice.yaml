@@ -59,6 +59,10 @@ spec:
       labels:
         app: authservice
     spec:
+{{ if .Values.imageCredentials.enabled }}
+      imagePullSecrets:
+      - name: kubeflow-image-pull-secrets
+{{ end }}
       containers:
       - envFrom:
         - secretRef:
