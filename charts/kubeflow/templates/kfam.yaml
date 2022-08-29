@@ -6,7 +6,7 @@ metadata:
     kustomize.component: profiles
   name: profiles-controller-service-account
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

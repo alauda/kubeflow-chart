@@ -10,7 +10,7 @@ metadata:
     release: istio
   name: cluster-local-gateway-service-account
   namespace: istio-system
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

@@ -9,7 +9,7 @@ metadata:
     kustomize.component: centraldashboard
   name: centraldashboard
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

@@ -39,7 +39,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: argo
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -54,7 +54,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-cache
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -68,7 +68,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-container-builder
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -82,7 +82,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-metadata-writer
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -96,7 +96,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: kubeflow-pipelines-viewer
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -109,7 +109,7 @@ metadata:
     kustomize.component: metacontroller
   name: meta-controller-service
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -121,7 +121,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: metadata-grpc-server
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -135,7 +135,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -149,7 +149,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-persistenceagent
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -163,7 +163,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-scheduledworkflow
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -177,7 +177,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-ui
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -191,7 +191,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-viewer-crd-service-account
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -205,7 +205,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: ml-pipeline-visualizationserver
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -217,7 +217,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: mysql
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -231,7 +231,7 @@ metadata:
     application-crd-id: kubeflow-pipelines
   name: pipeline-runner
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
@@ -1813,7 +1813,9 @@ data:
   appName: pipeline
   appVersion: {{ .Values.kfpVersion }}
   autoUpdatePipelineDefaultVersion: "true"
-  bucketName: mlpipeline
+  objectStoreHost: {{ .Values.minio.minioHost }}
+  objectStorePort: "{{ .Values.minio.minioPort }}"
+  bucketName: {{ .Values.minioKFPBucket }}
   cacheDb: cachedb
   cacheImage: {{ .Values.kfpCacheImage }}
   cacheNodeRestrictions: "false"
@@ -1842,7 +1844,30 @@ metadata:
 apiVersion: v1
 data:
   artifactRepository: |-
-{{ .Files.Get "config-files/kfp-artifact-repo.txt" | indent 4 }}
+    archiveLogs: true
+    s3:
+      endpoint: "{{ .Values.minioHost }}:{{ .Values.minioPort }}"
+      bucket: "{{ .Values.minioKFPBucket }}"
+      # keyFormat is a format pattern to define how artifacts will be organized in a bucket.
+      # It can reference workflow metadata variables such as workflow.namespace, workflow.name,
+      # pod.name. Can also use strftime formating of workflow.creationTimestamp so that workflow
+      # artifacts can be organized by date. If omitted, will use `{{workflow.name}}/{{pod.name}}`,
+      # which has potential for have collisions, because names do not guarantee they are unique
+      # over the lifetime of the cluster.
+      # Refer to https://kubernetes.io/docs/concepts/overview/working-with-objects/names/.
+      #
+      # The following format looks like:
+      # artifacts/my-workflow-abc123/2018/08/23/my-workflow-abc123-1234567890
+      # Adding date into the path greatly reduces the chance of {{pod.name}} collision.
+      keyFormat: "{{ `artifacts/{{workflow.name}}/{{workflow.creationTimestamp.Y}}/{{workflow.creationTimestamp.m}}/{{workflow.creationTimestamp.d}}/{{pod.name}}` }}"
+      # insecure will disable TLS. Primarily used for minio installs not configured with TLS
+      insecure: true
+      accessKeySecret:
+        name: mlpipeline-minio-artifact
+        key: accesskey
+      secretKeySecret:
+        name: mlpipeline-minio-artifact
+        key: secretkey
   containerRuntimeExecutor: emissary
   executor: |
     imagePullPolicy: IfNotPresent

@@ -23,8 +23,8 @@ metadata:
   name: minio-secret
   namespace: kubeflow
 stringData:
-  accesskey: {{ .Values.exports.secrets.minioAK }}
-  secretkey: {{ .Values.exports.secrets.minioSK }}
+  accesskey: {{ .Values.minioAK }}
+  secretkey: {{ .Values.minioSK }}
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -1,7 +1,7 @@
 {{- include "prechecks" . -}}
 apiVersion: v1
 data:
-  profile-name: {{ .Values.defaultUserProfile }}
+  profile-name: {{ .Values.dex.defaultUserProfile }}
   user: {{ .Values.dex.defaultUserEmail }}
 kind: ConfigMap
 metadata:
@@ -10,7 +10,7 @@ metadata:
 apiVersion: kubeflow.org/v1beta1
 kind: Profile
 metadata:
-  name: {{ .Values.defaultUserProfile }}
+  name: {{ .Values.dex.defaultUserProfile }}
 spec:
   owner:
     kind: User

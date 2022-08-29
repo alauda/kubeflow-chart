@@ -6,7 +6,7 @@ metadata:
     app: training-operator
   name: training-operator
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

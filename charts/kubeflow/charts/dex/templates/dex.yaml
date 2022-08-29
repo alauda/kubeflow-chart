@@ -3,12 +3,13 @@ kind: Namespace
 metadata:
   name: auth
 ---
+{{ include "dex.imagePullSecret" . }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: dex
   namespace: auth
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: dex-image-pull-secrets
 {{ end }}

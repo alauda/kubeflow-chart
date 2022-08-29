@@ -7,7 +7,7 @@ metadata:
     kustomize.component: notebook-controller
   name: notebook-controller-service-account
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

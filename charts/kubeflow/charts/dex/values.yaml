@@ -6,8 +6,8 @@ clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
 clientSecret: cFVCbkJPWTgwU25YZ2ppYlRZTTlaV056WTJ4cmVOR1Fvaw==
 dexImage: quay.io/dexidp/dex:v2.24.0
 
-imageCredentials:
-  enabled: false
+global:
+  useRegistryCredentials: false
   registry: quay.io
   username: someone
   password: sillyness

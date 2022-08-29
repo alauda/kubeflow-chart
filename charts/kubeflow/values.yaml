@@ -1,7 +1,5 @@
 dryRun: false
 
-namespace: kubeflow
-
 # Set enableIngress to true to use Kubernetes ingress to access Kubeflow.
 # else, you need to use istio-ingressgateway service.
 enableIngress: false
@@ -16,23 +14,27 @@ kubeflowSitePrefix: "/"
 tlsCrt: ""
 tlsKey: ""
 
-# Dex auth configurations
-oidcAuthURL: /dex/auth
-oidcProvider: http://dex.auth.svc.cluster.local:5556/dex
-skipAuthURI: "/dex"
-useridClaim: email
-useridHeader: kubeflow-userid
-useridPrefix: "\"\""
-oidcScopes: "profile email groups"
+global:
+  imageCredentials: ""
+  useRegistryCredentials: false
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com
 
 # Set minio.enabled = true to use embeded single node MinIO test deployment.
 minio:
   enabled: true
   kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
+  # use kubeflow image pull secrets to pull images
   useKubeflowImagePullSecrets: false
-# If you are not using the embeded deployment, setup minioAK and minioSK below.
-# minioAK: 
-# minioSK: 
+  # set S3/minio service locations
+  minioAK: minio
+  minioSK: minio123
+  minioHost: minio-service.kubeflow
+  minioPort: "9000"
+  minioS3Region: minio
+  minioKFPBucket: mlpipeline
 
 # Set dex.enabled = true to use embeded Dex deployment.
 # If you are using your own Dex server, 
@@ -41,25 +43,17 @@ dex:
   enabled: true
   oidcRedirectURL: /login/oidc
   defaultUserEmail: user@example.com
-  imageCredentials:
-    enabled: false
-    registry: quay.io
-    username: someone
-    password: sillyness
-    email: someone@host.com
+  defaultUserProfile: kubeflow-user-example-com
+  notebookAccessPipelineDesc: "Allow access pipeline"
+  oidcAuthURL: /dex/auth
+  oidcProvider: http://dex.auth.svc.cluster.local:5556/dex
+  skipAuthURI: "/dex"
+  useridClaim: email
+  useridHeader: kubeflow-userid
+  useridPrefix: "\"\""
+  oidcScopes: "profile email groups"
   # clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
   # clientSecret: WlhoaGJYQnNaUzFoY0hBdGMyVmpjbVYw
-
-# The default namespace bind to the default user:
-defaultUserProfile: kubeflow-user-example-com
-notebookAccessPipelineDesc: "Allow access pipeline"
-
-imageCredentials:
-  enabled: false
-  registry: quay.io
-  username: someone
-  password: sillyness
-  email: someone@host.com
 
 # ----------------------------------------------------
 # Images

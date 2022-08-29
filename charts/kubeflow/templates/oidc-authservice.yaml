@@ -1,16 +1,16 @@
 {{- include "prechecks" . -}}
 apiVersion: v1
 data:
-  OIDC_AUTH_URL: {{ default "/dex/auth" .Values.oidcAuthURL }}
-  OIDC_PROVIDER: {{ default "/dex" .Values.oidcProvider }}
-  OIDC_SCOPES: {{ .Values.oidcScopes }}
+  OIDC_AUTH_URL: {{ default "/dex/auth" .Values.dex.oidcAuthURL }}
+  OIDC_PROVIDER: {{ default "/dex" .Values.dex.oidcProvider }}
+  OIDC_SCOPES: {{ .Values.dex.oidcScopes }}
   PORT: '"8080"'
   REDIRECT_URL: {{ default "/login/oidc" .Values.dex.oidcRedirectURL }}
-  SKIP_AUTH_URI: {{ .Values.skipAuthURI }}
+  SKIP_AUTH_URI: {{ .Values.dex.skipAuthURI }}
   STORE_PATH: /var/lib/authservice/data.db
-  USERID_CLAIM: {{ .Values.useridClaim }}
-  USERID_HEADER: {{ .Values.useridHeader }}
-  USERID_PREFIX: {{ .Values.useridPrefix }}
+  USERID_CLAIM: {{ .Values.dex.useridClaim }}
+  USERID_HEADER: {{ .Values.dex.useridHeader }}
+  USERID_PREFIX: {{ .Values.dex.useridPrefix }}
 kind: ConfigMap
 metadata:
   name: oidc-authservice-parameters
@@ -59,7 +59,7 @@ spec:
       labels:
         app: authservice
     spec:
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
       imagePullSecrets:
       - name: kubeflow-image-pull-secrets
 {{ end }}
