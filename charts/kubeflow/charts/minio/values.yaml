@@ -1,8 +1,6 @@
 namespace: kubeflow
 kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
-useKubeflowImagePullSecrets: false
+minioAK: minio
+minioSK: minio123
 
-exports:
-  secrets:
-    minioAK: minio
-    minioSK: minio123
+useKubeflowImagePullSecrets: false

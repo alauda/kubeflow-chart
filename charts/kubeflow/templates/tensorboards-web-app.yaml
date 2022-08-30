@@ -7,7 +7,7 @@ metadata:
     kustomize.component: tensorboards-web-app
   name: tensorboards-web-app-service-account
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

@@ -14,8 +14,8 @@ knativeNetControllerImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/con
 # @sha256:6f41d379f1aacdfbb8f6d4f539e1769040e4f01bff3ad9c249b427e54dc56ea8
 knativeServingWebhookImage: gcr.io/knative-releases/knative.dev/serving/cmd/webhook
 
-imageCredentials:
-  enabled: false
+global:
+  useRegistryCredentials: false
   registry: quay.io
   username: someone
   password: sillyness

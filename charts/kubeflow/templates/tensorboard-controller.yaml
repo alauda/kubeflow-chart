@@ -4,7 +4,7 @@ kind: ServiceAccount
 metadata:
   name: tensorboard-controller
   namespace: kubeflow
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}

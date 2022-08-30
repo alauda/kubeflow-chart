@@ -8,10 +8,10 @@ metadata:
     app.kubernetes.io/part-of: kubeflow-profile
     istio-injection: enabled
     katib-metricscollector-injection: enabled
-    kubernetes.io/metadata.name: {{ .Values.defaultUserProfile}}
+    kubernetes.io/metadata.name: {{ .Values.dex.defaultUserProfile}}
     pipelines.kubeflow.org/enabled: "true"
     serving.kubeflow.org/inferenceservice: enabled
-  name: {{ .Values.defaultUserProfile}}
+  name: {{ .Values.dex.defaultUserProfile}}
 spec:
   finalizers:
   - kubernetes
@@ -22,27 +22,27 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: minio-s3-secret
-  namespace: {{ .Values.defaultUserProfile}}
+  namespace: {{ .Values.dex.defaultUserProfile}}
   annotations:
-     serving.kserve.io/s3-endpoint: minio-service.kubeflow:9000
-     serving.kubeflow.org/s3-endpoint: minio-service.kubeflow:9000
-     serving.kserve.io/s3-usehttps: "0"
-     serving.kubeflow.org/s3-usehttps: "0"
-     serving.kserve.io/s3-region: "us-east-2"
-     serving.kubeflow.org/s3-region: "us-east-2"
-     serving.kserve.io/s3-useanoncredential: "false"
-     serving.kubeflow.org/s3-useanoncredential: "false"
+    serving.kserve.io/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
+    serving.kserve.io/s3-usehttps: "0"
+    serving.kserve.io/s3-region: "{{ .Values.minioS3Region }}"
+    serving.kserve.io/s3-useanoncredential: "false"
+    serving.kubeflow.org/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
+    serving.kubeflow.org/s3-usehttps: "0"
+    serving.kubeflow.org/s3-region: "{{ .Values.minioS3Region }}"
+    serving.kubeflow.org/s3-useanoncredential: "false"
 type: Opaque
 # use `stringData` for raw credential string or `data` for base64 encoded string
 stringData:
-  AWS_ACCESS_KEY_ID: {{ .Values.minioAK }}
-  AWS_SECRET_ACCESS_KEY: {{ .Values.minioSK }}
+  AWS_ACCESS_KEY_ID: {{ .Values.minio.minioAK }}
+  AWS_SECRET_ACCESS_KEY: {{ .Values.minio.minioSK }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: minio-s3-sa
-  namespace: {{ .Values.defaultUserProfile}}
+  namespace: {{ .Values.dex.defaultUserProfile}}
 secrets:
 - name: minio-s3-secret
 ---
@@ -50,13 +50,13 @@ apiVersion: kubeflow.org/v1alpha1
 kind: PodDefault
 metadata:
   name: access-ml-pipeline
-  namespace: {{ .Values.defaultUserProfile}}
+  namespace: {{ .Values.dex.defaultUserProfile}}
   annotations:
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "10"
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  desc: {{ .Values.notebookAccessPipelineDesc }}
+  desc: {{ .Values.dex.notebookAccessPipelineDesc }}
   selector:
     matchLabels:
       access-ml-pipeline: "true"

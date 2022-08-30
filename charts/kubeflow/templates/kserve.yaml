@@ -743,7 +743,7 @@ spec:
         control-plane: kserve-controller-manager
         controller-tools.k8s.io: "1.0"
     spec:
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
       imagePullSecrets:
       - name: kubeflow-image-pull-secrets
 {{ end }}

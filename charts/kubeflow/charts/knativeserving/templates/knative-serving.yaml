@@ -47,6 +47,7 @@ webhooks:
   sideEffects: None
   timeoutSeconds: 10
 ---
+{{ include "knserving.imagePullSecret" . }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -54,7 +55,7 @@ metadata:
     serving.knative.dev/release: v0.22.1
   name: controller
   namespace: knative-serving
-{{ if .Values.imageCredentials.enabled }}
+{{ if .Values.global.useRegistryCredentials }}
 imagePullSecrets:
 - name: knative-serving-image-pull-secrets
 {{ end }}
