@@ -1815,7 +1815,7 @@ data:
   autoUpdatePipelineDefaultVersion: "true"
   objectStoreHost: {{ .Values.minio.minioHost }}
   objectStorePort: "{{ .Values.minio.minioPort }}"
-  bucketName: {{ .Values.minioKFPBucket }}
+  bucketName: {{ .Values.minio.minioKFPBucket }}
   cacheDb: cachedb
   cacheImage: {{ .Values.kfpCacheImage }}
   cacheNodeRestrictions: "false"
@@ -1848,18 +1848,6 @@ data:
     s3:
       endpoint: "{{ .Values.minioHost }}:{{ .Values.minioPort }}"
       bucket: "{{ .Values.minioKFPBucket }}"
-      # keyFormat is a format pattern to define how artifacts will be organized in a bucket.
-      # It can reference workflow metadata variables such as workflow.namespace, workflow.name,
-      # pod.name. Can also use strftime formating of workflow.creationTimestamp so that workflow
-      # artifacts can be organized by date. If omitted, will use `{{workflow.name}}/{{pod.name}}`,
-      # which has potential for have collisions, because names do not guarantee they are unique
-      # over the lifetime of the cluster.
-      # Refer to https://kubernetes.io/docs/concepts/overview/working-with-objects/names/.
-      #
-      # The following format looks like:
-      # artifacts/my-workflow-abc123/2018/08/23/my-workflow-abc123-1234567890
-      # Adding date into the path greatly reduces the chance of {{pod.name}} collision.
-      keyFormat: "{{ `artifacts/{{workflow.name}}/{{workflow.creationTimestamp.Y}}/{{workflow.creationTimestamp.m}}/{{workflow.creationTimestamp.d}}/{{pod.name}}` }}"
       # insecure will disable TLS. Primarily used for minio installs not configured with TLS
       insecure: true
       accessKeySecret:
@@ -1868,6 +1856,7 @@ data:
       secretKeySecret:
         name: mlpipeline-minio-artifact
         key: secretkey
+      {{ .Files.Get "config-files/kfp-artifact-repo.txt" | indent 6 }}
   containerRuntimeExecutor: emissary
   executor: |
     imagePullPolicy: IfNotPresent
@@ -1893,8 +1882,8 @@ metadata:
   name: mlpipeline-minio-artifact
   namespace: kubeflow
 stringData:
-  accesskey: {{ .Values.minioAK }}
-  secretkey: {{ .Values.minioSK }}
+  accesskey: {{ .Values.minio.minioAK }}
+  secretkey: {{ .Values.minio.minioSK }}
 ---
 apiVersion: v1
 kind: Secret

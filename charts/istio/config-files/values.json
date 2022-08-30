@@ -14,7 +14,7 @@
     },
     "enabled": true,
     "externalIstiod": false,
-    "hub": "docker.io/istio",
+    "hub": "registry.cn-hangzhou.aliyuncs.com/kubeflow-chart",
     "imagePullPolicy": "",
     "imagePullSecrets": [],
     "istioNamespace": "istio-system",

@@ -35,8 +35,8 @@ metadata:
 type: Opaque
 # use `stringData` for raw credential string or `data` for base64 encoded string
 stringData:
-  AWS_ACCESS_KEY_ID: {{ .Values.minioAK }}
-  AWS_SECRET_ACCESS_KEY: {{ .Values.minioSK }}
+  AWS_ACCESS_KEY_ID: {{ .Values.minio.minioAK }}
+  AWS_SECRET_ACCESS_KEY: {{ .Values.minio.minioSK }}
 ---
 apiVersion: v1
 kind: ServiceAccount
