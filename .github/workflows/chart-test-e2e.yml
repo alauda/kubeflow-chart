@@ -13,8 +13,6 @@ jobs:
         uses: medyagh/setup-minikube@master
         with:
           kubernetes-version: v1.21.1
-          cpus: 6
-          memory: 8000m
       - name: Try the cluster !
         run: kubectl get pods -A
       - name: Run E2E Tests
