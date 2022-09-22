@@ -20,30 +20,31 @@ jobs:
           set -e
           helm install istio charts/istio
           helm install cert-manager charts/certmanager
-          kubectl -n istio-system wait --for=condition=ready pod -l release=istio
-          kubectl -n cert-manager wait --for=condition=ready pod -l app.kubernetes.io/instance=cert-manager
+          kubectl -n istio-system wait --timeout=60s --for=condition=ready pod -l release=istio
+          kubectl -n cert-manager wait --timeout=60s --for=condition=ready pod -l app.kubernetes.io/instance=cert-manager
           helm install kubeflow charts/kubeflow
-          kubectl -n auth wait --for=condition=ready pod -l app=dex
-          kubectl -n knative-serving wait --for=condition=ready pod -l serving.knative.dev/release=v0.22.1
-          kubectl -n istio-system wait --for=condition=ready pod -l app=authservice
-          kubectl -n istio-system wait --for=condition=ready pod -l app=cluster-local-gateway
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=poddefaults
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=centraldashboard
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=jupyter-web-app
-          kubectl -n kubeflow wait --for=condition=ready pod -l kustomize.component=profiles
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=kserve
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=notebook-controller
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=metacontroller
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=cache-server
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=kubeflow-pipelines-profile-controller
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline-persistenceagent
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=metadata-writer
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline-scheduledworkflow
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline-ui
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline-viewer-crd
-          kubectl -n kubeflow wait --for=condition=ready pod -l app=ml-pipeline-visualizationserver
-          kubectl -n kserve wait --for=condition=ready pod -l control-plane=kserve-controller-manager
+          kubectl -n kubeflow get po
+          kubectl -n auth wait --timeout=300s --for=condition=ready pod -l app=dex
+          kubectl -n knative-serving wait --timeout=300s --for=condition=ready pod -l serving.knative.dev/release=v0.22.1
+          kubectl -n istio-system wait --timeout=300s --for=condition=ready pod -l app=authservice
+          kubectl -n istio-system wait --timeout=300s --for=condition=ready pod -l app=cluster-local-gateway
+          kubectl -n kubeflow wait --timeout=600s --for=condition=ready pod -l app=poddefaults
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=centraldashboard
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=jupyter-web-app
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l kustomize.component=profiles
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=kserve
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=notebook-controller
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=metacontroller
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=cache-server
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=kubeflow-pipelines-profile-controller
+          kubectl -n kubeflow wait --timeout=600s --for=condition=ready pod -l app=ml-pipeline
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=ml-pipeline-persistenceagent
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=metadata-writer
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=ml-pipeline-scheduledworkflow
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=ml-pipeline-ui
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=ml-pipeline-viewer-crd
+          kubectl -n kubeflow wait --timeout=60s --for=condition=ready pod -l app=ml-pipeline-visualizationserver
+          kubectl -n kserve wait --timeout=60s --for=condition=ready pod -l control-plane=kserve-controller-manager
           kubectl -n kubeflow get po
 
 
