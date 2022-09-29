@@ -1,0 +1,14 @@
+apiVersion: v2
+name: istio
+version: "1.11.4"
+kubeVersion: ">=1.18.0"
+description: istio for kubeflow.
+type: application
+keywords:
+  - "istio"
+sources:
+  - https://github.com/alauda/kubeflow-chart
+maintainers:
+  - name: typhoonzero
+    email: typhoonzero1986@gmail.com
+appVersion: "1.11.4"

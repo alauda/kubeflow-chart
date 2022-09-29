@@ -30,19 +30,21 @@ sources:
   - https://github.com/alauda/kubeflow-chart
   - https://github.com/kubeflow/manifests
 dependencies:
+  - name: cert-manager
+    version: "1.5.0"
+    alias: cert-manager
+    condition: cert-manager.enabled
+  - name: istio
+    version: "1.11.4"
+    condition: istio.enabled
   - name: minio
-    version: 1.0
-    reponsitory: https://alauda.github.io/kubeflow-chart
+    version: "1.0"
     condition: minio.enabled
-    import-values:
-      - secrets
   - name: dex
-    version: 1.0
-    reponsitory: https://alauda.github.io/kubeflow-chart
+    version: "1.0"
     condition: dex.enabled
   - name: knativeserving
     version: v0.22.1
-    reponsitory: https://alauda.github.io/kubeflow-chart
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
