@@ -15,7 +15,6 @@ tlsCrt: ""
 tlsKey: ""
 
 global:
-  imageCredentials: ""
   useRegistryCredentials: false
   registry: quay.io
   username: someone

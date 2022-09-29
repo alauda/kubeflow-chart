@@ -43,7 +43,7 @@ dependencies:
   - name: dex
     version: "1.0"
     condition: dex.enabled
-  - name: knativeserving
+  - name: knative-serving
     version: v0.22.1
 maintainers:
   - name: typhoonzero
