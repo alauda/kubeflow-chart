@@ -9,20 +9,15 @@
 ## 快速安装(本地 Minikube)：
 
 1. `helm repo add alauda https://alauda.github.io/kubeflow-chart`
-2. 安装前置依赖 istio 和 cert-manager (如果已有则可跳过):
-  - `helm install istio alauda/istio`
-  - `helm install cert-manager alauda/certmanager`
-3. `helm install my-kubeflow alauda/kubeflow`
-  
+1. `helm install kubeflow alauda/kubeflow`
+
 ### 使用国内镜像源安装
 
 使用 `values-cn.yaml` 覆盖安装镜像配置：
 
 ```bash
-wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
-helm install istio alauda/istio -f values-cn.yaml
-helm install cert-manager alauda/certmanager -f values-cn.yaml
-helm install my-kubeflow alauda/kubeflow -f values-cn.yaml
+wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+helm install kubeflow alauda/kubeflow -f values-cn.yaml
 ```
 
 ### 访问 Kubeflow 界面：
@@ -40,33 +35,20 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 
 如果您将镜像同步到一个私有镜像源，并包含认证，可以在 `values.yaml` 中增加如下认证信息配置：
 
 ```yaml
-imageCredentials:
-  enabled: true
+global:
+  imageCredentials: ""
+  useRegistryCredentials: false
   registry: quay.io
   username: someone
   password: sillyness
   email: someone@host.com
-dex:
-  imageCredentials:
-    enabled: true
-    registry: quay.io
-    username: someone
-    password: sillyness
-    email: someone@host.com
 minio:
   useKubeflowImagePullSecrets: true
-knativeserving:
-  imageCredentials:
-    enabled: true
-    registry: quay.io
-    username: someone
-    password: sillyness
-    email: someone@host.com
 ```
 
 ## 卸载 Kubeflow
 
-执行命令 `helm delete my-kubeflow` 即可完成卸载。
+执行命令 `helm delete kubeflow` 即可完成卸载。
 
 ## 在生产集群中部署 Kubeflow
 
@@ -104,9 +86,3 @@ useridPrefix: "\"\""
 oidcScopes: "profile email groups"
 ```
 
-
-## TODO
-
-- 适配 `cert-manager`, `istio`, `dex`, `minio` 的官方 Charts
-- 统一 `values.yaml` 中的 镜像/tag 的配置
-- 支持使用 subpath 方式访问 Kubeflow, 比如 `https://domain.name/kubeflow/`

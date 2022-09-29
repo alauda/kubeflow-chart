@@ -8,20 +8,15 @@ Kubeflow at any environments using Helm.
 ## Quick Installation(Using local Minikube)：
 
 1. `helm repo add alauda https://alauda.github.io/kubeflow-chart`
-2. Install requirements (skip this step if already installed):
-  - `helm install istio alauda/istio`
-  - `helm install cert-manager alauda/certmanager`
-3. `helm install my-kubeflow alauda/kubeflow`
+1. `helm install kubeflow alauda/kubeflow`
   
 ### Use alternative image registry (for CN access)
 
 Use `values-cn.yaml` to override image configurations:
 
 ```bash
-wget -O values-istio-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
-helm install istio alauda/istio -f values-cn.yaml
-helm install cert-manager alauda/certmanager -f values-cn.yaml
-helm install my-kubeflow alauda/kubeflow -f values-cn.yaml
+wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+helm install kubeflow alauda/kubeflow -f values-cn.yaml
 ```
 
 ### Access Kubeflow Web UI:
@@ -34,9 +29,24 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system --address=0.0.0.0 
 
 Visit `http://localhost:8080/`.
 
+### Configure using a private registry:
+
+If you have pushed images to your private image registry, setup below fields:
+```yaml
+global:
+  imageCredentials: ""
+  useRegistryCredentials: false
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com
+minio:
+  useKubeflowImagePullSecrets: true
+```
+
 ## Uninstall Kubeflow
 
-Run `helm delete my-kubeflow` to uninstall Kubeflow.
+Run `helm delete kubeflow` to uninstall Kubeflow.
 
 ## Deploy Kubeflow in production
 

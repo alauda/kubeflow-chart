@@ -57,7 +57,7 @@ dex:
 minio:
   kfpMinioImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
 
-knativeserving:
+knative-serving:
   knativeVersion: "v0.22.1"
   knativeNetControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-controller
   knativeNetWebhookImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/knative-net-istio-webhook

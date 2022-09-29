@@ -15,12 +15,16 @@ tlsCrt: ""
 tlsKey: ""
 
 global:
-  imageCredentials: ""
   useRegistryCredentials: false
   registry: quay.io
   username: someone
   password: sillyness
   email: someone@host.com
+
+cert-manager:
+  enabled: true
+istio:
+  enabled: true
 
 # Set minio.enabled = true to use embeded single node MinIO test deployment.
 minio:
