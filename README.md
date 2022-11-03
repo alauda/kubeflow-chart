@@ -16,7 +16,7 @@
 使用 `values-cn.yaml` 覆盖安装镜像配置：
 
 ```bash
-wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/main/values-cn.yaml
 helm install kubeflow alauda/kubeflow -f values-cn.yaml
 ```
 
