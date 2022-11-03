@@ -15,7 +15,7 @@ Kubeflow at any environments using Helm.
 Use `values-cn.yaml` to override image configurations:
 
 ```bash
-wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/values-cn.yaml
+wget -O values-cn.yaml https://raw.githubusercontent.com/alauda/kubeflow-chart/main/values-cn.yaml
 helm install kubeflow alauda/kubeflow -f values-cn.yaml
 ```
 
