@@ -6,10 +6,6 @@
 # kind: ConfigMap
 # metadata:
 #   name: default-install-config-5cbhhbttg4
-#   annotations:
-#     "helm.sh/hook": post-install
-#     "helm.sh/hook-weight": "10"
-#     "helm.sh/hook-delete-policy": hook-succeeded
 # ---
 apiVersion: kubeflow.org/v1beta1
 kind: Profile

@@ -156,12 +156,30 @@ spec:
       - envFrom:
         - configMapRef:
             name: kserve-models-web-app-config-gfh88m49k6
-        image: kserve/models-web-app:v0.7.0
         image: {{ .Values.kfsModelsWebAppImage }}:{{ .Values.kfsVersion }}
         imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz/liveness
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
         name: kserve-models-web-app
         ports:
         - containerPort: 5000
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz/readiness
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
       serviceAccountName: kserve-models-web-app
 ---
 apiVersion: networking.istio.io/v1beta1

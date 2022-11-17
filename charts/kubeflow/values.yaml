@@ -62,27 +62,32 @@ dex:
 # ----------------------------------------------------
 # Images
 # ----------------------------------------------------
-admissionWebhookImage: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook:v1.5.0
-jupyterWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app:v1.5.0
-notebookControllerImage: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller:v1.5.0
-notebookImageScipy: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:v1.5.0
-notebookImagePytorch: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:v1.5.0
-notebookImagePytorchCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:v1.5.0
-notebookImageTensorflow: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:v1.5.0
-notebookImageTensorflowCuda: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:v1.5.0
-notebookImageCodeserverPython: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:v1.5.0
-notebookImageRstudioTidyverse: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:v1.5.0
+podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook:v1.6.1
+jupyterWebAppImage: docker.io/kubeflownotebookswg/jupyter-web-app:v1.6.1
+notebookControllerImage: docker.io/kubeflownotebookswg/notebook-controller:v1.6.1
+notebookImageScipy: kubeflownotebookswg/jupyter-scipy:v1.6.1
+notebookImagePytorch: kubeflownotebookswg/jupyter-pytorch-full:v1.6.1
+notebookImagePytorchCuda: kubeflownotebookswg/jupyter-pytorch-cuda-full:v1.6.1
+notebookImageTensorflow: kubeflownotebookswg/jupyter-tensorflow-full:v1.6.1
+notebookImageTensorflowCuda: kubeflownotebookswg/jupyter-tensorflow-cuda-full:v1.6.1
+notebookImageCodeserverPython: kubeflownotebookswg/codeserver-python:v1.6.1
+notebookImageRstudioTidyverse: kubeflownotebookswg/rstudio-tidyverse:v1.6.1
 
 oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
-centralDashboardImage: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard:v1.5.0
-kfamAccessManagementImage: public.ecr.aws/j1r0q0g6/notebooks/access-management:v1.5.0
-kfamProfileControllerImage: public.ecr.aws/j1r0q0g6/notebooks/profile-controller:v1.5.0
-volumesWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app:v1.5.0
+centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard:v1.6.1
+kfamImage: docker.io/kubeflownotebookswg/kfam:v1.6.1
+kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller:v1.6.1
+volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app:v1.6.1
+tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller:v1.6.1
+tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app:v1.6.1
+tensorboardImage: tensorflow/tensorflow:2.1.0
+trainingOperatorImage: kubeflow/training-operator:v1-e1434f6
 
+kubectlImage: bitnami/kubectl:1.21.14
 # kfpVersion is the version of Kubeflow Pipeline images
-kfpVersion: "1.8.2"
+kfpVersion: "2.0.0-alpha.5"
 
-kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:1.8.2
+kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:2.0.0-alpha.5
 # below images uses kfpVersion as version tag:
 kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
 kfpFrontendImage: gcr.io/ml-pipeline/frontend
@@ -92,62 +97,60 @@ kfpPersistenceAgentImage: gcr.io/ml-pipeline/persistenceagent
 kfpMetadataWriterImage: gcr.io/ml-pipeline/metadata-writer
 kfpMetadataEnvoyImage: gcr.io/ml-pipeline/metadata-envoy
 kfpCacheServerImage: gcr.io/ml-pipeline/cache-server
+kfpCacheDeployerImage: gcr.io/ml-pipeline/cache-deployer
 
 # pipeline images using unique tags:
 kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.5.0
 kfpCacheImage: gcr.io/google-containers/busybox:latest
-kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.2.3-license-compliance
-kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.2.3-license-compliance
+kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.3.8-license-compliance
+kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.3.8-license-compliance
 kfpMetaControllerImage: docker.io/metacontrollerio/metacontroller:v2.0.4
-kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7
+kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7-debian
 kfpPythonImage: python:3.7
 
 # KServe
-kfsVersion: "v0.7.0"
+kfsVersion: "v0.8.0"
+kfsExplainerVersion: "latest"
 kfsAgentImage: kserve/agent
 kfsAlibiExplainerImage: kserve/alibi-explainer
 kfsAixExplainer: kserve/aix-explainer
 kfsArtExplainer: kserve/art-explainer
 
 kfsTensorflowImage: tensorflow/serving
-kfsTensorflowImageVersion: "1.14.0"
-kfsTensorflowImageGpuVersion: "1.14.0-gpu"
+kfsTensorflowImageVersion: "2.6.2"
+kfsTensorflowImageGpuVersion: "2.6.2-gpu"
 
 kfsOnnxImage: mcr.microsoft.com/onnxruntime/server
 kfsOnnxImageVersion: "v1.0.0"
 
 kfsSkLearnImage: kserve/sklearnserver
-kfsSkLearnImageVersion: "v0.7.0"
+kfsSkLearnImageVersion: "v0.8.0"
 
 kfsSeldonioImage: docker.io/seldonio/mlserver
-kfsSeldonioImageVersion: "0.2.1"
+kfsSeldonioImageVersion: "0.5.3"
 
 kfsXgbserverImage: kserve/xgbserver
-kfsXgbserverImageVersion: "v0.7.0"
-
-kfsPytorchImage: kserve/pytorchserver
-kfsPytorchImageVersion: "v0.7.0"
-kfsPytorchImageGpuVersion: "v0.7.0-gpu"
+kfsXgbserverImageVersion: "v0.8.0"
 
 kfsTorchServeImage: pytorch/torchserve-kfs
-kfsTorchServeImageVersion: "0.4.1"
-kfsTorchServeImageGpuVersion: "0.4.1-gpu"
+kfsTorchServeImageVersion: "0.5.3"
+kfsTorchServeImageGpuVersion: "0.5.3-gpu"
 
 kfsTritonImage: nvcr.io/nvidia/tritonserver
 kfsTritonImageVersion: "21.09-py3"
 
 kfsPmmlserverImage: kserve/pmmlserver
-kfsPmmlserverImageVersion: "v0.7.0"
+kfsPmmlserverImageVersion: "v0.8.0"
 
 kfsLgbserverImage: kserve/lgbserver
-kfsLgbserverImageVersion: "v0.7.0"
+kfsLgbserverImageVersion: "v0.8.0"
 
 kfsPaddleserverImage: kserve/paddleserver
-kfsPaddleserverImageVersion: "v0.7.0"
+kfsPaddleserverImageVersion: "v0.8.0"
 
 kfsStorageInitializerImage: kserve/storage-initializer
 kfsControllerImage: kserve/kserve-controller
-kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.4.0
+kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
 kfsModelsWebAppImage: kserve/models-web-app
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
@@ -159,9 +162,3 @@ knativeIstioConfigmap: istio
 # Default: Kubernetes
 istioMetaClusterID: Kubernetes
 
-# training operators
-trainingOperatorImage: public.ecr.aws/j1r0q0g6/training/training-operator:174e8813666951ded505daf334a37f60fd50c18d
-
-# Tensorboard
-tensorboardControllerImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller:v1.5.0
-tensorboardWebAppImage: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app:v1.5.0

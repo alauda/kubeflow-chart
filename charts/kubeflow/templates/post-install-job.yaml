@@ -42,7 +42,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: wait-client
-        image: bitnami/kubectl:1.21.14
+        image: {{ .Values.kubectlImage }}
         command: ["/bin/sh", "-c"]
         # wait istio ready and 
         # restart kubeflow components to apply istio sidecar injection
@@ -85,7 +85,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: wait-client
-        image: bitnami/kubectl:1.21.14
+        image: {{ .Values.kubectlImage }}
         command: ["/bin/sh", "-c"]
         # delete default profile first
         args:
