@@ -137,6 +137,7 @@ subjects:
 ---
 apiVersion: v1
 data:
+  VWA_APP_SECURE_COOKIES: "true"
   VWA_CLUSTER_DOMAIN: cluster.local
   VWA_PREFIX: /volumes
   VWA_USERID_HEADER: kubeflow-userid
@@ -146,7 +147,7 @@ metadata:
   labels:
     app: volumes-web-app
     kustomize.component: volumes-web-app
-  name: volumes-web-app-parameters-d9b9bmk7ch
+  name: volumes-web-app-parameters-dbh9dmt5gt
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -199,6 +200,8 @@ spec:
           value: kubeflow-userid
         - name: USERID_PREFIX
           value: ""
+        - name: APP_SECURE_COOKIES
+          value: $(VWA_APP_SECURE_COOKIES)
         image: {{ .Values.volumesWebAppImage }}
         name: volumes-web-app
         ports:

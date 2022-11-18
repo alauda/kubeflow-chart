@@ -397,7 +397,7 @@ metadata:
   labels:
     app: jupyter-web-app
     kustomize.component: jupyter-web-app
-  name: jupyter-web-app-config-5dg8kg2b82
+  name: jupyter-web-app-config-hmg7g9826g
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -598,6 +598,7 @@ metadata:
 ---
 apiVersion: v1
 data:
+  JWA_APP_SECURE_COOKIES: "true"
   JWA_CLUSTER_DOMAIN: cluster.local
   JWA_PREFIX: /jupyter
   JWA_UI: default
@@ -608,7 +609,7 @@ metadata:
   labels:
     app: jupyter-web-app
     kustomize.component: jupyter-web-app
-  name: jupyter-web-app-parameters-h7dbhff8cb
+  name: jupyter-web-app-parameters-dhcbt5dtdf
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -663,6 +664,8 @@ spec:
           value: kubeflow-userid
         - name: USERID_PREFIX
           value: ""
+        - name: APP_SECURE_COOKIES
+          value: $(JWA_APP_SECURE_COOKIES)
         image: {{ .Values.jupyterWebAppImage }}
         name: jupyter-web-app
         ports:
@@ -675,7 +678,7 @@ spec:
       serviceAccountName: jupyter-web-app-service-account
       volumes:
       - configMap:
-          name: jupyter-web-app-config-5dg8kg2b82
+          name: jupyter-web-app-config-hmg7g9826g
         name: config-volume
       - configMap:
           name: jupyter-web-app-logos

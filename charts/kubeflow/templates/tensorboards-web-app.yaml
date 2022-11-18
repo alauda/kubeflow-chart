@@ -135,6 +135,7 @@ subjects:
 ---
 apiVersion: v1
 data:
+  TWA_APP_SECURE_COOKIES: 'true '
   TWA_CLUSTER_DOMAIN: cluster.local
   TWA_PREFIX: /tensorboards
   TWA_USERID_HEADER: kubeflow-userid
@@ -144,7 +145,7 @@ metadata:
   labels:
     app: tensorboards-web-app
     kustomize.component: tensorboards-web-app
-  name: tensorboards-web-app-parameters-bdb48k45kd
+  name: tensorboards-web-app-parameters-c8ttmfh2f8
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -197,6 +198,8 @@ spec:
           value: kubeflow-userid
         - name: USERID_PREFIX
           value: ""
+        - name: APP_SECURE_COOKIES
+          value: $(TWA_APP_SECURE_COOKIES)
         image: {{ .Values.tensorboardWebAppImage }}
         name: tensorboards-web-app
         ports:

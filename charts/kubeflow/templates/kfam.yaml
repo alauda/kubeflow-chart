@@ -67,7 +67,7 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     kustomize.component: profiles
-  name: profiles-cluster-role-binding
+  name: profiles-cluster-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -162,7 +162,7 @@ spec:
         envFrom:
         - configMapRef:
             name: profiles-config-2g29dd2mbd
-        image: {{ .Values.kfamAccessManagementImage }}
+        image: {{ .Values.kfamImage }}
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
@@ -190,15 +190,19 @@ spec:
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
-            path: /metrics
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 30
+            path: /healthz
+            port: 9876
+          initialDelaySeconds: 15
+          periodSeconds: 20
         name: manager
         ports:
-        - containerPort: 8080
-          name: manager-http
-          protocol: TCP
+        - containerPort: 9876
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 9876
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
         - mountPath: /etc/profile-controller
           name: namespace-labels

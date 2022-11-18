@@ -138,6 +138,13 @@ spec:
               - key: kubernetes.io/arch
                 operator: In
                 values:
+                - arm64
+            weight: 2
+          - preference:
+              matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
                 - ppc64le
             weight: 2
           - preference:
@@ -154,6 +161,7 @@ spec:
                 operator: In
                 values:
                 - amd64
+                - arm64
                 - ppc64le
                 - s390x
       containers:
@@ -166,6 +174,8 @@ spec:
         - --proxyComponentLogLevel=misc:error
         - --log_output_level=default:info
         env:
+        - name: ISTIO_META_ROUTER_MODE
+          value: sni-dnat
         - name: JWT_POLICY
           value: third-party-jwt
         - name: PILOT_CERT_PROVIDER
@@ -211,11 +221,10 @@ spec:
           value: cluster.local
         - name: ISTIO_META_UNPRIVILEGED_POD
           value: "true"
-        - name: ISTIO_META_ROUTER_MODE
-          value: sni-dnat
         - name: ISTIO_META_CLUSTER_ID
           value: {{ .Values.istioMetaClusterID }}
         image: {{ .Values.knativeProxyvImage }}
+        imagePullPolicy: IfNotPresent
         name: istio-proxy
         ports:
         - containerPort: 15020
@@ -250,6 +259,10 @@ spec:
           privileged: false
           readOnlyRootFilesystem: true
         volumeMounts:
+        - mountPath: /var/run/secrets/workload-spiffe-uds
+          name: workload-socket
+        - mountPath: /var/run/secrets/workload-spiffe-credentials
+          name: workload-certs
         - mountPath: /etc/istio/proxy
           name: istio-envoy
         - mountPath: /etc/istio/config
@@ -276,6 +289,10 @@ spec:
         runAsUser: 1337
       serviceAccountName: cluster-local-gateway-service-account
       volumes:
+      - emptyDir: {}
+        name: workload-socket
+      - emptyDir: {}
+        name: workload-certs
       - configMap:
           name: istio-ca-root-cert
         name: istiod-ca-cert

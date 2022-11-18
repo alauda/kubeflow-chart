@@ -13,12 +13,10 @@
 # this example block and unindented to be in the data block
 # to actually change the configuration.
 
-# Default Knative Gateway after v0.3. It points to the Istio
-# standard istio-ingressgateway, instead of a custom one that we
-# used pre-0.3. The configuration format should be `gateway.
-# {{gateway_namespace}}.{{gateway_name}}: "{{ingress_name}}.
-# {{ingress_namespace}}.svc.cluster.local"`. The {{gateway_namespace}}
-# is optional; when it is omitted, the system will search for
+# A gateway and Istio service to serve external traffic.
+# The configuration format should be
+# `gateway.{{gateway_namespace}}.{{gateway_name}}: "{{ingress_name}}.{{ingress_namespace}}.svc.cluster.local"`.
+# The {{gateway_namespace}} is optional; when it is omitted, the system will search for
 # the gateway in the serving system namespace `knative-serving`
 gateway.knative-serving.knative-ingress-gateway: "istio-ingressgateway.istio-system.svc.cluster.local"
 
@@ -38,10 +36,14 @@ gateway.knative-serving.knative-ingress-gateway: "istio-ingressgateway.istio-sys
 # `knative-serving`
 local-gateway.knative-serving.knative-local-gateway: "knative-local-gateway.istio-system.svc.cluster.local"
 
+# DEPRECATED: local-gateway.mesh is deprecated.
+# See: https://github.com/knative/serving/issues/11523
+#
 # To use only Istio service mesh and no knative-local-gateway, replace
 # all local-gateway.* entries by the following entry.
 local-gateway.mesh: "mesh"
 
 # If true, knative will use the Istio VirtualService's status to determine
 # endpoint readiness. Otherwise, probe as usual.
+# NOTE: This feature is currently experimental and should not be used in production.
 enable-virtualservice-status: "false"
