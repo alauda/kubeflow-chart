@@ -1846,8 +1846,8 @@ data:
   artifactRepository: |-
     archiveLogs: true
     s3:
-      endpoint: "{{ .Values.minioHost }}:{{ .Values.minioPort }}"
-      bucket: "{{ .Values.minioKFPBucket }}"
+      endpoint: "{{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}"
+      bucket: "{{ .Values.minio.minioKFPBucket }}"
       # insecure will disable TLS. Primarily used for minio installs not configured with TLS
       insecure: true
       accessKeySecret:
