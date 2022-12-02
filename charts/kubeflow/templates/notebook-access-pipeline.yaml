@@ -26,11 +26,11 @@ metadata:
   annotations:
     serving.kserve.io/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
     serving.kserve.io/s3-usehttps: "0"
-    serving.kserve.io/s3-region: "{{ .Values.minioS3Region }}"
+    serving.kserve.io/s3-region: "{{ .Values.minio.minioS3Region }}"
     serving.kserve.io/s3-useanoncredential: "false"
     serving.kubeflow.org/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
     serving.kubeflow.org/s3-usehttps: "0"
-    serving.kubeflow.org/s3-region: "{{ .Values.minioS3Region }}"
+    serving.kubeflow.org/s3-region: "{{ .Values.minio.minioS3Region }}"
     serving.kubeflow.org/s3-useanoncredential: "false"
 type: Opaque
 # use `stringData` for raw credential string or `data` for base64 encoded string
