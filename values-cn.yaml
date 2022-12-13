@@ -4,6 +4,8 @@ tensorboardControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/ten
 tensorboardWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorboards-web-app:v1.6.1
 tensorboardImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/tensorflow:2.1.0
 trainingOperatorImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/training-operator:v1-e1434f6
+trainingOperatorPytorchInitImage: alpine:3.10
+trainingOperatorMPIInitImage: mpioperator/kubectl-delivery:latest
 jupyterWebAppImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/jupyter-web-app:v1.6.1
 kfamImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/kfam:v1.6.1
 kfamProfileControllerImage: registry.cn-hangzhou.aliyuncs.com/kubeflow-chart/profile-controller:v1.6.1

@@ -223,6 +223,11 @@ spec:
       containers:
       - command:
         - /manager
+        args:
+        - --pytorch-init-container-image
+        - {{ .Values.trainingOperatorPytorchInitImage }}
+        - --mpi-kubectl-delivery-image
+        - {{ .Values.trainingOperatorMPIInitImage }}
         env:
         - name: MY_POD_NAMESPACE
           valueFrom:
