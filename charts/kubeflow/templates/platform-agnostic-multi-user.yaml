@@ -1,4 +1,5 @@
 {{- include "prechecks" . -}}
+{{- if .Values.useRuntimeDocker }}
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -31,6 +32,7 @@ webhooks:
     - pods
   sideEffects: None
   timeoutSeconds: 5
+{{- end }}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -59,6 +61,22 @@ imagePullSecrets:
 - name: kubeflow-image-pull-secrets
 {{ end }}
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: kubeflow-pipelines-cache-deployer-sa
+  namespace: kubeflow
+{{ if .Values.global.useRegistryCredentials }}
+imagePullSecrets:
+- name: kubeflow-image-pull-secrets
+{{ end }}
+---
+{{- end }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -259,6 +277,30 @@ rules:
   verbs:
   - get
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: cache-deployer
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: kubeflow-pipelines-cache-deployer-role
+  namespace: kubeflow
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - patch
+  - list
+---
+{{- end }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -948,6 +990,47 @@ rules:
   - get
   - delete
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: kubeflow-pipelines-cache-deployer-clusterrole
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: kubeflow-pipelines-cache-deployer-clusterrole
+rules:
+- apiGroups:
+  - certificates.k8s.io
+  resources:
+  - certificatesigningrequests
+  - certificatesigningrequests/approval
+  verbs:
+  - create
+  - delete
+  - get
+  - update
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+- apiGroups:
+  - certificates.k8s.io
+  resourceNames:
+  - kubernetes.io/*
+  resources:
+  - signers
+  verbs:
+  - approve
+---
+{{- end }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -1299,6 +1382,25 @@ subjects:
   name: kubeflow-pipelines-cache
   namespace: kubeflow
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: kubeflow-pipelines-cache-deployer-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kubeflow-pipelines-cache-deployer-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: kubeflow-pipelines-cache-deployer-sa
+  namespace: kubeflow
+---
+{{- end }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -1460,6 +1562,27 @@ subjects:
   name: kubeflow-pipelines-cache
   namespace: kubeflow
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: cache-deployer
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: kubeflow-pipelines-cache-deployer-rolebinding
+  namespace: kubeflow
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kubeflow-pipelines-cache-deployer-role
+subjects:
+- kind: ServiceAccount
+  name: kubeflow-pipelines-cache-deployer-sa
+  namespace: kubeflow
+---
+{{- end }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -2082,8 +2205,8 @@ data:
   cacheImage: {{ .Values.kfpCacheImage }}
   cacheNodeRestrictions: "false"
   cronScheduleTimezone: UTC
-  dbHost: mysql
-  dbPort: "3306"
+  dbHost: {{ .Values.mysql.host }}
+  dbPort: "{{ .Values.mysql.port }}"
   defaultPipelineRoot: ""
   mlmdDb: metadb
   pipelineDb: mlpipeline
@@ -2108,8 +2231,8 @@ data:
   artifactRepository: |
     archiveLogs: true
     s3:
-      endpoint: "{{ .Values.minioHost }}:{{ .Values.minioPort }}"
-      bucket: "{{ .Values.minioKFPBucket }}"
+      endpoint: "{{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}"
+      bucket: "{{ .Values.minio.minioKFPBucket }}"
       # insecure will disable TLS. Primarily used for minio installs not configured with TLS
       insecure: true
       accessKeySecret:
@@ -2119,7 +2242,11 @@ data:
         name: mlpipeline-minio-artifact
         key: secretkey
       {{ .Files.Get "config-files/kfp-artifact-repo.txt" | indent 6 }}
+  {{- if .Values.useRuntimeDocker }}
   containerRuntimeExecutor: emissary
+  {{- else }}
+  containerRuntimeExecutor: pns
+  {{- end }}
   executor: |
     imagePullPolicy: IfNotPresent
     resources:
@@ -2157,8 +2284,8 @@ metadata:
   name: mysql-secret
   namespace: kubeflow
 stringData:
-  password: ""
-  username: root
+  password: "{{ .Values.mysql.password }}"
+  username: "{{ .Values.mysql.username }}"
 ---
 apiVersion: v1
 kind: Service
@@ -2310,6 +2437,7 @@ spec:
     app.kubernetes.io/name: kubeflow-pipelines
     application-crd-id: kubeflow-pipelines
 ---
+{{- if .Values.mysql.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -2326,6 +2454,7 @@ spec:
     app: mysql
     application-crd-id: kubeflow-pipelines
 ---
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -2357,6 +2486,48 @@ metadata:
   name: workflow-controller
 value: 1000000
 ---
+{{- if not .Values.useRuntimeDocker }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cache-deployer
+    app.kubernetes.io/component: ml-pipeline
+    app.kubernetes.io/name: kubeflow-pipelines
+    application-crd-id: kubeflow-pipelines
+  name: cache-deployer-deployment
+  namespace: kubeflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-deployer
+      app.kubernetes.io/component: ml-pipeline
+      app.kubernetes.io/name: kubeflow-pipelines
+      application-crd-id: kubeflow-pipelines
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cache-deployer
+        app.kubernetes.io/component: ml-pipeline
+        app.kubernetes.io/name: kubeflow-pipelines
+        application-crd-id: kubeflow-pipelines
+    spec:
+      containers:
+      - env:
+        - name: NAMESPACE_TO_WATCH
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: {{ .Values.kfpCacheDeployerImage }}:{{ .Values.kfpVersion }}
+        imagePullPolicy: Always
+        name: main
+      restartPolicy: Always
+      serviceAccountName: kubeflow-pipelines-cache-deployer-sa
+---
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -2377,12 +2548,16 @@ spec:
       application-crd-id: kubeflow-pipelines
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
       labels:
         app: cache-server
         app.kubernetes.io/component: ml-pipeline
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - args:
         - --db_driver=$(DBCONFIG_DRIVER)
@@ -2392,8 +2567,10 @@ spec:
         - --db_user=$(DBCONFIG_USER)
         - --db_password=$(DBCONFIG_PASSWORD)
         - --namespace_to_watch=$(NAMESPACE_TO_WATCH)
+        {{- if .Values.useRuntimeDocker }}
         - --tls_cert_filename=tls.crt
         - --tls_key_filename=tls.key
+        {{- end }}
         env:
         - name: CACHE_IMAGE
           valueFrom:
@@ -2478,6 +2655,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - command:
         - python
@@ -2549,6 +2728,8 @@ spec:
         application-crd-id: kubeflow-pipelines
         component: metadata-envoy
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - image: {{ .Values.kfpMetadataEnvoyImage }}:{{ .Values.kfpVersion }}
         name: container
@@ -2574,10 +2755,14 @@ spec:
       component: metadata-grpc-server
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
       labels:
         application-crd-id: kubeflow-pipelines
         component: metadata-grpc-server
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - args:
         - --grpc_port=8080
@@ -2654,12 +2839,16 @@ spec:
       application-crd-id: kubeflow-pipelines
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
       labels:
         app: metadata-writer
         app.kubernetes.io/component: ml-pipeline
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: NAMESPACE_TO_WATCH
@@ -2688,6 +2877,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline
@@ -2695,6 +2885,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: KUBEFLOW_USERID_HEADER
@@ -2710,6 +2902,16 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: OBJECTSTORECONFIG_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: objectStoreHost
+              name: pipeline-install-config
+        - name: OBJECTSTORECONFIG_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: objectStorePort
+              name: pipeline-install-config
         - name: OBJECTSTORECONFIG_SECURE
           value: "false"
         - name: OBJECTSTORECONFIG_BUCKETNAME
@@ -2832,6 +3034,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline-persistenceagent
@@ -2839,6 +3042,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: NAMESPACE
@@ -2883,6 +3088,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline-scheduledworkflow
@@ -2890,6 +3096,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: NAMESPACE
@@ -2915,6 +3123,7 @@ metadata:
   name: ml-pipeline-ui
   namespace: kubeflow
 spec:
+  replicas: {{ .Values.controlPlane.replicas }}
   selector:
     matchLabels:
       app: ml-pipeline-ui
@@ -2924,6 +3133,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline-ui
@@ -2931,6 +3141,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: VIEWER_TENSORBOARD_POD_TEMPLATE_SPEC_PATH
@@ -2965,7 +3177,7 @@ spec:
               name: mlpipeline-minio-artifact
         - name: ALLOW_CUSTOM_VISUALIZATIONS
           value: "true"
-        image: {{ .Values.kfpFrontendImage }}:{{ .Values.kfpVersion}}
+        image: {{ .Values.kfpFrontendImage }}:{{ .Values.kfpFrontendTag}}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -3028,6 +3240,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline-viewer-crd
@@ -3035,6 +3248,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - env:
         - name: NAMESPACE
@@ -3071,6 +3286,7 @@ spec:
   template:
     metadata:
       annotations:
+        sidecar.istio.io/inject: "true"
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
       labels:
         app: ml-pipeline-visualizationserver
@@ -3078,6 +3294,8 @@ spec:
         app.kubernetes.io/name: kubeflow-pipelines
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - image: {{ .Values.kfpVisualizationServerImage }}:{{ .Values.kfpVersion }}
         imagePullPolicy: IfNotPresent
@@ -3115,6 +3333,7 @@ spec:
             memory: 500Mi
       serviceAccountName: ml-pipeline-visualizationserver
 ---
+{{- if .Values.mysql.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -3153,10 +3372,14 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
       labels:
         app: mysql
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - args:
         - --ignore-db-dir=lost+found
@@ -3188,6 +3411,7 @@ spec:
         persistentVolumeClaim:
           claimName: mysql-pv-claim
 ---
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -3202,10 +3426,14 @@ spec:
       application-crd-id: kubeflow-pipelines
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
       labels:
         app: workflow-controller
         application-crd-id: kubeflow-pipelines
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - args:
         - --configmap
@@ -3278,6 +3506,8 @@ spec:
         application-crd-id: kubeflow-pipelines
         kustomize.component: metacontroller
     spec:
+      {{ include "kubeflow.nodeAffinity" . | indent 6 }}
+      {{ include "kubeflow.tolerations" . | indent 6 }}
       containers:
       - command:
         - /usr/bin/metacontroller
@@ -3304,6 +3534,7 @@ spec:
       serviceAccountName: meta-controller-service
   volumeClaimTemplates: []
 ---
+{{- if .Values.useRuntimeDocker }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -3333,6 +3564,7 @@ metadata:
 spec:
   selfSigned: {}
 ---
+{{- end }}
 apiVersion: metacontroller.k8s.io/v1alpha1
 kind: CompositeController
 metadata:
@@ -3420,6 +3652,7 @@ spec:
     tls:
       mode: ISTIO_MUTUAL
 ---
+{{- if .Values.mysql.enabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
@@ -3428,11 +3661,12 @@ metadata:
   name: ml-pipeline-mysql
   namespace: kubeflow
 spec:
-  host: mysql.kubeflow.svc.cluster.local
+  host: {{ .Values.mysql.host }}
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
 ---
+{{- end }}
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
@@ -3622,6 +3856,7 @@ spec:
   selector:
     matchLabels:
       app: ml-pipeline-visualizationserver
+{{- if .Values.mysql.enabled }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -3645,6 +3880,7 @@ spec:
   selector:
     matchLabels:
       app: mysql
+{{- end }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -3661,6 +3897,7 @@ spec:
   selector:
     matchLabels:
       app: cache-server
+{{- if .Values.mysql.enabled }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -3675,3 +3912,4 @@ spec:
   resources:
     requests:
       storage: 20Gi
+{{- end }}

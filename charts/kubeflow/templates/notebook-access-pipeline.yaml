@@ -22,16 +22,18 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: minio-s3-secret
-  namespace: {{ .Values.dex.defaultUserProfile}}
+  namespace: {{ .Values.dex.defaultUserProfile }}
   annotations:
     serving.kserve.io/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
     serving.kserve.io/s3-usehttps: "0"
-    serving.kserve.io/s3-region: "{{ .Values.minioS3Region }}"
+     serving.kserve.io/s3-region: "minio"
     serving.kserve.io/s3-useanoncredential: "false"
+     serving.kserve.io/s3-usevirtualbucket: "false"
     serving.kubeflow.org/s3-endpoint: {{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}
     serving.kubeflow.org/s3-usehttps: "0"
-    serving.kubeflow.org/s3-region: "{{ .Values.minioS3Region }}"
+     serving.kubeflow.org/s3-region: "minio"
     serving.kubeflow.org/s3-useanoncredential: "false"
+     serving.kubeflow.org/s3-usevirtualbucket: "false"
 type: Opaque
 # use `stringData` for raw credential string or `data` for base64 encoded string
 stringData:
@@ -45,6 +47,10 @@ metadata:
   namespace: {{ .Values.dex.defaultUserProfile}}
 secrets:
 - name: minio-s3-secret
+{{- if .Values.global.useRegistryCredentials }}
+imagePullSecrets:
+- name: kubeflow-image-pull-secrets
+{{- end }}
 ---
 apiVersion: kubeflow.org/v1alpha1
 kind: PodDefault
@@ -72,6 +78,34 @@ spec:
     - mountPath: /var/run/secrets/kubeflow/pipelines
       name: volume-kf-pipeline-token
       readOnly: true
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
   env:
     - name: KF_PIPELINES_SA_TOKEN_PATH
       value: /var/run/secrets/kubeflow/pipelines/token
+    - name: MLFLOW_TRACKING_URI
+      value: http://mlflow-tracking-server.kubeflow.svc.cluster.local:5000
+    - name: MLFLOW_EXPERIMENT_NAME
+      value: Default
+    - name: JUPYTERLAB_S3_ENDPOINT
+      value: "http://{{ .Values.minio.minioHost }}:{{ .Values.minio.minioPort }}"
+    - name: JUPYTERLAB_S3_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: minio-s3-secret
+          key: AWS_ACCESS_KEY_ID
+    - name: JUPYTERLAB_S3_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: minio-s3-secret
+          key: AWS_SECRET_ACCESS_KEY
+    - name: ELYRA_PIP_CONFIG_URL
+      value: http://minio-service.kubeflow:9000/public/pip.conf
+    - name: ELYRA_BOOTSTRAP_SCRIPT_URL
+      value: http://minio-service.kubeflow:9000/public/bootstrapper.py
+    - name: ELYRA_REQUIREMENTS_URL
+      value: http://minio-service.kubeflow:9000/public/requirements-elyra.txt
+    - name: ELYRA_REQUIREMENTS_URL_PY37
+      value: http://minio-service.kubeflow:9000/public/requirements-elyra-py37.txt

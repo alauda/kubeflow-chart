@@ -49,19 +49,27 @@ spec:
         # ignore not installed resources
         args:
         - |
-          kubectl -n istio-system wait --timeout=180s --for=condition=ready pod --all || true
-          kubectl -n kubeflow rollout restart deploy mysql || true
-          kubectl -n kubeflow rollout restart deploy minio || true
-          kubectl -n kubeflow rollout restart deploy cache-server || true
-          kubectl -n kubeflow rollout restart deploy metadata-grpc-deployment  || true
-          kubectl -n kubeflow rollout restart deploy metadata-writer  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-persistenceagent  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-scheduledworkflow  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-ui  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-viewer-crd  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-visualizationserver  || true
-          kubectl -n kubeflow rollout restart deploy workflow-controller  || true
+          kubectl -n istio-system wait --timeout=15m0s --for=condition=ready pod -l app=authservice
+          kubectl -n istio-system wait --timeout=15m0s --for=condition=ready pod -l app=istio-ingressgateway
+          kubectl -n istio-system wait --timeout=15m0s --for=condition=ready pod -l app=istiod
+          KFP_CONTAINERS=`kubectl -n kubeflow get pod -l app=ml-pipeline -o jsonpath='{range .items[*]}{range .spec.containers[*]}{.name}{"\n"}{end}{end}' | wc -l`
+          if [ "$KFP_CONTAINERS" != "2" ]; then
+            echo "ml-pipeline deployment is not istio injected. This may cause some issues, please check this manually."
+            echo "will automatically restart all components to try if istio injection will take place..."
+            kubectl -n kubeflow rollout restart deploy mysql || true
+            kubectl -n kubeflow rollout restart deploy minio || true
+            kubectl -n kubeflow rollout restart deploy cache-server || true
+            kubectl -n kubeflow rollout restart deploy metadata-grpc-deployment  || true
+            kubectl -n kubeflow rollout restart deploy metadata-writer  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline-persistenceagent  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline-scheduledworkflow  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline-ui  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline-viewer-crd  || true
+            kubectl -n kubeflow rollout restart deploy ml-pipeline-visualizationserver  || true
+            kubectl -n kubeflow rollout restart deploy workflow-controller  || true
+            echo "kubeflow componets restarted."
+          fi
 ---
 apiVersion: batch/v1
 kind: Job
