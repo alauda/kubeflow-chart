@@ -10,6 +10,7 @@ enableIngress: false
 kubeflowHost: "*"
 # kubeflowSitePrefix only supports "/" currently
 kubeflowSitePrefix: "/"
+
 # Setup tlsCrt and tlsKey to support HTTPS access (base64 encoded).
 tlsCrt: ""
 tlsKey: ""
@@ -30,7 +31,6 @@ istio:
 minio:
   enabled: true
   kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2019-08-14T20-37-41Z-license-compliance
-  # use kubeflow image pull secrets to pull images
   useKubeflowImagePullSecrets: false
   # set S3/minio service locations
   minioAK: minio
@@ -45,10 +45,6 @@ minio:
 # you need to setup below clientID, clientSecret, defaultUserEmail
 dex:
   enabled: true
-  oidcRedirectURL: /login/oidc
-  defaultUserEmail: user@example.com
-  defaultUserProfile: kubeflow-user-example-com
-  notebookAccessPipelineDesc: "Allow access pipeline"
   oidcAuthURL: /dex/auth
   oidcProvider: http://dex.auth.svc.cluster.local:5556/dex
   skipAuthURI: "/dex"
@@ -56,15 +52,36 @@ dex:
   useridHeader: kubeflow-userid
   useridPrefix: "\"\""
   oidcScopes: "profile email groups"
+  oidcRedirectURL: /login/oidc
   # clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
   # clientSecret: WlhoaGJYQnNaUzFoY0hBdGMyVmpjbVYw
+  dexImage: quay.io/dexidp/dex:v2.24.0
+  # default user:
+  defaultUserEmail: admin@cpaas.io
+  defaultUserProfile: kubeflow-admin-cpaas-io
+  notebookAccessPipelineDesc: "Allow access pipeline"
+
+knative-serving:
+  enabled: true
 
 # ----------------------------------------------------
 # Images
 # ----------------------------------------------------
-podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook:v1.6.1
+centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard:v1.6.1
 jupyterWebAppImage: docker.io/kubeflownotebookswg/jupyter-web-app:v1.6.1
+volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app:v1.6.1
+tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app:v1.6.1
+
+oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
+kfamImage: docker.io/kubeflownotebookswg/kfam:v1.6.1
+podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook:v1.6.1
+kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller:v1.6.1
 notebookControllerImage: docker.io/kubeflownotebookswg/notebook-controller:v1.6.1
+tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller:v1.6.1
+trainingOperatorImage: kubeflow/training-operator:v1-e1434f6
+trainingOperatorPytorchInitImage: alpine:3.10
+trainingOperatorMPIInitImage: mpioperator/kubectl-delivery:latest
+
 notebookImageScipy: kubeflownotebookswg/jupyter-scipy:v1.6.1
 notebookImagePytorch: kubeflownotebookswg/jupyter-pytorch-full:v1.6.1
 notebookImagePytorchCuda: kubeflownotebookswg/jupyter-pytorch-cuda-full:v1.6.1
@@ -72,25 +89,17 @@ notebookImageTensorflow: kubeflownotebookswg/jupyter-tensorflow-full:v1.6.1
 notebookImageTensorflowCuda: kubeflownotebookswg/jupyter-tensorflow-cuda-full:v1.6.1
 notebookImageCodeserverPython: kubeflownotebookswg/codeserver-python:v1.6.1
 notebookImageRstudioTidyverse: kubeflownotebookswg/rstudio-tidyverse:v1.6.1
-
-oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
-centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard:v1.6.1
-kfamImage: docker.io/kubeflownotebookswg/kfam:v1.6.1
-kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller:v1.6.1
-volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app:v1.6.1
-tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller:v1.6.1
-tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app:v1.6.1
 tensorboardImage: tensorflow/tensorflow:2.1.0
-trainingOperatorImage: kubeflow/training-operator:v1-e1434f6
 
 kubectlImage: bitnami/kubectl:1.21.14
+
 # kfpVersion is the version of Kubeflow Pipeline images
 kfpVersion: "2.0.0-alpha.5"
 
 kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:2.0.0-alpha.5
 # below images uses kfpVersion as version tag:
-kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
 kfpFrontendImage: gcr.io/ml-pipeline/frontend
+kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
 kfpViewerCrdControllerImage: gcr.io/ml-pipeline/viewer-crd-controller
 kfpScheduledWorkflowImage: gcr.io/ml-pipeline/scheduledworkflow
 kfpPersistenceAgentImage: gcr.io/ml-pipeline/persistenceagent
@@ -111,6 +120,7 @@ kfpPythonImage: python:3.7
 # KServe
 kfsVersion: "v0.8.0"
 kfsExplainerVersion: "latest"
+
 kfsAgentImage: kserve/agent
 kfsAlibiExplainerImage: kserve/alibi-explainer
 kfsAixExplainer: kserve/aix-explainer
