@@ -1,5 +1,7 @@
 # Kubeflow Chart
 
+[English Version Here](./README-en.md)
+
 使用 [Helm](https://helm.sh/) Chart 在多种环境更加快速安装和配置 [Kubeflow](https://www.kubeflow.org/)。
 
 作为 [kubeflow manifests](https://github.com/kubeflow/manifests) 的另一种开源部署方式，您可以轻松快速的在任意环境（公有云，本地集群，minikube）之上部署并运行 Kubeflow。
@@ -84,4 +86,3 @@ useridPrefix: "\"\""
 oidcScopes: "profile email groups"
 ```
 
-[English Version Here](./README-en.md)

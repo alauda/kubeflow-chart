@@ -1,9 +1,15 @@
 name: Release Charts
 
 on:
+  workflow_dispatch:
+    tags:
+      description: 'Test scenario tags'
+      required: false
+      type: boolean
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   release:
