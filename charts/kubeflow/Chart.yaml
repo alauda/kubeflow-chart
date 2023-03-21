@@ -9,7 +9,6 @@ description: |
   but to provide a straightforward way to deploy best-of-breed
   open-source systems for ML to diverse infrastructures.
   Anywhere you are running Kubernetes, you should be able to run Kubeflow.
-  
 # 卸载须知：
 # 
 # 1. 执行 helm delete 之后，注意需要执行下面命令确保 profile 资源删除：
@@ -34,18 +33,18 @@ dependencies:
     version: "1.5.0"
     alias: cert-manager
     condition: cert-manager.enabled
+  - name: dex
+    version: "2.31.2"
+    condition: dex.enabled
   - name: istio
     version: "1.14.1"
     condition: istio.enabled
+  - name: knative-serving
+    version: 1.2.5
   - name: minio
     version: "1.0"
     condition: minio.enabled
-  - name: dex
-    version: "1.0"
-    condition: dex.enabled
-  - name: knative-serving
-    version: v0.22.1
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
-appVersion: "1.5.0"
+appVersion: "1.6.1"

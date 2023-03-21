@@ -1,6 +1,6 @@
 apiVersion: v2
 name: knative-serving
-version: "v1.2.5"
+version: "1.2.5"
 kubeVersion: ">=1.17.0"
 description: "knative serving for kubeflow-chart."
 type: application
@@ -9,4 +9,4 @@ sources:
 maintainers:
   - name: typhoonzero
     email: typhoonzero1986@gmail.com
-appVersion: "v1.2.5"
+appVersion: "1.2.5"
