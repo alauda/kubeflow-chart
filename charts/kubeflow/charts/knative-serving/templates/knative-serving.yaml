@@ -869,7 +869,7 @@ data:
     # NOTE THAT THIS IS AN EXPERIMENTAL / ALPHA FEATURE
     concurrency-state-endpoint: ""
   progressDeadline: 600s
-  queueSidecarImage: gcr.io/knative-releases/knative.dev/serving/cmd/queue@sha256:14415b204ea8d0567235143a6c3377f49cbd35f18dc84dfa4baa7695c2a9b53d
+  queueSidecarImage: {{ .Values.knativeServingQueueImage }}:{{ .Values.knativeVersion }}
 kind: ConfigMap
 metadata:
   annotations:
@@ -1517,7 +1517,7 @@ spec:
           value: config-observability
         - name: METRICS_DOMAIN
           value: knative.dev/internal/serving
-        image: {{ .Values.knativeServingActivatorImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingActivatorImage }}:{{ .Values.knativeVersion }}
         livenessProbe:
           failureThreshold: 12
           httpGet:
@@ -1622,7 +1622,7 @@ spec:
           value: config-observability
         - name: METRICS_DOMAIN
           value: knative.dev/serving
-        image: {{ .Values.knativeServingAutoscalerImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingAutoscalerImage }}:{{ .Values.knativeVersion }}
         livenessProbe:
           failureThreshold: 6
           httpGet:
@@ -1711,7 +1711,7 @@ spec:
           value: config-observability
         - name: METRICS_DOMAIN
           value: knative.dev/internal/serving
-        image: {{ .Values.knativeServingControllerImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingControllerImage }}:{{ .Values.knativeVersion }}
         name: controller
         ports:
         - containerPort: 9090
@@ -1781,7 +1781,7 @@ spec:
           value: config-observability
         - name: METRICS_DOMAIN
           value: knative.dev/serving
-        image: {{ .Values.knativeServingDomainMappingImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingDomainMappingImage }}:{{ .Values.knativeVersion }}
         name: domain-mapping
         ports:
         - containerPort: 9090
@@ -1859,7 +1859,7 @@ spec:
           value: "8443"
         - name: METRICS_DOMAIN
           value: knative.dev/serving
-        image: {{ .Values.knativeServingDomainMappingWebhookImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingDomainMappingWebhookImage }}:{{ .Values.knativeVersion }}
         livenessProbe:
           failureThreshold: 6
           httpGet:
@@ -2085,7 +2085,7 @@ spec:
           value: "8443"
         - name: METRICS_DOMAIN
           value: knative.dev/internal/serving
-        image: {{ .Values.knativeServingWebhookImage }}:{{ .Chart.Version }}
+        image: {{ .Values.knativeServingWebhookImage }}:{{ .Values.knativeVersion }}
         livenessProbe:
           failureThreshold: 6
           httpGet:
@@ -2222,7 +2222,7 @@ metadata:
   name: queue-proxy
   namespace: knative-serving
 spec:
-  image: {{ .Values.knativeServingQueueImage }}:{{ .Chart.Version }}
+  image: {{ .Values.knativeServingQueueImage }}:{{ .Values.knativeVersion }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
