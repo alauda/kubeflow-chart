@@ -41,6 +41,56 @@ entries:
   kubeflow:
   - apiVersion: v2
     appVersion: 1.6.1
+    created: "2023-03-28T08:46:40.7211819Z"
+    dependencies:
+    - alias: cert-manager
+      condition: cert-manager.enabled
+      name: cert-manager
+      repository: ""
+      version: 1.5.0
+    - condition: dex.enabled
+      name: dex
+      repository: ""
+      version: 2.31.2
+    - condition: istio.enabled
+      name: istio
+      repository: ""
+      version: 1.14.1
+    - name: knative-serving
+      repository: ""
+      version: 1.2.5
+    - condition: minio.enabled
+      name: minio
+      repository: ""
+      version: "1.0"
+    description: 'The Kubeflow project is dedicated to making deployments of machine
+      learning (ML) workflows on Kubernetes simple, portable and scalable. Our goal
+      is not to recreate other services, but to provide a straightforward way to deploy
+      best-of-breed open-source systems for ML to diverse infrastructures. Anywhere
+      you are running Kubernetes, you should be able to run Kubeflow. '
+    digest: 6600b5c8f50aa013deeb237d3692901f706756c1a4a322f6169cb26c32dee4ef
+    home: https://github.com/alauda/kubeflow-chart
+    keywords:
+    - Kubeflow
+    - Kubernetes
+    - machine learning
+    - tensorflow
+    - pytorch
+    - XGBoost
+    kubeVersion: '>=1.20.0'
+    maintainers:
+    - email: typhoonzero1986@gmail.com
+      name: typhoonzero
+    name: kubeflow
+    sources:
+    - https://github.com/alauda/kubeflow-chart
+    - https://github.com/kubeflow/manifests
+    type: application
+    urls:
+    - https://github.com/alauda/kubeflow-chart/releases/download/kubeflow-1.6.2/kubeflow-1.6.2.tgz
+    version: 1.6.2
+  - apiVersion: v2
+    appVersion: 1.6.1
     created: "2023-03-21T07:49:06.768485066Z"
     dependencies:
     - alias: cert-manager
@@ -232,4 +282,4 @@ entries:
     urls:
     - https://github.com/alauda/kubeflow-chart/releases/download/kubeflow-1.4/kubeflow-1.4.tgz
     version: "1.4"
-generated: "2023-03-21T07:49:06.768504966Z"
+generated: "2023-03-28T08:46:40.721205201Z"
