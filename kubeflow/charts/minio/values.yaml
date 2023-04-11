@@ -1,5 +1,5 @@
 namespace: kubeflow
-kfpMinioImage: minio/minio
+kfpMinioImage: gcr.io/ml-pipeline/minio:RELEASE.2023-04-07T05-28-58Z
 minioAK: minio
 minioSK: minio123
 

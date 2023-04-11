@@ -1,6 +1,6 @@
 apiVersion: v2
 name: minio
-version: "RELEASE.2023-04-07T05-28-58Z"
+version: "1.0"
 kubeVersion: ">=1.17.0"
 description: "MinIO"
 type: application
