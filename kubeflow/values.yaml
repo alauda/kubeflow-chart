@@ -84,17 +84,17 @@ knative-serving:
 # ----------------------------------------------------
 # Images
 # ----------------------------------------------------
-centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard:v1.7.0
-jupyterWebAppImage: docker.io/kubeflownotebookswg/jupyter-web-app:v1.7.0
-volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app:v1.7.0
-tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app:v1.7.0
+centralDashboardImage: kubeflownotebookswg/centraldashboard:v1.7.0
+jupyterWebAppImage: kubeflownotebookswg/jupyter-web-app:v1.7.0
+volumesWebAppImage: kubeflownotebookswg/volumes-web-app:v1.7.0
+tensorboardWebAppImage: kubeflownotebookswg/tensorboards-web-app:v1.7.0
 
 oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
-kfamImage: docker.io/kubeflownotebookswg/kfam:v1.7.0
-podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook:v1.7.0
-kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller:v1.7.0
-notebookControllerImage: docker.io/kubeflownotebookswg/notebook-controller:v1.7.0
-tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller:v1.7.0
+kfamImage: kubeflownotebookswg/kfam:v1.7.0
+podDefaultsWebhookImage: kubeflownotebookswg/poddefaults-webhook:v1.7.0
+kfamProfileControllerImage: kubeflownotebookswg/profile-controller:v1.7.0
+notebookControllerImage: kubeflownotebookswg/notebook-controller:v1.7.0
+tensorboardControllerImage: kubeflownotebookswg/tensorboard-controller:v1.7.0
 trainingOperatorImage: kubeflow/training-operator:v1-8a066f9
 trainingOperatorPytorchInitImage: alpine
 trainingOperatorMPIInitImage: mpioperator/kubectl-delivery:v0.2.3
@@ -130,12 +130,12 @@ kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.
 kfpCacheImage: gcr.io/google-containers/busybox:latest
 kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.3.8-license-compliance
 kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.3.8-license-compliance
-kfpMetaControllerImage: docker.io/metacontrollerio/metacontroller:v2.0.4
+kfpMetaControllerImage: metacontrollerio/metacontroller:v2.0.4
 kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7-debian
 kfpPythonImage: python:3.7
 
 # KServe
-kfsVersion: "v0.10.1"
+kfsVersion: "v0.10.0"
 kfsExplainerVersion: "latest"
 
 kfsAgentImage: kserve/agent
@@ -151,9 +151,9 @@ kfsOnnxImage: mcr.microsoft.com/onnxruntime/server
 kfsOnnxImageVersion: "latest"
 
 kfsSkLearnImage: kserve/sklearnserver
-kfsSkLearnImageVersion: "v0.10.1"
+kfsSkLearnImageVersion: "v0.10.0"
 
-kfsSeldonioImage: docker.io/seldonio/mlserver
+kfsSeldonioImage: seldonio/mlserver
 kfsSeldonioImageVersion: "1.3.0.rc2"
 
 kfsXgbserverImage: kserve/xgbserver
@@ -178,10 +178,10 @@ kfsPaddleserverImageVersion: "latest"
 kfsStorageInitializerImage: kserve/storage-initializer
 kfsControllerImage: kserve/kserve-controller
 kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.14.0
-kfsModelsWebAppImage: kserve/models-web-app
+kfsModelsWebAppImage: kserve/models-web-app:0.10.0
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
-knativeProxyvImage: docker.io/istio/proxyv2:1.17.2
+knativeProxyvImage: istio/proxyv2:1.17.2
 # Configmap used by istio, for creating kfserving "cluster-local-gateway".
 # You may use `kubectl -n istio-system get configmap` to confirm.
 knativeIstioConfigmap: istio
