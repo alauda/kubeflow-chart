@@ -84,36 +84,36 @@ knative-serving:
 # ----------------------------------------------------
 # Images
 # ----------------------------------------------------
-centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard
-jupyterWebAppImage: docker.io/kubeflownotebookswg/jupyter-web-app
-volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app
-tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app
+centralDashboardImage: docker.io/kubeflownotebookswg/centraldashboard:v1.7.0
+jupyterWebAppImage: docker.io/kubeflownotebookswg/jupyter-web-app:v1.7.0
+volumesWebAppImage: docker.io/kubeflownotebookswg/volumes-web-app:v1.7.0
+tensorboardWebAppImage: docker.io/kubeflownotebookswg/tensorboards-web-app:v1.7.0
 
 oidcAuthServiceImage: gcr.io/arrikto/kubeflow/oidc-authservice:28c59ef
-kfamImage: docker.io/kubeflownotebookswg/kfam
-podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook
-kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller
-notebookControllerImage: docker.io/kubeflownotebookswg/notebook-controller
-tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller
-trainingOperatorImage: kubeflow/training-operator
+kfamImage: docker.io/kubeflownotebookswg/kfam:v1.7.0
+podDefaultsWebhookImage: docker.io/kubeflownotebookswg/poddefaults-webhook:v1.7.0
+kfamProfileControllerImage: docker.io/kubeflownotebookswg/profile-controller:v1.7.0
+notebookControllerImage: docker.io/kubeflownotebookswg/notebook-controller:v1.7.0
+tensorboardControllerImage: docker.io/kubeflownotebookswg/tensorboard-controller:v1.7.0
+trainingOperatorImage: kubeflow/training-operator:v1-8a066f9
 trainingOperatorPytorchInitImage: alpine
-trainingOperatorMPIInitImage: mpioperator/kubectl-delivery:latest
+trainingOperatorMPIInitImage: mpioperator/kubectl-delivery:v0.2.3
 
-notebookImageScipy: kubeflownotebookswg/jupyter-scipy
-notebookImagePytorch: kubeflownotebookswg/jupyter-pytorch-full
-notebookImagePytorchCuda: kubeflownotebookswg/jupyter-pytorch-cuda-full
-notebookImageTensorflow: kubeflownotebookswg/jupyter-tensorflow-full
-notebookImageTensorflowCuda: kubeflownotebookswg/jupyter-tensorflow-cuda-full
-notebookImageCodeserverPython: kubeflownotebookswg/codeserver-python
-notebookImageRstudioTidyverse: kubeflownotebookswg/rstudio-tidyverse
-tensorboardImage: tensorflow/tensorflow
+notebookImageScipy: kubeflownotebookswg/jupyter-scipy:v1.7.0
+notebookImagePytorch: kubeflownotebookswg/jupyter-pytorch-full:v1.7.0
+notebookImagePytorchCuda: kubeflownotebookswg/jupyter-pytorch-cuda-full:v1.7.0
+notebookImageTensorflow: kubeflownotebookswg/jupyter-tensorflow-full:v1.7.0
+notebookImageTensorflowCuda: kubeflownotebookswg/jupyter-tensorflow-cuda-full:v1.7.0
+notebookImageCodeserverPython: kubeflownotebookswg/codeserver-python:v1.7.0
+notebookImageRstudioTidyverse: kubeflownotebookswg/rstudio-tidyverse:v1.7.0
+tensorboardImage: tensorflow/tensorflow:2.12.0
 
 kubectlImage: bitnami/kubectl
 
 # kfpVersion is the version of Kubeflow Pipeline images
-kfpVersion: "latest"
+kfpVersion: "2.0.0-alpha.7"
 
-kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server
+kfpApiServerImageAndTag: gcr.io/ml-pipeline/api-server:2.0.0-alpha.7
 # below images uses kfpVersion as version tag:
 kfpFrontendImage: gcr.io/ml-pipeline/frontend
 kfpVisualizationServerImage: gcr.io/ml-pipeline/visualization-server
@@ -126,16 +126,16 @@ kfpCacheServerImage: gcr.io/ml-pipeline/cache-server
 kfpCacheDeployerImage: gcr.io/ml-pipeline/cache-deployer
 
 # pipeline images using unique tags:
-kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server
-kfpCacheImage: gcr.io/google-containers/busybox
-kfpArgoExecImage: gcr.io/ml-pipeline/argoexec
-kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller
-kfpMetaControllerImage: docker.io/metacontrollerio/metacontroller
-kfpMysqlImage: gcr.io/ml-pipeline/mysql
+kfpMlMetadataStoreServerImage: gcr.io/tfx-oss-public/ml_metadata_store_server:1.13.0
+kfpCacheImage: gcr.io/google-containers/busybox:latest
+kfpArgoExecImage: gcr.io/ml-pipeline/argoexec:v3.3.8-license-compliance
+kfpArgoControllerImage: gcr.io/ml-pipeline/workflow-controller:v3.3.8-license-compliance
+kfpMetaControllerImage: docker.io/metacontrollerio/metacontroller:v2.0.4
+kfpMysqlImage: gcr.io/ml-pipeline/mysql:5.7-debian
 kfpPythonImage: python:3.7
 
 # KServe
-kfsVersion: "latest"
+kfsVersion: "v0.10.1"
 kfsExplainerVersion: "latest"
 
 kfsAgentImage: kserve/agent
@@ -144,24 +144,24 @@ kfsAixExplainer: kserve/aix-explainer
 kfsArtExplainer: kserve/art-explainer
 
 kfsTensorflowImage: tensorflow/serving
-kfsTensorflowImageVersion: "latest"
-kfsTensorflowImageGpuVersion: "latest-gpu"
+kfsTensorflowImageVersion: "2.12.0"
+kfsTensorflowImageGpuVersion: "2.12.0-gpu"
 
 kfsOnnxImage: mcr.microsoft.com/onnxruntime/server
 kfsOnnxImageVersion: "latest"
 
 kfsSkLearnImage: kserve/sklearnserver
-kfsSkLearnImageVersion: "latest"
+kfsSkLearnImageVersion: "v0.10.1"
 
 kfsSeldonioImage: docker.io/seldonio/mlserver
-kfsSeldonioImageVersion: "latest"
+kfsSeldonioImageVersion: "1.3.0.rc2"
 
 kfsXgbserverImage: kserve/xgbserver
 kfsXgbserverImageVersion: "latest"
 
 kfsTorchServeImage: pytorch/torchserve-kfs
-kfsTorchServeImageVersion: "latest"
-kfsTorchServeImageGpuVersion: "latest-gpu"
+kfsTorchServeImageVersion: "0.7.1"
+kfsTorchServeImageGpuVersion: "0.7.1-gpu"
 
 kfsTritonImage: nvcr.io/nvidia/tritonserver
 kfsTritonImageVersion: "23.03-py3"
@@ -177,11 +177,11 @@ kfsPaddleserverImageVersion: "latest"
 
 kfsStorageInitializerImage: kserve/storage-initializer
 kfsControllerImage: kserve/kserve-controller
-kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:latest
+kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.14.0
 kfsModelsWebAppImage: kserve/models-web-app
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
-knativeProxyvImage: docker.io/istio/proxyv2
+knativeProxyvImage: docker.io/istio/proxyv2:1.17.2
 # Configmap used by istio, for creating kfserving "cluster-local-gateway".
 # You may use `kubectl -n istio-system get configmap` to confirm.
 knativeIstioConfigmap: istio
