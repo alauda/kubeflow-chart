@@ -1,5 +1,5 @@
 # NOTE: kubeflow's knative installation uses digest to pull these images.
-knativeVersion: "v1.2.5"
+knativeVersion: "v1.9.2"
 # @sha256:14415b204ea8d0567235143a6c3377f49cbd35f18dc84dfa4baa7695c2a9b53d
 knativeServingQueueImage: gcr.io/knative-releases/knative.dev/serving/cmd/queue
 # @sha256:93ff6e69357785ff97806945b284cbd1d37e50402b876a320645be8877c0d7b7
@@ -18,10 +18,3 @@ knativeServingDomainMappingWebhookImage: gcr.io/knative-releases/knative.dev/ser
 knativeNetControllerImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/controller
 # @sha256:a705c1ea8e9e556f860314fe055082fbe3cde6a924c29291955f98d979f8185e
 knativeNetWebhookImage: gcr.io/knative-releases/knative.dev/net-istio/cmd/webhook
-
-global:
-  useRegistryCredentials: false
-  registry: quay.io
-  username: someone
-  password: sillyness
-  email: someone@host.com

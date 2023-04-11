@@ -1,0 +1,8 @@
+apiVersion: v2
+name: cert-manager
+version: "v1.11.1"
+kubeVersion: ">=1.18.0"
+description: cert manager deps for kubeflow.
+type: application
+keywords:
+  - "cert manager"

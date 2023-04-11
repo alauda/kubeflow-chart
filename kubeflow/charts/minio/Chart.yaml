@@ -1,0 +1,10 @@
+apiVersion: v2
+name: minio
+version: "latest"
+kubeVersion: ">=1.17.0"
+description: "MinIO"
+type: application
+keywords:
+  - "Minio"
+  - "storage"
+  - "S3"

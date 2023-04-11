@@ -1,0 +1,6 @@
+apiVersion: v2
+name: knative-serving
+version: "1.9.2"
+kubeVersion: ">=1.17.0"
+description: "knative serving for kubeflow-chart."
+type: application

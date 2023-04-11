@@ -1,0 +1,8 @@
+apiVersion: v2
+name: dex
+version: "2.36.0"
+kubeVersion: ">=1.20.0"
+description: dex for kubeflow.
+type: application
+keywords:
+  - "cert manager"
