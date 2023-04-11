@@ -15,6 +15,13 @@ kubeflowSitePrefix: "/"
 tlsCrt: ""
 tlsKey: ""
 
+global:
+  useRegistryCredentials: false
+  registry: quay.io
+  username: someone
+  password: sillyness
+  email: someone@host.com
+
 controlPlane:
   # runtime use Docker or Containerd, set to False to containerd envs.
   useRuntimeDocker: true
