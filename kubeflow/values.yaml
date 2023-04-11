@@ -178,7 +178,7 @@ kfsPaddleserverImageVersion: "latest"
 kfsStorageInitializerImage: kserve/storage-initializer
 kfsControllerImage: kserve/kserve-controller
 kfsKubeRbacProxyImage: gcr.io/kubebuilder/kube-rbac-proxy:v0.14.0
-kfsModelsWebAppImage: kserve/models-web-app:0.10.0
+kfsModelsWebAppImage: kserve/models-web-app
 
 # Used by templates/cluster-local-gateway.yaml for knative istio confs.
 knativeProxyvImage: istio/proxyv2:1.17.2
