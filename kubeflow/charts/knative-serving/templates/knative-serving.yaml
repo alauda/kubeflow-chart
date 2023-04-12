@@ -3,9 +3,9 @@ kind: Namespace
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     istio-injection: enabled
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving
 ---
 apiVersion: admissionregistration.k8s.io/v1
@@ -14,8 +14,8 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook.domainmapping.serving.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -48,9 +48,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: webhook.istio.networking.internal.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -74,8 +74,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook.serving.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -117,8 +117,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: controller
   namespace: knative-serving
 ---
@@ -127,9 +127,9 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     duck.knative.dev/addressable: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-addressable-resolver
 rules:
 - apiGroups:
@@ -153,8 +153,8 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-admin
 ---
 aggregationRule:
@@ -166,8 +166,8 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-aggregated-addressable-resolver
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -175,9 +175,9 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     serving.knative.dev/controller: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-core
 rules:
 - apiGroups:
@@ -310,10 +310,10 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
     serving.knative.dev/controller: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: knative-serving-istio
 rules:
 - apiGroups:
@@ -336,10 +336,10 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-admin: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-namespaced-admin
 rules:
 - apiGroups:
@@ -364,10 +364,10 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-namespaced-edit
 rules:
 - apiGroups:
@@ -395,10 +395,10 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     rbac.authorization.k8s.io/aggregate-to-view: "true"
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-view: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-namespaced-view
 rules:
 - apiGroups:
@@ -418,9 +418,9 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     duck.knative.dev/podspecable: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-podspecable-binding
 rules:
 - apiGroups:
@@ -439,8 +439,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-controller-addressable-resolver
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -457,8 +457,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: knative-serving-controller-admin
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -661,8 +661,8 @@ metadata:
   labels:
     app.kubernetes.io/component: autoscaler
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-autoscaler
   namespace: knative-serving
 ---
@@ -790,8 +790,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-defaults
   namespace: knative-serving
 ---
@@ -877,8 +877,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-deployment
   namespace: knative-serving
 ---
@@ -928,8 +928,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-domain
   namespace: knative-serving
 ---
@@ -1076,8 +1076,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-features
   namespace: knative-serving
 ---
@@ -1162,8 +1162,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-gc
   namespace: knative-serving
 ---
@@ -1177,9 +1177,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: config-istio
   namespace: knative-serving
 ---
@@ -1194,8 +1194,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-leader-election
   namespace: knative-serving
 ---
@@ -1209,8 +1209,8 @@ metadata:
     knative.dev/example-checksum: be93ff10
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-logging
   namespace: knative-serving
 ---
@@ -1224,8 +1224,8 @@ metadata:
     knative.dev/example-checksum: 6e2033e0
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-network
   namespace: knative-serving
 ---
@@ -1239,8 +1239,8 @@ metadata:
     knative.dev/example-checksum: fed4756e
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-observability
   namespace: knative-serving
 ---
@@ -1254,8 +1254,8 @@ metadata:
     knative.dev/example-checksum: "26614636"
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config-tracing
   namespace: knative-serving
 ---
@@ -1265,8 +1265,8 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: domainmapping-webhook-certs
   namespace: knative-serving
 ---
@@ -1276,9 +1276,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: net-istio-webhook-certs
   namespace: knative-serving
 ---
@@ -1288,8 +1288,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook-certs
   namespace: knative-serving
 ---
@@ -1299,10 +1299,10 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     experimental.istio.io/disable-gateway-port-translation: "true"
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: knative-local-gateway
   namespace: istio-system
 spec:
@@ -1322,8 +1322,8 @@ metadata:
     app: activator
     app.kubernetes.io/component: activator
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: activator-service
   namespace: knative-serving
 spec:
@@ -1351,8 +1351,8 @@ metadata:
     app: autoscaler
     app.kubernetes.io/component: autoscaler
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: autoscaler
   namespace: knative-serving
 spec:
@@ -1376,8 +1376,8 @@ metadata:
     app: controller
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: controller
   namespace: knative-serving
 spec:
@@ -1397,9 +1397,9 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     role: domainmapping-webhook
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: domainmapping-webhook
   namespace: knative-serving
 spec:
@@ -1422,10 +1422,10 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
     role: net-istio-webhook
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: net-istio-webhook
   namespace: knative-serving
 spec:
@@ -1448,9 +1448,9 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     role: webhook
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: webhook
   namespace: knative-serving
 spec:
@@ -1473,8 +1473,8 @@ metadata:
   labels:
     app.kubernetes.io/component: activator
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: activator
   namespace: knative-serving
 spec:
@@ -1491,9 +1491,9 @@ spec:
         app: activator
         app.kubernetes.io/component: activator
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
+        app.kubernetes.io/version: 1.2.5
         role: activator
-        serving.knative.dev/release: v1.9.2
+        serving.knative.dev/release: v1.2.5
     spec:
       containers:
       - env:
@@ -1568,8 +1568,8 @@ metadata:
   labels:
     app.kubernetes.io/component: autoscaler
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: autoscaler
   namespace: knative-serving
 spec:
@@ -1590,8 +1590,8 @@ spec:
         app: autoscaler
         app.kubernetes.io/component: autoscaler
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
-        serving.knative.dev/release: v1.9.2
+        app.kubernetes.io/version: 1.2.5
+        serving.knative.dev/release: v1.2.5
     spec:
       affinity:
         podAntiAffinity:
@@ -1666,8 +1666,8 @@ metadata:
   labels:
     app.kubernetes.io/component: controller
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: controller
   namespace: knative-serving
 spec:
@@ -1683,8 +1683,8 @@ spec:
         app: controller
         app.kubernetes.io/component: controller
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
-        serving.knative.dev/release: v1.9.2
+        app.kubernetes.io/version: 1.2.5
+        serving.knative.dev/release: v1.2.5
     spec:
       affinity:
         podAntiAffinity:
@@ -1740,8 +1740,8 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: domain-mapping
   namespace: knative-serving
 spec:
@@ -1757,8 +1757,8 @@ spec:
         app: domain-mapping
         app.kubernetes.io/component: domain-mapping
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
-        serving.knative.dev/release: v1.9.2
+        app.kubernetes.io/version: 1.2.5
+        serving.knative.dev/release: v1.2.5
     spec:
       affinity:
         podAntiAffinity:
@@ -1810,8 +1810,8 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: domainmapping-webhook
   namespace: knative-serving
 spec:
@@ -1828,9 +1828,9 @@ spec:
         app: domainmapping-webhook
         app.kubernetes.io/component: domain-mapping
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
+        app.kubernetes.io/version: 1.2.5
         role: domainmapping-webhook
-        serving.knative.dev/release: v1.9.2
+        serving.knative.dev/release: v1.2.5
     spec:
       affinity:
         podAntiAffinity:
@@ -1909,9 +1909,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: net-istio-controller
   namespace: knative-serving
 spec:
@@ -1927,8 +1927,8 @@ spec:
         app: net-istio-controller
         app.kubernetes.io/component: net-istio
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
-        serving.knative.dev/release: v1.9.2
+        app.kubernetes.io/version: 1.2.0
+        serving.knative.dev/release: v1.2.0
     spec:
       containers:
       - env:
@@ -1942,7 +1942,7 @@ spec:
           value: config-observability
         - name: METRICS_DOMAIN
           value: knative.dev/net-istio
-        image: {{ .Values.knativeNetControllerImage }}:v1.9.2
+        image: {{ .Values.knativeNetControllerImage }}:v1.2.0
         name: controller
         ports:
         - containerPort: 9090
@@ -1971,9 +1971,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: net-istio-webhook
   namespace: knative-serving
 spec:
@@ -1990,9 +1990,9 @@ spec:
         app: net-istio-webhook
         app.kubernetes.io/component: net-istio
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
+        app.kubernetes.io/version: 1.2.0
         role: net-istio-webhook
-        serving.knative.dev/release: v1.9.2
+        serving.knative.dev/release: v1.2.0
     spec:
       containers:
       - env:
@@ -2008,7 +2008,7 @@ spec:
           value: knative.dev/net-istio
         - name: WEBHOOK_NAME
           value: net-istio-webhook
-        image: {{ .Values.knativeNetWebhookImage }}:v1.9.2
+        image: {{ .Values.knativeNetWebhookImage }}:v1.2.0
         name: webhook
         ports:
         - containerPort: 9090
@@ -2034,8 +2034,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook
   namespace: knative-serving
 spec:
@@ -2052,9 +2052,9 @@ spec:
         app: webhook
         app.kubernetes.io/component: webhook
         app.kubernetes.io/name: knative-serving
-        app.kubernetes.io/version: 1.9.2
+        app.kubernetes.io/version: 1.2.5
         role: webhook
-        serving.knative.dev/release: v1.9.2
+        serving.knative.dev/release: v1.2.5
     spec:
       affinity:
         podAntiAffinity:
@@ -2135,8 +2135,8 @@ metadata:
   labels:
     app.kubernetes.io/component: activator
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: activator-pdb
   namespace: knative-serving
 spec:
@@ -2151,8 +2151,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook-pdb
   namespace: knative-serving
 spec:
@@ -2161,14 +2161,14 @@ spec:
     matchLabels:
       app: webhook
 ---
-apiVersion: autoscaling/v2
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
     app.kubernetes.io/component: activator
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: activator
   namespace: knative-serving
 spec:
@@ -2186,14 +2186,14 @@ spec:
     kind: Deployment
     name: activator
 ---
-apiVersion: autoscaling/v2
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: webhook
   namespace: knative-serving
 spec:
@@ -2217,8 +2217,8 @@ metadata:
   labels:
     app.kubernetes.io/component: queue-proxy
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: queue-proxy
   namespace: knative-serving
 spec:
@@ -2241,9 +2241,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: knative-local-gateway
   namespace: knative-serving
 spec:
@@ -2329,9 +2329,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: domainmapping-webhook
   namespace: knative-serving
 spec:
@@ -2348,9 +2348,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: net-istio-webhook
   namespace: knative-serving
 spec:
@@ -2367,9 +2367,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: webhook
   namespace: knative-serving
 spec:
@@ -2386,9 +2386,9 @@ metadata:
   labels:
     app.kubernetes.io/component: net-istio
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.0
     networking.knative.dev/ingress-provider: istio
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.0
   name: config.webhook.istio.networking.internal.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -2412,8 +2412,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: config.webhook.serving.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -2438,8 +2438,8 @@ metadata:
   labels:
     app.kubernetes.io/component: domain-mapping
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: validation.webhook.domainmapping.serving.knative.dev
 webhooks:
 - admissionReviewVersions:
@@ -2473,8 +2473,8 @@ metadata:
   labels:
     app.kubernetes.io/component: webhook
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
-    serving.knative.dev/release: v1.9.2
+    app.kubernetes.io/version: 1.2.5
+    serving.knative.dev/release: v1.2.5
   name: validation.webhook.serving.knative.dev
 webhooks:
 - admissionReviewVersions:

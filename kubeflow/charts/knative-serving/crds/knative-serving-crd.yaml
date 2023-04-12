@@ -3,9 +3,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: certificates.networking.internal.knative.dev
 spec:
   group: networking.internal.knative.dev
@@ -42,9 +42,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: clusterdomainclaims.networking.internal.knative.dev
 spec:
   group: networking.internal.knative.dev
@@ -74,10 +74,10 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     duck.knative.dev/podspecable: "true"
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: configurations.serving.knative.dev
 spec:
   group: serving.knative.dev
@@ -1177,9 +1177,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: domainmappings.serving.knative.dev
 spec:
   group: serving.knative.dev
@@ -1495,7 +1495,7 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
   name: images.caching.internal.knative.dev
 spec:
@@ -1530,9 +1530,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: ingresses.networking.internal.knative.dev
 spec:
   group: networking.internal.knative.dev
@@ -1570,9 +1570,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: metrics.autoscaling.internal.knative.dev
 spec:
   group: autoscaling.internal.knative.dev
@@ -1697,9 +1697,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: podautoscalers.autoscaling.internal.knative.dev
 spec:
   group: autoscaling.internal.knative.dev
@@ -1871,9 +1871,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: revisions.serving.knative.dev
 spec:
   group: serving.knative.dev
@@ -2928,10 +2928,10 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     duck.knative.dev/addressable: "true"
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: routes.serving.knative.dev
 spec:
   group: serving.knative.dev
@@ -3163,9 +3163,9 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: serverlessservices.networking.internal.knative.dev
 spec:
   group: networking.internal.knative.dev
@@ -3214,11 +3214,11 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: knative-serving
-    app.kubernetes.io/version: 1.9.2
+    app.kubernetes.io/version: 1.2.5
     duck.knative.dev/addressable: "true"
     duck.knative.dev/podspecable: "true"
     knative.dev/crd-install: "true"
-    serving.knative.dev/release: v1.9.2
+    serving.knative.dev/release: v1.2.5
   name: services.serving.knative.dev
 spec:
   group: serving.knative.dev
