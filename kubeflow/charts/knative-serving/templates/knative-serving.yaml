@@ -2161,7 +2161,7 @@ spec:
     matchLabels:
       app: webhook
 ---
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
@@ -2186,7 +2186,7 @@ spec:
     kind: Deployment
     name: activator
 ---
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   labels:
