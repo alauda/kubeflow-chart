@@ -1,8 +1,14 @@
 apiVersion: v2
 name: cert-manager
-version: "v1.11.1"
+version: "1.5.0"
 kubeVersion: ">=1.18.0"
 description: cert manager deps for kubeflow.
 type: application
 keywords:
   - "cert manager"
+sources:
+  - https://github.com/alauda/kubeflow-chart
+maintainers:
+  - name: typhoonzero
+    email: typhoonzero1986@gmail.com
+appVersion: "1.5.0"
