@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 config:
   # Set it to a valid URL
-  issuer: http://127.0.0.1:5556/dex
+  issuer: http://127.0.0.1:5556/
 
   # See https://dexidp.io/docs/storage/ for more options
   storage:
@@ -182,7 +182,7 @@ ingress:
   enabled: true
 
   hosts:
-    - host: http://127.0.0.1:5556/dex
+    - host: http://127.0.0.1:5556/
       paths:
         - path: /
 
