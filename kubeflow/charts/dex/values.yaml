@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 config:
   # Set it to a valid URL
-  issuer: http://my-issuer-url.com
+  issuer: http://127.0.0.1:5556/dex
 
   # See https://dexidp.io/docs/storage/ for more options
   storage:
