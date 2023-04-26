@@ -182,7 +182,7 @@ ingress:
   enabled: true
 
   hosts:
-    - host: my-issuer-url.com
+    - host: http://127.0.0.1:5556/dex
       paths:
         - path: /
 
