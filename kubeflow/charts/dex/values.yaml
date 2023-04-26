@@ -1,7 +1,18 @@
 # Default values for dex.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+config:
+  # Set it to a valid URL
+  issuer: http://my-issuer-url.com
 
+  # See https://dexidp.io/docs/storage/ for more options
+  storage:
+    type: memory
+
+  # Enable at least one connector
+  # See https://dexidp.io/docs/connectors/ for more options
+  enablePasswordDB: true
+  
 # -- Number of replicas (pods) to launch.
 replicaCount: 1
 
@@ -50,10 +61,6 @@ configSecret:
   # If not set and create is true, a name is generated using the fullname template.
   # Must point to secret that contains at least a `config.yaml` key.
   name: ""
-
-# -- Application configuration.
-# See the [official documentation](https://dexidp.io/docs/).
-config: {}
 
 # -- Additional storage [volumes](https://kubernetes.io/docs/concepts/storage/volumes/).
 # See the [API reference](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#volumes-1) for details.
@@ -172,31 +179,12 @@ service:
       nodePort:
 
 ingress:
-  # -- Enable [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/).
-  enabled: false
+  enabled: true
 
-  # -- Ingress [class name](https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class).
-  className: ""
-
-  # -- Annotations to be added to the ingress.
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-
-  # -- Ingress host configuration.
-  # @default -- See [values.yaml](values.yaml).
   hosts:
-    - host: chart-example.local
+    - host: my-issuer-url.com
       paths:
         - path: /
-          pathType: ImplementationSpecific
-
-  # -- Ingress TLS configuration.
-  # @default -- See [values.yaml](values.yaml).
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 serviceMonitor:
   # -- Enable Prometheus ServiceMonitor.
