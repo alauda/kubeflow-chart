@@ -1,7 +1,0 @@
-oidcRedirectURL: /login/oidc
-defaultUserEmail: user@example.com
-defaultUserName: user
-defaultUserPass: $2y$12$4K/VkmDd1q1Orb3xAt82zu8gk7Ad6ReFR4LCP9UeYE90NLiN9Df72
-clientID: a3ViZWZsb3ctb2lkYy1hdXRoc2VydmljZQ==
-clientSecret: cFVCbkJPWTgwU25YZ2ppYlRZTTlaV056WTJ4cmVOR1Fvaw==
-dexImage: ghcr.io/dexidp/dex:v2.36.0

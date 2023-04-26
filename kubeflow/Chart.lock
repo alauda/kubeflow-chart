@@ -1,0 +1,18 @@
+dependencies:
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.11.0
+- name: dex
+  repository: https://charts.dexidp.io
+  version: 0.14.1
+- name: base
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.17.2
+- name: istiod
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.17.2
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.10
+digest: sha256:31c9e356cd6eb8744578ebd895527281d82f2f05de1641c9445a8f1f05732aa8
+generated: "2023-04-26T11:53:43.020138+02:00"
