@@ -2,6 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: cluster-role-binding
+  namespace: kubeflow
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -14,6 +15,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: cluster-role
+  namespace: kubeflow
 rules:
 - apiGroups:
   - kubeflow.org
@@ -34,6 +36,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kubeflow-poddefaults-admin
+  namespace: kubeflow
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-admin: "true"
 aggregationRule:
@@ -48,6 +51,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kubeflow-poddefaults-edit
+  namespace: kubeflow
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-edit: "true"
 aggregationRule:
@@ -62,6 +66,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kubeflow-poddefaults-view
+  namespace: kubeflow
   labels:
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-poddefaults-admin: "true"
     rbac.authorization.kubeflow.org/aggregate-to-kubeflow-poddefaults-edit: "true"
@@ -80,6 +85,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment
+  namespace: kubeflow
 spec:
   template:
     metadata:
@@ -106,6 +112,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: mutating-webhook-configuration
+  namespace: kubeflow
 webhooks:
 - admissionReviewVersions:
     - v1beta1
@@ -135,11 +142,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: service-account
+  namespace: kubeflow
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: service
+  namespace: kubeflow
 spec:
   ports:
   - name: https-webhook
