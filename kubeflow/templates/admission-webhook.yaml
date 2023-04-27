@@ -87,6 +87,9 @@ metadata:
   name: deployment
   namespace: kubeflow
 spec:
+  selector:
+    matchLabels:
+      app: admission-webhook
   template:
     metadata:
       annotations:
