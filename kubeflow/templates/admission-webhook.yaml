@@ -86,11 +86,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deployment
+  labels:
+    app: admission-webhook
   namespace: kubeflow
 spec:
   selector:
     matchLabels:
-      app: deployment
+      app: admission-webhook
   template:
     metadata:
       annotations:
