@@ -124,6 +124,7 @@ webhooks:
     caBundle: ""
     service:
       name: service
+      namespace: kubeflow
       path: /apply-poddefault
   sideEffects: None
   failurePolicy: Fail
