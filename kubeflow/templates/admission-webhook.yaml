@@ -97,6 +97,7 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "false"
+        app: admission-webhook
     spec:
       containers:
       - image: docker.io/kubeflownotebookswg/poddefaults-webhook
