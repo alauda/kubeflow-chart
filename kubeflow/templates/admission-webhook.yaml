@@ -90,7 +90,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: admission-webhook
+      app: deployment
   template:
     metadata:
       annotations:
