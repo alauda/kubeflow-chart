@@ -1,0 +1,6 @@
+
+# Central dashboard
+CD_CLUSTER_DOMAIN: cluster.local
+CD_USERID_HEADER: kubeflow-userid
+CD_USERID_PREFIX:
+CD_REGISTRATION_FLOW: false
