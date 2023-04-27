@@ -208,10 +208,10 @@ spec:
         - name: REGISTRATION_FLOW
           value: false
         - name: DASHBOARD_LINKS_CONFIGMAP
-            valueFrom:
-              configMapKeyRef:
-                name: centraldashboard-config
-                key: links
+          valueFrom:
+            configMapKeyRef:
+            name: centraldashboard-config
+            key: links
       serviceAccountName: centraldashboard
 ---
 apiVersion: rbac.authorization.k8s.io/v1
