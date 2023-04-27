@@ -200,15 +200,18 @@ spec:
           protocol: TCP
         env:
         - name: USERID_HEADER
-          value: {{.Values.CD_USERID_HEADER}}
+          value: kubeflow-userid
         - name: USERID_PREFIX
-          value: {{.Values.CD_USERID_PREFIX}}
+          value: 
         - name: PROFILES_KFAM_SERVICE_HOST
           value: profiles-kfam.kubeflow
         - name: REGISTRATION_FLOW
           value: false
         - name: DASHBOARD_LINKS_CONFIGMAP
-          value: {{.Values.CD_CONFIGMAP_NAME}}
+            valueFrom:
+              configMapKeyRef:
+                name: centraldashboard-config
+                key: links
       serviceAccountName: centraldashboard
 ---
 apiVersion: rbac.authorization.k8s.io/v1
