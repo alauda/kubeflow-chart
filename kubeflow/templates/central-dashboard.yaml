@@ -210,8 +210,8 @@ spec:
         - name: DASHBOARD_LINKS_CONFIGMAP
           valueFrom:
             configMapKeyRef:
-                name: centraldashboard-config
-                key: links
+              name: centraldashboard-config
+              key: links
       serviceAccountName: centraldashboard
 ---
 apiVersion: rbac.authorization.k8s.io/v1
