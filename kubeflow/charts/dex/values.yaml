@@ -197,9 +197,10 @@ ingress:
   enabled: true
 
   hosts:
-    - host: http://127.0.0.1:5556/
+    - host: chart-example.local
       paths:
         - path: /
+          pathType: ImplementationSpecific
 
 serviceMonitor:
   # -- Enable Prometheus ServiceMonitor.
