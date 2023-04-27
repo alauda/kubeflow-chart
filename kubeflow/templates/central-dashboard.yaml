@@ -206,7 +206,7 @@ spec:
         - name: PROFILES_KFAM_SERVICE_HOST
           value: profiles-kfam.kubeflow
         - name: REGISTRATION_FLOW
-          value: false
+          value: "false"
         - name: DASHBOARD_LINKS_CONFIGMAP
           valueFrom:
             configMapKeyRef:
