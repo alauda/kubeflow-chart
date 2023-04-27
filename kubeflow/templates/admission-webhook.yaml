@@ -85,19 +85,24 @@ rules:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment
+  creationTimestamp: null
   labels:
-    app: admission-webhook
+    app: deployment
+  name: deployment
   namespace: kubeflow
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: admission-webhook
+      app: deployment
+  strategy: {}
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "false"
-        app: admission-webhook
+      creationTimestamp: null
+      labels:
+        app: deployment
     spec:
       containers:
       - image: docker.io/kubeflownotebookswg/poddefaults-webhook
@@ -109,11 +114,13 @@ spec:
         ports:
         - name: https-webhook
           containerPort: 4443
+        resources: {}
       volumes:
       - name: webhook-cert
         secret:
           secretName: webhook-certs
       serviceAccountName: service-account
+status: {}
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
