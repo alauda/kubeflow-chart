@@ -1,0 +1,140 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: authn-filter
+spec:
+  workloadSelector:
+    labels:
+      istio: ingressgateway
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.http_connection_manager"
+      patch:
+        # For some reason, INSERT_FIRST doesn't work
+        operation: INSERT_BEFORE
+        value:
+          # See: https://www.envoyproxy.io/docs/envoy/v1.17.0/configuration/http/http_filters/ext_authz_filter#config-http-filters-ext-authz
+          name: "envoy.filters.http.ext_authz"
+          typed_config:
+            '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+            http_service:
+              server_uri:
+                uri: http://authservice.default.svc.cluster.local
+                cluster: outbound|8080||authservice.default.svc.cluster.local
+                timeout: 10s
+              authorization_request:
+                allowed_headers:
+                  patterns:
+                    # XXX: MUST be lowercase!
+                    - exact: "authorization"
+                    - exact: "cookie"
+                    - exact: "x-auth-token"
+              authorization_response:
+                allowed_upstream_headers:
+                  patterns:
+                    - exact: "kubeflow-userid"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: authservice-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: authservice
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: authn-delegator
+rules:
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: authn-delegators
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: authn-delegator
+subjects:
+  - kind: ServiceAccount
+    name: authservice
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice
+spec:
+  type: ClusterIP
+  selector:
+    app: authservice
+  ports:
+  - port: 8080
+    name: http-authservice
+    targetPort: http-api
+  publishNotReadyAddresses: true
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: authservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authservice
+  serviceName: authservice
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: authservice
+    spec:
+      serviceAccountName: authservice
+      containers:
+      - name: authservice
+        image: gcr.io/arrikto/kubeflow/oidc-authservice:e236439
+        imagePullPolicy: Always
+        ports:
+        - name: http-api
+          containerPort: 8080
+        envFrom:
+          - secretRef:
+              name: oidc-authservice-client
+          - configMapRef:
+              name: oidc-authservice-parameters
+        volumeMounts:
+          - name: data
+            mountPath: /var/lib/authservice
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 8081
+      securityContext:
+        fsGroup: 111
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+              claimName: authservice-pvc

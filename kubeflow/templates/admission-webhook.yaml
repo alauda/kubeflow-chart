@@ -88,13 +88,13 @@ metadata:
   creationTimestamp: null
   labels:
     app: deployment
-  name: deployment
+  name: admission-webhook
   namespace: kubeflow
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: deployment
+      app: admission-webhook
   strategy: {}
   template:
     metadata:
@@ -102,7 +102,7 @@ spec:
         sidecar.istio.io/inject: "false"
       creationTimestamp: null
       labels:
-        app: deployment
+        app: admission-webhook
     spec:
       containers:
       - image: docker.io/kubeflownotebookswg/poddefaults-webhook
@@ -169,3 +169,25 @@ spec:
   - name: https-webhook
     port: 443
     targetPort: https-webhook
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert
+spec:
+  isCA: true
+  commonName: service.default.svc
+  dnsNames:
+  - service.default.svc
+  - service.default.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: selfsigned-issuer
+  secretName: webhook-certs
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
