@@ -1,4 +1,3 @@
-{{- include "prechecks" . -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -7,10 +6,6 @@ metadata:
     kustomize.component: jupyter-web-app
   name: jupyter-web-app-service-account
   namespace: kubeflow
-{{ if .Values.global.useRegistryCredentials }}
-imagePullSecrets:
-- name: kubeflow-image-pull-secrets
-{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -116,6 +111,14 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - list
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -229,23 +232,23 @@ data:
     spawnerFormDefaults:
       image:
         # The container Image for the user's Jupyter Notebook
-        value: {{ .Values.notebookImageTensorflow }}
+        value: kubeflownotebookswg/jupyter-scipy:v1.7.0-rc.0
         # The list of available standard container Images
         options:
-        - {{ .Values.notebookImageScipy }}
-        - {{ .Values.notebookImagePytorch }}
-        - {{ .Values.notebookImagePytorchCuda }}
-        - {{ .Values.notebookImageTensorflow }}
-        - {{ .Values.notebookImageTensorflowCuda }}
+        - kubeflownotebookswg/jupyter-scipy:v1.7.0-rc.0
+        - kubeflownotebookswg/jupyter-pytorch-full:v1.7.0-rc.0
+        - kubeflownotebookswg/jupyter-pytorch-cuda-full:v1.7.0-rc.0
+        - kubeflownotebookswg/jupyter-tensorflow-full:v1.7.0-rc.0
+        - kubeflownotebookswg/jupyter-tensorflow-cuda-full:v1.7.0-rc.0
       imageGroupOne:
         # The container Image for the user's Group One Server
         # The annotation `notebooks.kubeflow.org/http-rewrite-uri: /`
         # is applied to notebook in this group, configuring
         # the Istio rewrite for containers that host their web UI at `/`
-        value: {{ .Values.notebookImageCodeserverPython }}
+        value: kubeflownotebookswg/codeserver-python:v1.7.0-rc.0
         # The list of available standard container Images
         options:
-        - {{ .Values.notebookImageCodeserverPython }}
+        - kubeflownotebookswg/codeserver-python:v1.7.0-rc.0
       imageGroupTwo:
         # The container Image for the user's Group Two Server
         # The annotation `notebooks.kubeflow.org/http-rewrite-uri: /`
@@ -254,10 +257,10 @@ data:
         # The annotation `notebooks.kubeflow.org/http-headers-request-set`
         # is applied to notebook in this group, configuring Istio
         # to add the `X-RStudio-Root-Path` header to requests
-        value: {{ .Values.notebookImageRstudioTidyverse }}
+        value: kubeflownotebookswg/rstudio-tidyverse:v1.7.0-rc.0
         # The list of available standard container Images
         options:
-        - {{ .Values.notebookImageRstudioTidyverse }}
+        - kubeflownotebookswg/rstudio-tidyverse:v1.7.0-rc.0
       # If true, hide registry and/or tag name in the image selection dropdown
       hideRegistry: true
       hideTag: false
@@ -397,7 +400,7 @@ metadata:
   labels:
     app: jupyter-web-app
     kustomize.component: jupyter-web-app
-  name: jupyter-web-app-config-hmg7g9826g
+  name: jupyter-web-app-config-92bgck72t2
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -609,7 +612,7 @@ metadata:
   labels:
     app: jupyter-web-app
     kustomize.component: jupyter-web-app
-  name: jupyter-web-app-parameters-dhcbt5dtdf
+  name: jupyter-web-app-parameters-42k97gcbmb
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -648,8 +651,6 @@ spec:
       kustomize.component: jupyter-web-app
   template:
     metadata:
-      annotations:
-        sidecar.istio.io/inject: "false"
       labels:
         app: jupyter-web-app
         kustomize.component: jupyter-web-app
@@ -665,8 +666,8 @@ spec:
         - name: USERID_PREFIX
           value: ""
         - name: APP_SECURE_COOKIES
-          value: $(JWA_APP_SECURE_COOKIES)
-        image: {{ .Values.jupyterWebAppImage }}
+          value: "true"
+        image: docker.io/kubeflownotebookswg/jupyter-web-app:v1.7.0-rc.0
         name: jupyter-web-app
         ports:
         - containerPort: 5000
@@ -678,11 +679,25 @@ spec:
       serviceAccountName: jupyter-web-app-service-account
       volumes:
       - configMap:
-          name: jupyter-web-app-config-hmg7g9826g
+          name: jupyter-web-app-config-92bgck72t2
         name: config-volume
       - configMap:
           name: jupyter-web-app-logos
         name: logos-volume
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  labels:
+    app: jupyter-web-app
+    kustomize.component: jupyter-web-app
+  name: jupyter-web-app
+  namespace: kubeflow
+spec:
+  host: jupyter-web-app-service.kubeflow.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -696,7 +711,7 @@ spec:
   gateways:
   - kubeflow-gateway
   hosts:
-  - '{{ .Values.kubeflowHost }}'
+  - '*'
   http:
   - headers:
       request:
@@ -704,7 +719,7 @@ spec:
           x-forwarded-prefix: /jupyter
     match:
     - uri:
-        prefix: '{{ .Values.kubeflowSitePrefix }}jupyter/'
+        prefix: /jupyter/
     rewrite:
       uri: /
     route:
@@ -712,3 +727,22 @@ spec:
         host: jupyter-web-app-service.kubeflow.svc.cluster.local
         port:
           number: 80
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  labels:
+    app: jupyter-web-app
+    kustomize.component: jupyter-web-app
+  name: jupyter-web-app
+  namespace: kubeflow
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+  selector:
+    matchLabels:
+      app: jupyter-web-app

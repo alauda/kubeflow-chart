@@ -10,10 +10,6 @@ metadata:
     release: istio
   name: cluster-local-gateway-service-account
   namespace: istio-system
-{{ if .Values.global.useRegistryCredentials }}
-imagePullSecrets:
-- name: kubeflow-image-pull-secrets
-{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -57,7 +53,6 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations: null
   labels:
     app: cluster-local-gateway
     install.operator.istio.io/owning-resource: unknown
@@ -125,45 +120,8 @@ spec:
     spec:
       affinity:
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - preference:
-              matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-            weight: 2
-          - preference:
-              matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - arm64
-            weight: 2
-          - preference:
-              matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - ppc64le
-            weight: 2
-          - preference:
-              matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - s390x
-            weight: 2
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-                - arm64
-                - ppc64le
-                - s390x
+          preferredDuringSchedulingIgnoredDuringExecution: null
+          requiredDuringSchedulingIgnoredDuringExecution: null
       containers:
       - args:
         - proxy
@@ -222,9 +180,8 @@ spec:
         - name: ISTIO_META_UNPRIVILEGED_POD
           value: "true"
         - name: ISTIO_META_CLUSTER_ID
-          value: {{ .Values.istioMetaClusterID }}
-        image: {{ .Values.knativeProxyvImage }}
-        imagePullPolicy: IfNotPresent
+          value: Kubernetes
+        image: docker.io/istio/proxyv2:1.16.0
         name: istio-proxy
         ports:
         - containerPort: 15020
@@ -261,6 +218,8 @@ spec:
         volumeMounts:
         - mountPath: /var/run/secrets/workload-spiffe-uds
           name: workload-socket
+        - mountPath: /var/run/secrets/credential-uds
+          name: credential-socket
         - mountPath: /var/run/secrets/workload-spiffe-credentials
           name: workload-certs
         - mountPath: /etc/istio/proxy
@@ -292,6 +251,8 @@ spec:
       - emptyDir: {}
         name: workload-socket
       - emptyDir: {}
+        name: credential-socket
+      - emptyDir: {}
         name: workload-certs
       - configMap:
           name: istio-ca-root-cert
@@ -317,7 +278,7 @@ spec:
               expirationSeconds: 43200
               path: istio-token
       - configMap:
-          name: {{ .Values.knativeIstioConfigmap }}
+          name: istio
           optional: true
         name: config-volume
       - name: ingressgateway-certs
@@ -328,6 +289,25 @@ spec:
         secret:
           optional: true
           secretName: istio-ingressgateway-ca-certs
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: cluster-local-gateway
+    install.operator.istio.io/owning-resource: unknown
+    istio: cluster-local-gateway
+    istio.io/rev: default
+    operator.istio.io/component: IngressGateways
+    release: istio
+  name: cluster-local-gateway
+  namespace: istio-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: cluster-local-gateway
+      istio: cluster-local-gateway
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway

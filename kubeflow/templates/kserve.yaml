@@ -1,64 +1,3 @@
-apiVersion: admissionregistration.k8s.io/v1
-kind: MutatingWebhookConfiguration
-metadata:
-  annotations:
-    cert-manager.io/inject-ca-from: kubeflow/serving-cert
-  labels:
-    app: kserve
-    app.kubernetes.io/name: kserve
-  name: inferenceservice.serving.kserve.io
-webhooks:
-- admissionReviewVersions:
-  - v1beta1
-  clientConfig:
-    caBundle: Cg==
-    service:
-      name: kserve-webhook-server-service
-      namespace: kubeflow
-      path: /mutate-serving-kserve-io-v1beta1-inferenceservice
-  failurePolicy: Fail
-  name: inferenceservice.kserve-webhook-server.defaulter
-  rules:
-  - apiGroups:
-    - serving.kserve.io
-    apiVersions:
-    - v1beta1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - inferenceservices
-  sideEffects: None
-- admissionReviewVersions:
-  - v1beta1
-  clientConfig:
-    caBundle: Cg==
-    service:
-      name: kserve-webhook-server-service
-      namespace: kubeflow
-      path: /mutate-pods
-  failurePolicy: Fail
-  name: inferenceservice.kserve-webhook-server.pod-mutator
-  namespaceSelector:
-    matchExpressions:
-    - key: control-plane
-      operator: DoesNotExist
-  objectSelector:
-    matchExpressions:
-    - key: serving.kserve.io/inferenceservice
-      operator: Exists
-  rules:
-  - apiGroups:
-    - ""
-    apiVersions:
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - pods
-  sideEffects: None
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -69,10 +8,6 @@ metadata:
     app.kubernetes.io/name: kserve
   name: kserve-controller-manager
   namespace: kubeflow
-{{ if .Values.global.useRegistryCredentials }}
-imagePullSecrets:
-- name: kubeflow-image-pull-secrets
-{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -83,6 +18,15 @@ metadata:
   name: kserve-leader-election-role
   namespace: kubeflow
 rules:
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - list
+  - update
 - apiGroups:
   - ""
   resources:
@@ -182,6 +126,14 @@ rules:
   - ""
   resources:
   - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
   verbs:
   - get
   - list
@@ -311,6 +263,26 @@ rules:
   - serving.kserve.io
   resources:
   - clusterservingruntimes/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - serving.kserve.io
+  resources:
+  - inferencegraphs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - serving.kserve.io
+  resources:
+  - inferencegraphs/status
   verbs:
   - get
   - patch
@@ -544,7 +516,7 @@ apiVersion: v1
 data:
   agent: |-
     {
-        "image" : "{{ .Values.kfsAgentImage }}:{{ .Values.kfsVersion }}",
+        "image" : "kserve/agent:v0.10.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
@@ -552,7 +524,7 @@ data:
     }
   batcher: |-
     {
-        "image" : "{{ .Values.kfsAgentImage }}:{{ .Values.kfsVersion }}",
+        "image" : "kserve/agent:v0.10.0",
         "memoryRequest": "1Gi",
         "memoryLimit": "1Gi",
         "cpuRequest": "1",
@@ -565,7 +537,14 @@ data:
        },
        "s3": {
            "s3AccessKeyIDName": "AWS_ACCESS_KEY_ID",
-           "s3SecretAccessKeyName": "AWS_SECRET_ACCESS_KEY"
+           "s3SecretAccessKeyName": "AWS_SECRET_ACCESS_KEY",
+           "s3Endpoint": "",
+           "s3UseHttps": "",
+           "s3Region": "",
+           "s3VerifySSL": "",
+           "s3UseVirtualBucket": "",
+           "s3UseAnonymousCredential": "",
+           "s3CABundle": ""
        }
     }
   deploy: |-
@@ -575,157 +554,50 @@ data:
   explainers: |-
     {
         "alibi": {
-            "image" : "{{ .Values.kfsAlibiExplainerImage }}",
-            "defaultImageVersion": "{{ .Values.kfsExplainerVersion }}"
+            "image" : "kserve/alibi-explainer",
+            "defaultImageVersion": "latest"
         },
         "aix": {
-            "image" : "{{ .Values.kfsAixExplainer }}",
-            "defaultImageVersion": "{{ .Values.kfsExplainerVersion }}"
+            "image" : "kserve/aix-explainer",
+            "defaultImageVersion": "latest"
         },
         "art": {
-            "image" : "{{ .Values.kfsArtExplainer }}",
-            "defaultImageVersion": "{{ .Values.kfsExplainerVersion }}"
+            "image" : "kserve/art-explainer",
+            "defaultImageVersion": "latest"
         }
     }
   ingress: |-
-    {
-        "ingressGateway" : "knative-serving/knative-ingress-gateway",
-        "ingressService" : "istio-ingressgateway.istio-system.svc.cluster.local",
-        "localGateway" : "knative-serving/knative-local-gateway",
-        "localGatewayService" : "knative-local-gateway.istio-system.svc.cluster.local",
-        "ingressDomain"  : "example.com"
-    }
+{{ .Files.Get "config-files/kserve-ingress.tmpl" | indent 4 }}
   logger: |-
     {
-        "image" : "{{ .Values.kfsAgentImage }}:{{ .Values.kfsVersion }}",
+        "image" : "kserve/agent:v0.10.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
         "cpuLimit": "1",
         "defaultUrl": "http://default-broker"
     }
-  predictors: |-
+  metricsAggregator: |-
     {
-        "tensorflow": {
-            "image": "{{ .Values.kfsTensorflowImage }}",
-            "defaultImageVersion": "{{ .Values.kfsTensorflowImageVersion }}",
-            "defaultGpuImageVersion": "{{ .Values.kfsTensorflowImageGpuVersion }}",
-            "defaultTimeout": "60",
-            "supportedFrameworks": [
-              "tensorflow"
-            ],
-            "multiModelServer": false
-        },
-        "onnx": {
-            "image": "{{ .Values.kfsOnnxImage }}",
-            "defaultImageVersion": "{{ .Values.kfsOnnxImageVersion }}",
-            "supportedFrameworks": [
-              "onnx"
-            ],
-            "multiModelServer": false
-        },
-        "sklearn": {
-          "v1": {
-            "image": "{{ .Values.kfsSkLearnImage }}",
-            "defaultImageVersion": "{{ .Values.kfsSkLearnImageVersion }}",
-            "supportedFrameworks": [
-              "sklearn"
-            ],
-            "multiModelServer": true
-          },
-          "v2": {
-            "image": "{{ .Values.kfsSeldonioImage }}",
-            "defaultImageVersion": "{{ .Values.kfsSeldonioImageVersion }}",
-            "supportedFrameworks": [
-              "sklearn"
-            ],
-            "multiModelServer": true
-          }
-        },
-        "xgboost": {
-          "v1": {
-            "image": "{{ .Values.kfsXgbserverImage }}",
-            "defaultImageVersion": "{{ .Values.kfsXgbserverImageVersion }}",
-            "supportedFrameworks": [
-              "xgboost"
-            ],
-            "multiModelServer": true
-          },
-          "v2": {
-            "image": "{{ .Values.kfsSeldonioImage }}",
-            "defaultImageVersion": "{{ .Values.kfsSeldonioImageVersion }}",
-            "supportedFrameworks": [
-              "xgboost"
-            ],
-            "multiModelServer": true
-          }
-        },
-        "pytorch": {
-          "v1" : {
-            "image": "{{ .Values.kfsPytorchImage }}",
-            "defaultImageVersion": "{{ .Values.kfsPytorchImageVersion }}",
-            "defaultGpuImageVersion": "{{ .Values.kfsPytorchImageGpuVersion }}",
-            "supportedFrameworks": [
-              "pytorch"
-            ],
-            "multiModelServer": false
-          },
-          "v2" : {
-            "image": "{{ .Values.kfsTorchServeImage }}",
-            "defaultImageVersion": "{{ .Values.kfsTorchServeImageVersion }}",
-            "defaultGpuImageVersion": "{{ .Values.kfsTorchServeImageGpuVersion }}",
-            "supportedFrameworks": [
-              "pytorch"
-            ],
-            "multiModelServer": false
-          }
-        },
-        "triton": {
-            "image": "{{ .Values.kfsTritonImage }}",
-            "defaultImageVersion": "{{ .Values.kfsTritonImageVersion }}",
-            "supportedFrameworks": [
-              "tensorrt",
-              "tensorflow",
-              "onnx",
-              "pytorch"
-            ],
-            "multiModelServer": true
-        },
-        "pmml": {
-            "image": "{{ .Values.kfsPmmlserverImage }}",
-            "defaultImageVersion": "{{ .Values.kfsPmmlserverImageVersion }}",
-            "supportedFrameworks": [
-              "pmml"
-            ],
-            "multiModelServer": false
-        },
-        "lightgbm": {
-            "image": "{{ .Values.kfsLgbserverImage }}",
-            "defaultImageVersion": "{{ .Values.kfsLgbserverImageVersion }}",
-            "supportedFrameworks": [
-              "lightgbm"
-            ],
-            "multiModelServer": false
-        },
-        "paddle": {
-            "image": "{{ .Values.kfsPaddleserverImage }}",
-            "defaultImageVersion": "{{ .Values.kfsPaddleserverImageVersion }}",
-            "supportedFrameworks": [
-              "paddle"
-            ],
-            "multiModelServer": false
-        }
+      "enableMetricAggregation": "false",
+      "enablePrometheusScraping" : "false"
     }
-  storageInitializer: |-
+  router: |-
     {
-        "image" : "{{ .Values.kfsStorageInitializerImage }}:{{ .Values.kfsVersion}}",
+        "image" : "kserve/router:v0.10.0",
         "memoryRequest": "100Mi",
         "memoryLimit": "1Gi",
         "cpuRequest": "100m",
         "cpuLimit": "1"
     }
-  transformers: |-
+  storageInitializer: |-
     {
+        "image" : "kserve/storage-initializer:v0.10.0",
+        "memoryRequest": "100Mi",
+        "memoryLimit": "1Gi",
+        "cpuRequest": "100m",
+        "cpuLimit": "1",
+        "storageSpecSecretName": "storage-config"
     }
 kind: ConfigMap
 metadata:
@@ -733,17 +605,6 @@ metadata:
     app: kserve
     app.kubernetes.io/name: kserve
   name: inferenceservice-config
-  namespace: kubeflow
----
-apiVersion: v1
-data:
-  ingressGateway: kubeflow/kubeflow-gateway
-kind: ConfigMap
-metadata:
-  labels:
-    app: kserve
-    app.kubernetes.io/name: kserve
-  name: kserve-config
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -819,7 +680,7 @@ spec:
     control-plane: kserve-controller-manager
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   labels:
     app: kserve
@@ -835,10 +696,10 @@ spec:
       app.kubernetes.io/name: kserve
       control-plane: kserve-controller-manager
       controller-tools.k8s.io: "1.0"
-  serviceName: controller-manager-service
   template:
     metadata:
       annotations:
+        kubectl.kubernetes.io/default-container: manager
         sidecar.istio.io/inject: "false"
       labels:
         app: kserve
@@ -849,6 +710,7 @@ spec:
       containers:
       - args:
         - --metrics-addr=127.0.0.1:8080
+        - --leader-elect
         command:
         - /manager
         env:
@@ -858,7 +720,7 @@ spec:
               fieldPath: metadata.namespace
         - name: SECRET_NAME
           value: kserve-webhook-server-cert
-        image: "{{ .Values.kfsControllerImage }}:{{ .Values.kfsVersion }}"
+        image: kserve/kserve-controller:v0.10.0
         imagePullPolicy: Always
         name: manager
         ports:
@@ -883,7 +745,7 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: {{ .Values.kfsKubeRbacProxyImage }}
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
@@ -932,13 +794,16 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-lgbserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
     - --model_dir=/mnt/models
     - --http_port=8080
     - --nthread=1
-    image: {{ .Values.kfsLgbserverImage }}:{{ .Values.kfsLgbserverImageVersion }}
+    image: kserve/lgbserver:v0.10.0
     name: kserve-container
     resources:
       limits:
@@ -947,16 +812,21 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
   supportedModelFormats:
   - autoSelect: true
     name: lightgbm
-    version: "2"
+    version: "3"
 ---
 apiVersion: serving.kserve.io/v1alpha1
 kind: ClusterServingRuntime
 metadata:
   name: kserve-mlserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - env:
     - name: MLSERVER_MODEL_IMPLEMENTATION
@@ -967,7 +837,7 @@ spec:
       value: "9000"
     - name: MODELS_DIR
       value: /mnt/models
-    image: {{ .Values.kfsSeldonioImage }}:{{ .Values.kfsSeldonioImageVersion }}
+    image: docker.io/seldonio/mlserver:1.0.0
     name: kserve-container
     resources:
       limits:
@@ -976,12 +846,17 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v2
   supportedModelFormats:
-  - name: sklearn
+  - autoSelect: true
+    name: sklearn
     version: "0"
-  - name: xgboost
+  - autoSelect: true
+    name: xgboost
     version: "1"
-  - name: lightgbm
+  - autoSelect: true
+    name: lightgbm
     version: "3"
   - autoSelect: true
     name: mlflow
@@ -992,12 +867,15 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-paddleserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
     - --model_dir=/mnt/models
     - --http_port=8080
-    image: {{ .Values.kfsPaddleserverImage }}:{{ .Values.kfsPaddleserverImageVersion }}
+    image: kserve/paddleserver:v0.10.0
     name: kserve-container
     resources:
       limits:
@@ -1006,6 +884,8 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
   supportedModelFormats:
   - autoSelect: true
     name: paddle
@@ -1016,12 +896,15 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-pmmlserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
     - --model_dir=/mnt/models
     - --http_port=8080
-    image: {{ .Values.kfsPmmlserverImage }}:{{ .Values.kfsPmmlserverImageVersion }}
+    image: kserve/pmmlserver:v0.10.0
     name: kserve-container
     resources:
       limits:
@@ -1030,6 +913,8 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
   supportedModelFormats:
   - autoSelect: true
     name: pmml
@@ -1043,12 +928,15 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-sklearnserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
     - --model_dir=/mnt/models
     - --http_port=8080
-    image: {{ .Values.kfsSkLearnImage }}:{{ .Values.kfsSkLearnImageVersion }}
+    image: kserve/sklearnserver:v0.10.0
     name: kserve-container
     resources:
       limits:
@@ -1057,6 +945,8 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
   supportedModelFormats:
   - autoSelect: true
     name: sklearn
@@ -1067,6 +957,9 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-tensorflow-serving
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
@@ -1076,7 +969,7 @@ spec:
     - --rest_api_timeout_in_ms=60000
     command:
     - /usr/bin/tensorflow_model_server
-    image: {{ .Values.kfsTensorflowImage }}:{{ .Values.kfsTensorflowImageVersion }}
+    image: tensorflow/serving:2.6.2
     name: kserve-container
     resources:
       limits:
@@ -1085,6 +978,9 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
+  - grpc-v1
   supportedModelFormats:
   - autoSelect: true
     name: tensorflow
@@ -1098,6 +994,9 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-torchserve
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8082"
   containers:
   - args:
     - torchserve
@@ -1107,7 +1006,7 @@ spec:
     env:
     - name: TS_SERVICE_ENVELOPE
       value: '{{`{{.Labels.serviceEnvelope}}`}}'
-    image: {{ .Values.kfsTorchServeImage }}:{{ .Values.kfsTorchServeImageVersion}}
+    image: pytorch/torchserve-kfs:0.7.0
     name: kserve-container
     resources:
       limits:
@@ -1116,6 +1015,10 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
+  - v2
+  - grpc-v1
   supportedModelFormats:
   - autoSelect: true
     name: pytorch
@@ -1126,6 +1029,9 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-tritonserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8002"
   containers:
   - args:
     - tritonserver
@@ -1134,7 +1040,7 @@ spec:
     - --http-port=8080
     - --allow-grpc=true
     - --allow-http=true
-    image: {{ .Values.kfsTritonImage }}:{{ .Values.kfsTritonImageVersion }}
+    image: nvcr.io/nvidia/tritonserver:21.09-py3
     name: kserve-container
     resources:
       limits:
@@ -1143,12 +1049,18 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v2
+  - grpc-v2
   supportedModelFormats:
-  - name: tensorrt
+  - autoSelect: true
+    name: tensorrt
     version: "8"
-  - name: tensorflow
+  - autoSelect: true
+    name: tensorflow
     version: "1"
-  - name: tensorflow
+  - autoSelect: true
+    name: tensorflow
     version: "2"
   - autoSelect: true
     name: onnx
@@ -1164,13 +1076,16 @@ kind: ClusterServingRuntime
 metadata:
   name: kserve-xgbserver
 spec:
+  annotations:
+    prometheus.kserve.io/path: /metrics
+    prometheus.kserve.io/port: "8080"
   containers:
   - args:
     - --model_name={{`{{.Name}}`}}
     - --model_dir=/mnt/models
     - --http_port=8080
     - --nthread=1
-    image: {{ .Values.kfsXgbserverImage }}:{{ .Values.kfsXgbserverImageVersion }}
+    image: kserve/xgbserver:v0.10.0
     name: kserve-container
     resources:
       limits:
@@ -1179,10 +1094,105 @@ spec:
       requests:
         cpu: "1"
         memory: 2Gi
+  protocolVersions:
+  - v1
   supportedModelFormats:
   - autoSelect: true
     name: xgboost
     version: "1"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: kubeflow/serving-cert
+  labels:
+    app: kserve
+    app.kubernetes.io/name: kserve
+  name: inferenceservice.serving.kserve.io
+webhooks:
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    caBundle: Cg==
+    service:
+      name: kserve-webhook-server-service
+      namespace: kubeflow
+      path: /mutate-serving-kserve-io-v1beta1-inferenceservice
+  failurePolicy: Fail
+  name: inferenceservice.kserve-webhook-server.defaulter
+  rules:
+  - apiGroups:
+    - serving.kserve.io
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - inferenceservices
+  sideEffects: None
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    caBundle: Cg==
+    service:
+      name: kserve-webhook-server-service
+      namespace: kubeflow
+      path: /mutate-pods
+  failurePolicy: Fail
+  name: inferenceservice.kserve-webhook-server.pod-mutator
+  namespaceSelector:
+    matchExpressions:
+    - key: control-plane
+      operator: DoesNotExist
+  objectSelector:
+    matchExpressions:
+    - key: serving.kserve.io/inferenceservice
+      operator: Exists
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pods
+  sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: kubeflow/serving-cert
+  labels:
+    app: kserve
+    app.kubernetes.io/name: kserve
+  name: inferencegraph.serving.kserve.io
+webhooks:
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    caBundle: Cg==
+    service:
+      name: kserve-webhook-server-service
+      namespace: kubeflow
+      path: /validate-serving-kserve-io-v1alpha1-inferencegraph
+  failurePolicy: Fail
+  name: inferencegraph.kserve-webhook-server.validator
+  rules:
+  - apiGroups:
+    - serving.kserve.io
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - inferencegraphs
+  sideEffects: None
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration

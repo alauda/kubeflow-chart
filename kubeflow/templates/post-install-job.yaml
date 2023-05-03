@@ -42,7 +42,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: wait-client
-        image: {{ .Values.kubectlImage }}
+        image: bitnami/kubectl
         command: ["/bin/sh", "-c"]
         # wait istio ready and 
         # restart kubeflow components to apply istio sidecar injection
@@ -54,19 +54,7 @@ spec:
           kubectl -n istio-system wait --timeout=15m0s --for=condition=ready pod -l app=istiod
           
           echo "will automatically restart all components to try if istio injection will take place..."
-          kubectl -n kubeflow rollout restart deploy mysql || true
-          kubectl -n kubeflow rollout restart deploy minio || true
-          kubectl -n kubeflow rollout restart deploy cache-server || true
-          kubectl -n kubeflow rollout restart deploy metadata-grpc-deployment  || true
-          kubectl -n kubeflow rollout restart deploy metadata-writer  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-persistenceagent  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-scheduledworkflow  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-ui  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-viewer-crd  || true
-          kubectl -n kubeflow rollout restart deploy ml-pipeline-visualizationserver  || true
-          kubectl -n kubeflow rollout restart deploy workflow-controller  || true
-          kubectl -n kubeflow rollout restart deploy centraldashboard  || true
+          kubectl -n kubeflow rollout restart deploy || true
           echo "kubeflow componets restarted."
 
 ---
@@ -92,9 +80,9 @@ spec:
       restartPolicy: Never
       containers:
       - name: wait-client
-        image: {{ .Values.kubectlImage }}
+        image: bitnami/kubectl
         command: ["/bin/sh", "-c"]
         # delete default profile first
         args:
         - |
-          kubectl delete profile {{ .Values.dex.defaultUserProfile }}
+          kubectl delete profile kubeflow-user-example-com

@@ -8,10 +8,6 @@ metadata:
     kustomize.component: kserve-models-web-app
   name: kserve-models-web-app
   namespace: kubeflow
-{{ if .Values.global.useRegistryCredentials }}
-imagePullSecrets:
-- name: kubeflow-image-pull-secrets
-{{ end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -92,13 +88,12 @@ data:
   USERID_HEADER: kubeflow-userid
 kind: ConfigMap
 metadata:
-  annotations: {}
   labels:
     app: kserve
     app.kubernetes.io/component: kserve-models-web-app
     app.kubernetes.io/name: kserve
     kustomize.component: kserve-models-web-app
-  name: kserve-models-web-app-config-gfh88m49k6
+  name: kserve-models-web-app-config-87f7mg8b2f
   namespace: kubeflow
 ---
 apiVersion: v1
@@ -155,8 +150,8 @@ spec:
       containers:
       - envFrom:
         - configMapRef:
-            name: kserve-models-web-app-config-gfh88m49k6
-        image: {{ .Values.kfsModelsWebAppImage }}:{{ .Values.kfsVersion }}
+            name: kserve-models-web-app-config-87f7mg8b2f
+        image: kserve/models-web-app:v0.10.0
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 3
