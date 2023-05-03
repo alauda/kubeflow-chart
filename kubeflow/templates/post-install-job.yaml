@@ -85,4 +85,4 @@ spec:
         # delete default profile first
         args:
         - |
-          kubectl delete profile {{ .Values.dex.defaultUserProfile }}
+          kubectl delete profile kubeflow-user-example-com
