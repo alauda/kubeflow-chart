@@ -909,9 +909,9 @@ metadata:
 apiVersion: v1
 data:
   config: |-
-{{ .Files.Get "config-files/istio-config.tmpl" | indent 4 }}
+    {{ .Files.Get "config-files/istio-config.tmpl" }}
   values: |-
-{{ .Files.Get "config-files/istio-values.json" | indent 4 }}
+    {{ .Files.Get "config-files/istio-values.json" }}
 kind: ConfigMap
 metadata:
   labels:
