@@ -959,7 +959,7 @@ spec:
   selector:
     app: istio-ingressgateway
     istio: ingressgateway
-  type: ClusterIP
+  type: NodePort
 ---
 apiVersion: v1
 kind: Service
