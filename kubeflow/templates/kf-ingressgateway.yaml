@@ -80,7 +80,7 @@ metadata:
   namespace: kubeflow
 spec:
   selector:
-    gateway-name: smm-ingressgateway-external
+    gateway-name: kubeflow-ingressgateway
     gateway-type: ingress
   servers:
   - hosts:
