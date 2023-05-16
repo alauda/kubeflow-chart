@@ -659,7 +659,7 @@ spec:
             - -c
             - mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}
           failureThreshold: 10
-          initialDelaySeconds: 10
+          initialDelaySeconds: 300
           periodSeconds: 5
         name: katib-mysql
         ports:
@@ -673,7 +673,7 @@ spec:
             - mysql -D ${MYSQL_DATABASE} -u root -p${MYSQL_ROOT_PASSWORD} -e 'SELECT
               1'
           failureThreshold: 10
-          initialDelaySeconds: 10
+          initialDelaySeconds: 50
           periodSeconds: 5
         startupProbe:
           exec:
