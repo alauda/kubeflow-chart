@@ -2,6 +2,7 @@ apiVersion: servicemesh.cisco.com/v1alpha1
 kind: IstioMeshGateway
 metadata:
   name: kubeflow-ingressgateway
+  namespace: kubeflow
 spec:
   istioControlPlane:
     name: cp-v115x
