@@ -19,7 +19,7 @@ spec:
         protocol: TCP
         targetPort: 8080
     type: LoadBalancer
-  type: ingress 
+  type: ingress
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
