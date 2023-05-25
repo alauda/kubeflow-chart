@@ -1,0 +1,146 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "48d54389-9c1a-4897-a37a-bee7b98a1836",
+          "type": "execution_node",
+          "op": "execute-python-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "data.zip"
+              ],
+              "include_subdirectories": false,
+              "distributed_training": 2,
+              "outputs": [],
+              "env_vars": [
+                {
+                  "env_var": "RANK"
+                },
+                {
+                  "env_var": "NRANKS"
+                },
+                {
+                  "env_var": "GPUS",
+                  "value": "0"
+                },
+                {
+                  "env_var": "EPOCHS",
+                  "value": "2"
+                },
+                {
+                  "env_var": "DATA_PATH",
+                  "value": "data"
+                },
+                {
+                  "env_var": "BATCH_SIZE",
+                  "value": "32"
+                },
+                {
+                  "env_var": "USE_GPU",
+                  "value": "0"
+                },
+                {
+                  "env_var": "LOCAL_RANK"
+                },
+                {
+                  "env_var": "CUDA_LAUNCH_BLOCKING"
+                },
+                {
+                  "env_var": "WORLD_SIZE"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "src/pytorch-mnist-dist.py",
+              "runtime_image": "build-harbor.alauda.cn/3rdparty/kubeflow/elyra-runtime-pytorch:1.13.0"
+            },
+            "label": "",
+            "ui_data": {
+              "label": "pytorch-mnist-dist.py",
+              "image": "/notebook/kubeflow-admin-cpaas-io/wuyi1/static/elyra/python.svg",
+              "x_pos": 106,
+              "y_pos": 329,
+              "description": "Run Python script"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "7a18b8cb-e8e1-47db-a6d0-4683e10a32a6",
+              "x_pos": 39,
+              "y_pos": 156,
+              "width": 322,
+              "height": 126,
+              "content": "1. 使用 pytorch 运行时镜像\n2. 配置分布式训练 worker 个数\n3. 支持使用 DistributedDataParallel 分布式训练\n4. 如果依赖多个 .py 文件，可以选择这些文件设置为依赖。",
+              "associated_id_refs": [
+                {
+                  "node_ref": "48d54389-9c1a-4897-a37a-bee7b98a1836"
+                }
+              ]
+            }
+          ]
+        },
+        "version": 8,
+        "runtime_type": "KUBEFLOW_PIPELINES",
+        "properties": {
+          "pipeline_defaults": {
+            "kubernetes_pod_annotations": [],
+            "kubernetes_pod_labels": [],
+            "mounted_volumes": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_shared_mem_size": {},
+            "env_vars": [],
+            "kubernetes_secrets": []
+          },
+          "name": "06pytorch-dist-train",
+          "runtime": "Kubeflow Pipelines"
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
