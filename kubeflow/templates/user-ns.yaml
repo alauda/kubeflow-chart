@@ -27,6 +27,7 @@ metadata:
     kubernetes.io/metadata.name: kubeflow-user-example-com
     pipelines.kubeflow.org/enabled: "true"
     serving.kubeflow.org/inferenceservice: enabled
+    istio.io/rev: cp-v115x.istio-system
   name: kubeflow-user-example-com
 spec:
   finalizers:
