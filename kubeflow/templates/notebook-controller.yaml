@@ -194,7 +194,7 @@ data:
   CULL_IDLE_TIME: "1440"
   ENABLE_CULLING: "false"
   IDLENESS_CHECK_PERIOD: "1"
-  ISTIO_GATEWAY: kubeflow/kubeflow-gateway
+  ISTIO_GATEWAY: kubeflow-gateway
   USE_ISTIO: "true"
 kind: ConfigMap
 metadata:

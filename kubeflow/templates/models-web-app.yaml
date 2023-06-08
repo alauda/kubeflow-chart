@@ -189,7 +189,7 @@ metadata:
   namespace: kubeflow
 spec:
   gateways:
-  - kubeflow/kubeflow-gateway
+  - kubeflow-gateway
   hosts:
   - '*'
   http:

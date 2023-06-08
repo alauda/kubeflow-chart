@@ -2,8 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: auth
-  labels:
-    istio.io/rev: cp-v115x.istio-system
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -155,7 +153,7 @@ metadata:
   namespace: auth
 spec:
   gateways:
-  - kubeflow/kubeflow-gateway
+  - kubeflow-gateway
   hosts:
   - '*'
   http:
