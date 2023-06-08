@@ -7,6 +7,7 @@ metadata:
     app: kubeflow-imgw-app
     istio.io/rev: cp-v115x.istio-system
   name: kubeflow-imgw
+  namespace: kubeflow
 spec:
   deployment:
     podMetadata:
@@ -22,5 +23,5 @@ spec:
       port: 80
       protocol: TCP
       targetPort: 8080
-    type: ClusterIP
+    type: LoadBalancer
   type: ingress
