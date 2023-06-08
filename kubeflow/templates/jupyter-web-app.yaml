@@ -601,7 +601,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  JWA_APP_SECURE_COOKIES: "false"
+  JWA_APP_SECURE_COOKIES: "true"
   JWA_CLUSTER_DOMAIN: cluster.local
   JWA_PREFIX: /jupyter
   JWA_UI: default
@@ -666,7 +666,7 @@ spec:
         - name: USERID_PREFIX
           value: ""
         - name: APP_SECURE_COOKIES
-          value: "false"
+          value: "true"
         image: docker.io/kubeflownotebookswg/jupyter-web-app:v1.7.0-rc.0
         name: jupyter-web-app
         ports:
