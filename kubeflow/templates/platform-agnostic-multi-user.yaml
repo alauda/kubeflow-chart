@@ -3584,6 +3584,7 @@ spec:
     - source:
         namespaces:
         - istio-system
+        - kubeflow
   selector:
     matchLabels:
       app: ml-pipeline-ui
