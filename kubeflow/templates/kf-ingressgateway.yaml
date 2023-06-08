@@ -5,7 +5,7 @@ metadata:
   namespace: kubeflow
 spec:
   selector:
-    gateway-name: smm-ingressgateway-external
+    gateway-name: kubeflow-ingressgateway-external
     gateway-type: ingress
   servers:
   - hosts:
@@ -14,3 +14,32 @@ spec:
       name: http
       number: 81
       protocol: HTTP
+---
+apiVersion: servicemesh.cisco.com/v1alpha1
+kind: IstioMeshGateway
+metadata:
+  labels:
+    istio.io/rev: cp-v115x.istio-system
+  name: kubeflow-ingressgateway
+  namespace: kubeflow
+spec:
+  deployment:
+    replicas:
+      max: 1
+      min: 1
+  istioControlPlane:
+    name: cp-v115x
+    namespace: istio-system
+  service:
+    ports:
+    - name: tcp-status-port
+      port: 15021
+      protocol: TCP
+      targetPort: 15021
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    type: LoadBalancer
+  type: ingress
+---

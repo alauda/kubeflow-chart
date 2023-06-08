@@ -22,7 +22,6 @@ metadata:
     owner: user@example.com
   labels:
     app.kubernetes.io/part-of: kubeflow-profile
-    istio-injection: enabled
     katib-metricscollector-injection: enabled
     kubernetes.io/metadata.name: kubeflow-user-example-com
     pipelines.kubeflow.org/enabled: "true"
