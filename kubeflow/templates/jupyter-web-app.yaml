@@ -666,7 +666,7 @@ spec:
         - name: USERID_PREFIX
           value: ""
         - name: APP_SECURE_COOKIES
-          value: "true"
+          value: "false"
         image: docker.io/kubeflownotebookswg/jupyter-web-app:v1.7.0-rc.0
         name: jupyter-web-app
         ports:
