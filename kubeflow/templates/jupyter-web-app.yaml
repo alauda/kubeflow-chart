@@ -601,7 +601,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  JWA_APP_SECURE_COOKIES: "true"
+  JWA_APP_SECURE_COOKIES: "false"
   JWA_CLUSTER_DOMAIN: cluster.local
   JWA_PREFIX: /jupyter
   JWA_UI: default
