@@ -153,7 +153,7 @@ metadata:
   namespace: auth
 spec:
   gateways:
-  - kubeflow-gateway
+  - kubeflow/kubeflow-gateway
   hosts:
   - '*'
   http:

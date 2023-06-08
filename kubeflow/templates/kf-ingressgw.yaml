@@ -1,0 +1,26 @@
+apiVersion: servicemesh.cisco.com/v1alpha1
+kind: IstioMeshGateway
+metadata:
+  annotations:
+    banzaicloud.io/related-to: istio-system/cp-v115x
+  labels:
+    app: kubeflow-imgw-app
+    istio.io/rev: cp-v115x.istio-system
+  name: kubeflow-imgw
+spec:
+  deployment:
+    podMetadata:
+      labels:
+        app: kubeflow-imgw-app
+        istio: ingressgateway
+  istioControlPlane:
+    name: cp-v115x
+    namespace: istio-system
+  service:
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    type: ClusterIP
+  type: ingress

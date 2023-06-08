@@ -18,4 +18,3 @@ spec:
         x-kubernetes-preserve-unknown-fields: true
     served: true
     storage: true
----

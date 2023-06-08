@@ -15,23 +15,6 @@ spec:
     kind: User
     name: user@example.com
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations:
-    owner: user@example.com
-  labels:
-    app.kubernetes.io/part-of: kubeflow-profile
-    katib-metricscollector-injection: enabled
-    kubernetes.io/metadata.name: kubeflow-user-example-com
-    pipelines.kubeflow.org/enabled: "true"
-    serving.kubeflow.org/inferenceservice: enabled
-    istio.io/rev: cp-v115x.istio-system
-  name: kubeflow-user-example-com
-spec:
-  finalizers:
-  - kubernetes
----
 apiVersion: kubeflow.org/v1alpha1
 kind: PodDefault
 metadata:
