@@ -12,7 +12,7 @@ spec:
     - '*'
     port:
       name: http
-      number: 81
+      number: 80
       protocol: HTTP
 ---
 apiVersion: servicemesh.cisco.com/v1alpha1
