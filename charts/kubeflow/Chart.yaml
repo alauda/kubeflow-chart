@@ -41,6 +41,7 @@ dependencies:
     condition: istio.enabled
   - name: knative-serving
     version: "1.2.5"
+    condition: knative-serving.enabled
   - name: minio
     version: "1.0"
     condition: minio.enabled
