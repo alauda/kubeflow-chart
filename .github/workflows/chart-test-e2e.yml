@@ -1,0 +1,31 @@
+name: ChartsE2E
+
+on:
+  - pull_request
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Start minikube
+        uses: medyagh/setup-minikube@master
+        with:
+          kubernetes-version: v1.21.1
+      - name: Try the cluster !
+        run: kubectl get pods -A
+      - name: Run E2E Tests
+        run: |
+          set -e
+          helm install istio charts/istio
+          helm install cert-manager charts/certmanager
+          kubectl -n istio-system wait --timeout=60s --for=condition=ready pod --all
+          kubectl -n cert-manager wait --timeout=60s --for=condition=ready pod --all
+          helm install kubeflow charts/kubeflow
+          kubectl -n kubeflow get po
+          kubectl -n auth wait --timeout=300s --for=condition=ready pod --all
+          kubectl -n knative-serving wait --timeout=300s --for=condition=ready pod --all
+          kubectl -n istio-system wait --timeout=300s --for=condition=ready pod --all
+          kubectl -n kubeflow wait --timeout=300s --for=condition=ready pod --all
+          kubectl -n kubeflow get po
